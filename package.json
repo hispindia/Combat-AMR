@@ -1,0 +1,50 @@
+{
+  "name": "Tracker-Aggregation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "license": "BSD-3-Clause",
+  "private": true,
+  "homepage": ".",
+  "developer": {
+    "name": "Gyan Bahadur Tamang",
+    "company": "HISP India"
+  },
+  "manifest.webapp": {
+    "name": "Tracker Aggregation",
+    "description": "Data aggregation of AMR.",
+    "appType": "APP",
+    "activities": {
+      "dhis": {
+        "href": "*"
+      }
+    }
+  },
+  "icons": {
+    "16": "appicon-16x16.svg",
+    "32": "appicon-32x32.svg",
+    "48": "appicon-48x48.svg"
+  },
+  "scripts": {
+    "build": "d2-app-scripts build",
+    "start": "d2-app-scripts start",
+    "test": "d2-app-scripts test"
+  },
+  "devDependencies": {
+    "@dhis2/cli-app-scripts": "^3.1.1"
+  },
+  "dependencies": {
+    "@dhis2/app-runtime": "^2.0.4",
+    "@hisp-amr/api": "^0.0.8",
+    "@hisp-amr/org-unit-tree": "^0.0.17",
+    "axios": "^0.18.1",
+    "base-64": "^0.1.0",
+    "bootstrap": "^4.5.2",
+    "react-bootstrap": "^1.3.0",
+    "react-scripts": "^3.4.4",
+    "reactstrap": "^8.3.1",
+    "styled-components": "^5.0.0",
+    "webpack": "^4.41.5",
+    "write-json-file": "^4.3.0"
+  }
+}
