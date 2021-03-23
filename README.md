@@ -12,7 +12,7 @@ yarn install
 
 you need to log in server ( mention in .env.development)
 
-for eaxample (http://localhost:3000/)
+for eaxample -> (http://localhost:3000/)
 
 yarn start
 
