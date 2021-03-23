@@ -127,14 +127,6 @@ class DynamicComponent extends Component {
               let antiPresent = antiKeys in deAnti;
               if (antiPresent) {
                 var antiValue = deAnti[antiKeys];
-                // if (antiValue.indexOf(' ') >= 0) {
-                //   console.log("ANTIVALUES WITH SPACES : ",antiValue)
-                //   antiValue = antiValue.split(" ")[0]; // Ampicillin_Results
-                // }
-                // else {
-                //   console.log("ANTIVALUES WITHOUT  SPACES : ",antiValue)
-                //   antiValue = antiValue.split("_")[0]; // Ampicillin_Results
-                // }
                 antiValue = antiValue.split("_")[0];
                 antiValue = antiValue + "-" + dataElementAnti[antiKeys]; // Ampicillin-Resistant
                 if (dataElementAnti["mp5MeJ2dFQz"] && dataElementAnti["B7XuDaXPv10"]) {
@@ -157,19 +149,11 @@ class DynamicComponent extends Component {
           }`;
           let eventOrgUnitAnti = event.orgUnit;
           let eventDeCodeAnti = event.dataValues.deCode;
-          // let eventCOCAnti = event.dataValues;
-          // console.log("ANTI ABA_AW value: ", deCOC_anti["ABA_AW"])
-          // console.log("ANTI ABA_AW Value COCS", deCOC_anti["Meropenem-Resistant, CSF, OPD"])
-          // console.log("ANTI ABA_AW Value COCS", deCOC_anti["Minocycline-Resistant, CSF, OPD"])
-          // console.log("ANTI ABA_AW Value COCS", deCOC_anti["Amikacin-Resistant, Abdominal fluid, OPD"])
-          // console.log("ANTI ABA_AW Value COCS", deCOC_anti["Imipenem-Susceptible, Abdominal fluid, OPD"])
-
           for (var coc_keys in event.dataValues) {
             let coc_key_anti = ""
             if (eventDeCodeAnti != event.dataValues[coc_keys]) {
               coc_key_anti = event.dataValues[coc_keys];
             }
-            console.log("COC KEYS", eventDeCodeAnti," : ",coc_key_anti)
             if (
             deCOC_anti[eventDeCodeAnti] &&
             deCOC_anti[coc_key_anti] &&
@@ -278,7 +262,6 @@ class DynamicComponent extends Component {
         dataValues.push(dataValue);
       }
 
-      console.log("DATA Sample Wise : ",programCount);
       var programCountAnti = await this.getAntiEvents(orgUnit, startDate, endDate);
 
       for (let itemAnti in programCountAnti) {
@@ -292,13 +275,10 @@ class DynamicComponent extends Component {
         dataValues.push(dataValueAntiB);
       }
 
-      console.log("Data Antibiotics wise : ",programCountAnti);
-
       // PUSHING DATA IN DATA ENTRY
       var dataValueSet = {};
       dataValueSet.dataValues = dataValues;
       var dataJSON = JSON.stringify(dataValueSet);
-      console.log(dataValueSet);
       const headers = {
         "Content-Type": "application/json",
         dataType: "json",
@@ -306,7 +286,6 @@ class DynamicComponent extends Component {
       axios
         .post("../../../api/dataValueSets", dataJSON, { headers: headers })
         .then((response) => {
-          console.log(response);
           var impCount = response.data.importCount.imported;
           var upCount = response.data.importCount.updated;
           var igCount = response.data.importCount.ignored;
