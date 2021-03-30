@@ -1,0 +1,23 @@
+{
+  "launch_path": "index.html",
+  "default_locale": "en",
+  "activities": {
+    "dhis": {
+      "href": "*"
+    }
+  },
+  "appType": "APP",
+  "name": "AMR Data Entry- Patient Overview",
+  "version": "0.4.1",
+  "description": "Enter AMR data.",
+  "icons": {
+    "16": "appicon-16x16.svg",
+    "32": "appicon-32x32.svg",
+    "48": "appicon-48x48.svg"
+  },
+  "developer": {
+    "name": "Gyan Bahadur Tamang",
+    "company": "HISP India"
+  },
+  "manifest_generated_at": "Tue Mar 16 2021 15:18:08 GMT+0530 (India Standard Time)"
+}
