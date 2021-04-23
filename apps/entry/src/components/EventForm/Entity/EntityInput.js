@@ -3,6 +3,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { setEntityValue, validateUnique } from '@hisp-amr/app'
 import { TextInput, AgeInput, RadioInputs, SelectInput } from '@hisp-amr/inputs'
+import { DropdownTreeSelect } from 'react-dropdown-tree-select';
+import { DropdownTreeSelectInput } from './DropdownTreeSelectInput'
+
+
 
 const Padding = styled.div`
     padding: 16px;
@@ -20,6 +24,36 @@ export const EntityInput = ({ attribute }) => {
     const unique = useSelector(state => state.data.entity.uniques[id])
     const modal = useSelector(state => state.data.entity.modal)
     const disabled = entityId && !editing ? true : false
+    const valueType = attribute.trackedEntityAttribute.valueType;
+    const orgUnit = useSelector(state => state.data)
+    var { orgUnits } = useSelector(state => state.metadata)
+
+    
+    function newOrgInsert(testorgs)
+    { 
+    var testorgss = testorgs
+    var isParent = false;
+    if(Array.isArray(testorgs)){
+    testorgss = testorgs[0]
+    }
+    else{
+        testorgss = testorgs
+    }
+    if(testorgss && isParent == false){
+    testorgss['label'] = testorgss.displayName;
+    isParent = true;
+    }
+    if(testorgss.children.length!=0){
+        testorgss.children.forEach(function(element){
+        element['label'] = element.displayName
+        newOrgInsert(element)
+        })
+    }
+    return testorgss
+    }
+
+    var orgUnitsLabels = newOrgInsert(orgUnits)
+
 
     /**
      * Called on every input field change.
@@ -82,7 +116,15 @@ export const EntityInput = ({ attribute }) => {
                         disabled={disabled}
                     />
                 )
-            ) : (
+                ) : valueType === "ORGANISATION_UNIT" ? 
+                <DropdownTreeSelectInput
+                        data={
+                            orgUnitsLabels
+                        }
+                        onChange={onChange}
+                        
+                    />
+                : (
                 <TextInput
                     required={attribute.mandatory}
                     unique={attribute.trackedEntityAttribute.unique}

@@ -75,10 +75,12 @@ export const EventForm = ({ history, match }) => {
         if (eventIDs && editable) {
             var isPrev = true
             for (let eventValues in previousValues) {
+                if (eventValues != "VbUbBX7G6Jf") {
                     if (event["values"][eventValues] == "") {
-                        dispatch(setEventValue(eventValues, previousValues[eventValues],isPrev))
+                        dispatch(setEventValue(eventValues, previousValues[eventValues], isPrev))
                         // event["values"][eventValues] = previousValues[eventValues]
                     }
+                }
             }
             // dispatch(addExistingEvent(event))
             // dispatch(resetPreviousEntity())

@@ -1,4 +1,4 @@
-export const appName = 'Data Entry'
+export const appName = 'AMR Data Entry'
 
 export const categories = [
     // {

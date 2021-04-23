@@ -6,6 +6,7 @@ import { CardSection } from 'components'
 import { SelectInput, RadioInputs, DateInput } from '@hisp-amr/inputs'
 import { setProgram, setPanelValue } from 'actions'
 import { PanelButtons } from './PanelButtons'
+import { SAMPLE_TESTING_PROGRAM } from 'constants/dhis2'
 
 /**
  * Contains event panel.
@@ -15,7 +16,7 @@ export const Panel = ({ showEdit }) => {
     const editable = useSelector(state => state.data.editable)
     const dispatch = useDispatch()
     const { stageLists } = useSelector(state => state.metadata)
-    const {
+    var {
         program,
         programStage,
         organism,
@@ -25,7 +26,15 @@ export const Panel = ({ showEdit }) => {
         defaultProgram,
         organisms,
     } = useSelector(state => state.data.panel)
-  
+    const isPrevEvent = useSelector(state => state.data.previousValues)
+    if (Object.keys(isPrevEvent).length) {
+        if (programs) {
+            programs = programs.filter(function (element) {
+                return element.value != SAMPLE_TESTING_PROGRAM[0].value;
+        
+            });
+        }
+    }
     /**
      * Called when a new program is selected.
      */
@@ -47,6 +56,7 @@ export const Panel = ({ showEdit }) => {
             disabled: valid,
             required: true,
         }
+
         switch (id) {
             case `defaultProgram`: 
             return getInput({

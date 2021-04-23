@@ -145,7 +145,7 @@ export const eventRules = (
                         break
                 }
             } catch (error) {
-                console.warn('Failed to evaluate rule:', rule, error)
+                console.warn('ERRORS : Failed to evaluate rule:', rule, error)
             }
         })
     })

@@ -47,6 +47,7 @@
         "jquery": "^3.4.1",
         "react": "^16.9.0",
         "react-bootstrap-sweetalert": "^5.1.9",
-        "react-dom": "^16.9.0"
+        "react-dom": "^16.9.0",
+        "react-dropdown-tree-select": "^2.5.1"
     }
 }

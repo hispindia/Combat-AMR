@@ -58,7 +58,7 @@ export const DataElement = ({ id }) => {
         useSelector(state => state.data.event.duplicate)
 
     const onChange = (key, value) => {
-        if((key == ORGANISM_DETECTED) && (value == 'Detected'))
+        if((key == ORGANISM_DETECTED) && (value == 'Organism detected'))
         {
          dispatch(AddAndSubmit(true))
          dispatch(setEventValue(key, value,false))

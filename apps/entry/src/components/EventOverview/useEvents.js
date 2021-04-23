@@ -56,6 +56,11 @@ export const useEvents = status => {
     const user = useSelector(state => state.metadata.user)
     const selected = useSelector(state => state.selectedOrgUnit.id)
 
+    var sampleTestingProgram = programList.find(element => {
+        var sampleLable = "Sample testing"
+        return element.label ===  sampleLable;
+    }).value;
+
     const [state, dispatcher] = useReducer(reducer, INITIAL_STATE)
 
     useEffect(() => {
@@ -67,11 +72,13 @@ export const useEvents = status => {
     useEffect(() => {
         const getData = async () => {
             try {
-                const events = await getTEI(selected)
-                dispatcher({
-                    type: NEW_ROWS,
-                    rows: events,
-                })
+                const events = await getTEI(selected,sampleTestingProgram).then((eventResult) =>
+                                dispatcher({
+                                type: NEW_ROWS,
+                                rows: eventResult,
+                                })
+                )
+
             } catch (error) {
                 console.error(error)
                 dispatcher({ type: EVENTS_ERRORED })

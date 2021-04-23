@@ -56,6 +56,7 @@ export const SET_PREVIOUS_EVENT = "SET_PREVIOUS_EVENT"
 export const SET_EVENT = "SET_EVENT"
 // export const SET_PREVALUE = "SET_PREVALUE"
 export const PAGE_FIRST = "PAGE_FIRST"
+export const COMPLETED_CLICKED = 'COMPLETED_CLICKED'
 
 
 

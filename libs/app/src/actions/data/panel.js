@@ -7,13 +7,16 @@ export const setPanel = () =>async(dispatch,getState) =>{
 }
 export const setProgram = program => (dispatch, getState) => {
     const { programOrganisms, optionSets, stageLists } = getState().metadata
-    const organisms = []
-    optionSets[programOrganisms[program]].forEach(o => {
-        if (!organisms.find(org => org.value === o.value)) organisms.push(o)
-    })
-    const programStage =
-        stageLists[program].length > 1 ? '' : stageLists[program][0].value
-
+    const organisms = [];
+    var programStage = "";
+    if (program) {
+        optionSets[programOrganisms[program]].forEach(o => {
+            if (!organisms.find(org => org.value === o.value)) organisms.push(o);
+        });
+    
+        programStage =
+            stageLists[program].length > 1 ? '' : stageLists[program][0].value
+    }
     dispatch(
         createAction(SET_PANEL, {
             program,

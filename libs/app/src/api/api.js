@@ -109,7 +109,7 @@ export const newRecord = async (
 ) => {
     const initialValues = {
         [ORGANISM_ELEMENT]: orgaCode,
-        [AMR_ELEMENT]: await generateAmrId(ou, orgUnitCode),
+        // [AMR_ELEMENT]: await generateAmrId(ou, orgUnitCode),
     }
     const { entityId, eventId } = eId
         ? await addEvent(initialValues, pId, {
@@ -119,7 +119,7 @@ export const newRecord = async (
               entityValues: eValues,
               sampleDate,
         },
-            UpdatedEventPayload
+            
         )
         : await addPersonWithEvent(initialValues, pId, {
               programStageId: pStage.id,
@@ -297,7 +297,7 @@ export const addEvent = async (
             status: 'ACTIVE',
         },
         eventValues,
-        UpdatedEventPayload
+    
     )
     if (entityValues) await updatePerson(entityId, entityValues)
     // Enrolling if not already enrolled.
@@ -383,7 +383,7 @@ export const isDuplicateRecord = async ({
                 order: 'created:asc',
                 fields: 'event,dataValues[dataElement,value]',
                 filters: `${SAMPLE_ID_ELEMENT}&eq:${sampleId}`,
-                options: [`program=L7bu48EI54J`],
+                options: [`program=WhYipXYg2Nh`],
             })
         )
     ).events

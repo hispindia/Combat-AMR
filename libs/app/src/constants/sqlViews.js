@@ -1,1 +1,1 @@
-export const GET_AMR_IDS = 'joGfuhbHQUx'
+export const GET_AMR_IDS = 'lorKXpWR1Gp'

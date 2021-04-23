@@ -47,9 +47,9 @@ const Events = ({match, history }) => {
         let btnStatus= false
         for (let dataValue of dataValues) {
             let dataElement = dataValue.dataElement;
-            if( dataElement == 'u8VDCIwa3w4'){  // id of organism detected data element in sample testing
-                btnStatus = true;
-            }
+            // if( dataElement == 'VbUbBX7G6Jf'){  // id of organism detected data element in sample testing
+            //     btnStatus = true;
+            // }
         }
         let editStatus = true;
         dispatch(getExistingEvent(ou, teiId, eventId, editStatus, btnStatus))
@@ -79,16 +79,16 @@ const Events = ({match, history }) => {
                     }
                     for( let value of ele.dataValues){
                             dataValue['0']=name
-                        if(value.dataElement == 'B7XuDaXPv10'){
+                        if(value.dataElement == 'q7U3sRRnFg5'){
                             dataValue['1'] =value;
                         }
-                        if(value.dataElement == 'GpAu5HjWAEz'){
+                        if(value.dataElement == 'si9RY754UNU'){
                             dataValue['2'] =value;
                         }
-                        if(value.dataElement == 'mp5MeJ2dFQz'){
+                        if(value.dataElement == 'GqP6sLQ1Wt3'){
                             dataValue['3'] =value;
                         }
-                        if((value.dataElement == 'SaQe2REkGVw') || (value.dataElement  =='u8VDCIwa3w4')){  // id of organism detected data element in sample testing
+                        if((value.dataElement == 'TJrFZ3sVSG5') || (value.dataElement  =='VbUbBX7G6Jf')){  // id of organism detected data element in sample testing
                             dataValue['4'] =value;
                         }
                         dataValue['5']=date
@@ -109,7 +109,7 @@ const Events = ({match, history }) => {
                                 let data = [ {value: ''}]
                                 dataValue['4']=data
                               }  
-                           if(dataValue['4'].value !== 'Detected'){
+                           if(dataValue['4'].value !== 'Organism detected'){
                                 data = dataValue;
                         }
                     return (  
@@ -138,7 +138,7 @@ const Events = ({match, history }) => {
                     <TableRow>
                     <TableCell><b>Program Name</b></TableCell> 
                     <TableCell><b>Location</b></TableCell> 
-                    <TableCell><b>Lap Sample ID</b></TableCell> 
+                    <TableCell><b>Lab ID</b></TableCell> 
                     <TableCell><b>Sample Type</b></TableCell> 
                     <TableCell><b>Organism</b></TableCell> 
                     <TableCell><b>Event Date</b></TableCell>

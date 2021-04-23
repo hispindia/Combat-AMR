@@ -53,6 +53,7 @@
     "dependencies": {
         "axios": "^0.21.1",
         "cross-env": "^7.0.0",
+        "react-dropdown-tree-select": "^2.5.1",
         "sync-request": "^6.1.0"
     }
 }

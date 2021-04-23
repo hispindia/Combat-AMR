@@ -37,7 +37,8 @@ import {
     SET_PREVIOUS_EVENT,
     SET_EVENT,
     // SET_PREVALUE
-    PAGE_FIRST
+    PAGE_FIRST,
+    COMPLETED_CLICKED,
 } from '../actions/types'
 
 const INITIAL_EVENT = {
@@ -76,6 +77,8 @@ const INITIAL_STATE = {
     },
     event: INITIAL_EVENT,
     buttonLoading: false,
+    completeClicked: false,
+    inCompleteClicked:false,
 }
 
 export const data = (state = INITIAL_STATE, { type, payload }) => {
@@ -326,7 +329,12 @@ export const data = (state = INITIAL_STATE, { type, payload }) => {
                 return {
                     ...state,
                     removebtn: payload,
-                }
+            }
+        case COMPLETED_CLICKED:
+            return {
+                ...state,
+                completeClicked:payload,
+            }
         case SET_EVENT:
                     return {
                         ...state,

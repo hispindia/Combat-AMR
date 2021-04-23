@@ -23,7 +23,9 @@ import {
     REMOVE_BUTTONS,
     SET_PREVIOUS_EVENT,
     SET_EVENT,
-    PAGE_FIRST
+    PAGE_FIRST,
+    COMPLETED_CLICKED,
+    INCOMPLETED_CLICKED,
 } from '../types'
 import { deleteEvent } from '@hisp-amr/api'
 
@@ -170,34 +172,6 @@ export const createNewEvent = () => async (dispatch, getState) => {
     const entity = getState().data.entity
     const panel = getState().data.panel
     const metadata = getState().metadata
-    const prevStateValues = getState().data.previousValues
-
-    var values_to_send = []
-    var UpdatedEventPayload = {}
-    if (Object.keys(prevStateValues).length != 0) {
-        console.log("GETDATA", getState().data)        
-        Object.keys(prevStateValues).forEach(function (previouskey) {
-            if (prevStateValues[previouskey] != "") {
-                if (prevStateValues[previouskey] != "Detected") {
-                    values_to_send.push({
-                        dataElement: previouskey,
-                        value: prevStateValues[previouskey]
-                    })
-                }
-            }
-    
-        });
-        UpdatedEventPayload = {
-            dataValues: values_to_send,
-            program: panel.program,
-            orgUnit: getState().data.orgUnit.id
-        }
-        // const eveRes = postEvent(UpdatedEventPayload)
-        console.log("EVENTS POST SUCCESS", UpdatedEventPayload)
-
-    }
-
-
     const rules = getRules(
         metadata.eventRules,
         panel.program,
@@ -218,7 +192,7 @@ export const createNewEvent = () => async (dispatch, getState) => {
                 sampleDate: panel.sampleDate,
                 orgUnitCode: orgUnit.code,
             },
-            UpdatedEventPayload,
+            
         )
         metadata.calculatedVariables.forEach(variables => {
             for (let key in data.eventValues)
@@ -267,15 +241,19 @@ export const submitEvent = addMore => async (dispatch, getState) => {
     try {
         
         await setEventStatus(eventId, true)
-        if (addMore) dispatch(createAction(RESET_PANEL_EVENT))
+        if (addMore)
+        {
+            dispatch(createAction(RESET_PANEL_EVENT))
+        }
         else {
-            if (eventValues[ORGANISM_DETECTED] == "Detected") {
+            if (eventValues[ORGANISM_DETECTED] == "Organism detected") {
                 dispatch(createAction(SET_PREVIOUS_EVENT, { eventValues }))
                 dispatch(AddAndSubmit(false))                
                 dispatch(createAction(PANEL_EDITABLE))
                 dispatch(createAction(RESET_PANEL_EVENT))
                 dispatch(createAction(PAGE_FIRST, true))
-            } else {
+            }
+            else {
                 dispatch(createAction(EXIT))
             }
         }
@@ -305,6 +283,53 @@ export const editEvent = () => async (dispatch, getState) => {
         await setEventStatus(eventId)
         dispatch(createAction(SET_INCOMPLETED))
         dispatch(showAlert('Record is editable.'))
+    } catch (error) {
+        console.error(error)
+        dispatch(showAlert('Failed to edit record.', { critical: true }))
+    } finally {
+        batch(() => {
+            dispatch(createAction(SET_BUTTON_LOADING, false))
+            dispatch(enableButtons())
+        })
+    }
+}
+
+export const completeEvent = () => async (dispatch, getState) => {
+    batch(() => {
+        dispatch(disableButtons())
+        dispatch(createAction(SET_BUTTON_LOADING, 'edit'))
+    })
+    const eventId = getState().data.event.id
+
+    try {
+        await setEventStatus(eventId)
+        dispatch(createAction(SET_COMPLETED))
+        dispatch(showAlert('Event Completed'))
+        dispatch(createAction(COMPLETED_CLICKED,true))
+    } catch (error) {
+        console.error(error)
+        dispatch(showAlert('Failed to edit record.', { critical: true }))
+    } finally {
+        batch(() => {
+            dispatch(createAction(SET_BUTTON_LOADING, false))
+            dispatch(enableButtons())
+        })
+    }
+}
+
+export const inCompleteEvent = () => async (dispatch, getState) => {
+    batch(() => {
+        dispatch(disableButtons())
+        dispatch(createAction(SET_BUTTON_LOADING, 'edit'))
+    })
+    const eventId = getState().data.event.id
+
+    try {
+        await setEventStatus(eventId)
+        dispatch(createAction(SET_INCOMPLETED))
+        dispatch(showAlert('Record is editable.'))
+        dispatch(createAction(COMPLETED_CLICKED,false))
+
     } catch (error) {
         console.error(error)
         dispatch(showAlert('Failed to edit record.', { critical: true }))
@@ -355,16 +380,16 @@ export const setEventValue = (key, value,isPrev) => (dispatch, getState) => {
     const tempProgramStage = getState().data.panel.programStage;
     const tempStatus = "ACTIVE";
     console.log("ORG UNITS",getState())
-    var dID = ["mp5MeJ2dFQz", "dRKIjwIDab4", "GpAu5HjWAEz", "B7XuDaXPv10"];
-    if (isPrev != true) {
-        updateEventValue(event.id, key, value, programId,orgUnit,trackerID,tempStatus,tempProgramStage)
-    }
-    else if (isPrev == true) {
-    if (!dID.includes(key)) {
-        updateEventValue(event.id, key, value, programId,orgUnit,trackerID,tempStatus,tempProgramStage)
-    }
-    }
-    
+    // var dID = ["GqP6sLQ1Wt3", "Gkmu7ySPxjb", "si9RY754UNU", "q7U3sRRnFg5"];
+    // if (isPrev != true) {
+    //     updateEventValue(event.id, key, value, programId,orgUnit,trackerID,tempStatus,tempProgramStage)
+    // }
+    // else if (isPrev == true) {
+    // if (!dID.includes(key)) {
+    // }
+    // }
+    updateEventValue(event.id, key, value, programId,orgUnit,trackerID,tempStatus,tempProgramStage)
+
     if (key === SAMPLE_ID_ELEMENT && programId == SAMPLE_TESTING_PROGRAM["0"].value) dispatch(checkDuplicacy(value))
 
     const [values, programStage, invalid] = eventRules(
