@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux'
 import { arrayOf, object, string } from 'prop-types'
 import { CardSection } from 'components'
 import { SectionContent } from './SectionContent'
+import { PATHOGEN_DE } from 'constants/dhis2'
+
 
 export const Section = ({
     heading,
@@ -15,7 +17,6 @@ export const Section = ({
         const elementProps = useSelector(
             state => state.data.event.programStage.dataElements
         )
-
         dataElements = dataElements.filter(
             d => !elementProps[d].hide && !elementProps[d].hideWithValues
         )

@@ -3,10 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { setEntityValue, validateUnique } from '@hisp-amr/app'
 import { TextInput, AgeInput, RadioInputs, SelectInput } from '@hisp-amr/inputs'
-import { DropdownTreeSelect } from 'react-dropdown-tree-select';
-import { DropdownTreeSelectInput } from './DropdownTreeSelectInput'
-
-
+import {TreeViewInput} from './TreeViewInput'
 
 const Padding = styled.div`
     padding: 16px;
@@ -25,10 +22,8 @@ export const EntityInput = ({ attribute }) => {
     const modal = useSelector(state => state.data.entity.modal)
     const disabled = entityId && !editing ? true : false
     const valueType = attribute.trackedEntityAttribute.valueType;
-    const orgUnit = useSelector(state => state.data)
     var { orgUnits } = useSelector(state => state.metadata)
-
-    
+    var valueToFind = "";
     function newOrgInsert(testorgs)
     { 
     var testorgss = testorgs
@@ -40,21 +35,29 @@ export const EntityInput = ({ attribute }) => {
         testorgss = testorgs
     }
     if(testorgss && isParent == false){
-    testorgss['label'] = testorgss.displayName;
+        testorgss['label'] = testorgss.displayName;
+        testorgss['value'] = testorgss.id;
+        if (testorgss.id == value) {
+            valueToFind = testorgss.displayName
+        }
     isParent = true;
     }
     if(testorgss.children.length!=0){
         testorgss.children.forEach(function(element){
-        element['label'] = element.displayName
+            element['label'] = element.displayName
+            element['value'] = element.id
+            if (element.id == value) {
+                valueToFind = element.displayName;
+            }
         newOrgInsert(element)
         })
     }
     return testorgss
     }
-
-    var orgUnitsLabels = newOrgInsert(orgUnits)
-
-
+    var orgUnitsLabels = {}
+    if (valueType === "ORGANISATION_UNIT") {
+        orgUnitsLabels = newOrgInsert(orgUnits)
+    }
     /**
      * Called on every input field change.
      */
@@ -116,14 +119,13 @@ export const EntityInput = ({ attribute }) => {
                         disabled={disabled}
                     />
                 )
-                ) : valueType === "ORGANISATION_UNIT" ? 
-                <DropdownTreeSelectInput
-                        data={
-                            orgUnitsLabels
-                        }
+                ) : valueType === "ORGANISATION_UNIT" ?
+                        <TreeViewInput data={orgUnitsLabels}
+                        placeholder={attribute.trackedEntityAttribute.displayName}
                         onChange={onChange}
-                        
-                    />
+                        name={attribute.trackedEntityAttribute.id}
+                        value={valueToFind}
+                        />
                 : (
                 <TextInput
                     required={attribute.mandatory}

@@ -100,7 +100,9 @@ export const EventForm = ({ history, match }) => {
     }, [error])
 
     useEffect(() => {
-        if (!isFirstRender && panelValid && pageFirst) dispatch(createNewEvent())
+        if (!isFirstRender && panelValid && pageFirst) {
+            dispatch(createNewEvent())
+        }
     }, [panelValid, pageFirst])
 
     const onDelete =(e) =>{

@@ -9,6 +9,7 @@ export const texts = {
     required: 'This field is required',
     unique: 'This field requires a unique value',
     validate: 'Validating',
+    format:"Enter correct format for time : HH:MM"
 }
 
 export const statuses = {

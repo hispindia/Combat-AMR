@@ -6,7 +6,7 @@ export const setPanel = () =>async(dispatch,getState) =>{
     dispatch(createAction(RESET_PANEL_EVENT))
 }
 export const setProgram = program => (dispatch, getState) => {
-    const { programOrganisms, optionSets, stageLists } = getState().metadata
+    const { programOrganisms, optionSets, stageLists,dataElements } = getState().metadata
     const organisms = [];
     var programStage = "";
     if (program) {

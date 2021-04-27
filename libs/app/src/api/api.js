@@ -117,9 +117,9 @@ export const newRecord = async (
               orgUnitId: ou,
               entityId: eId,
               entityValues: eValues,
-              sampleDate,
+            sampleDate,
         },
-            
+        UpdatedEventPayload
         )
         : await addPersonWithEvent(initialValues, pId, {
               programStageId: pStage.id,
@@ -154,6 +154,7 @@ export const existingRecord = async (programs, ou, teiId, evId) => {
         eventList,
         ...record,
         entityValues,
+    
     }
 }
 export const addPersonWithEvent = async (
@@ -297,6 +298,7 @@ export const addEvent = async (
             status: 'ACTIVE',
         },
         eventValues,
+        UpdatedEventPayload
     
     )
     if (entityValues) await updatePerson(entityId, entityValues)
@@ -354,7 +356,6 @@ export const updateEventValue = async (eventId, dataElementId, value, programID,
         trackedEntityInstance:trackerID.id,
         dataValues: [{ dataElement: dataElementId, value: value , providedElsewhere: false}]
     }
-    console.log("DATA TO SEND",dataBody)
     //return await axios.put(`../../../api/events/${eventId}/${dataElementId}`, dataBody);
 
     // yarn add  sync-request -W
@@ -362,7 +363,6 @@ export const updateEventValue = async (eventId, dataElementId, value, programID,
         json: dataBody
     });
     let apiResponse = JSON.parse( postResponse.getBody('utf8'));
-    console.log( 'apiResponse -- ' , apiResponse )
 }
 
 

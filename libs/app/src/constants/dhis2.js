@@ -1,4 +1,4 @@
-export const ORGANISM_ELEMENT = 'TJrFZ3sVSG5'
+export const ORGANISM_ELEMENT = 'VsNSbOlwed9'
 export const TEST_RESULT_ELEMENT = 'PWl3DzPeiCh'
 export const SAMPLE_ID_ELEMENT = 'si9RY754UNU'
 export const AMR_ELEMENT = 'lIkk661BLpG'
@@ -15,6 +15,7 @@ export const L2_REVISION_REASON = 'fEnFVvEFKVc'
 export const DEO_GROUP = 'mYdK5QT4ndl'
 export const ORGANISM_SET = 'D134QfwG7th'
 export const ORGANISM_DETECTED = 'VbUbBX7G6Jf' // id of organism detected Data element in sample testing 
+export const PATHOGEN_DE = "VsNSbOlwed9" 
 export const SAMPLE_TESTING_PROGRAM = [{
     value: "WhYipXYg2Nh", 
     label: "Sample Testing"

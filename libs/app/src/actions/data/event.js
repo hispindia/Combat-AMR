@@ -159,8 +159,10 @@ export const getExistingEvent = (orgUnit, tieId, eventId, editStatus, btnStatus)
                 data.programStage.id
             )
         dispatch(createAction(EXISTING_DATA_RECEIVED, data))
-        } 
-    } catch (error) {
+        }
+        dispatch(createAction(PANEL_EDITABLE))
+    }
+    catch (error) {
         console.error(error)
         dispatch(showAlert('Failed to get record.', { critical: true }))
         dispatch(createAction(EXISTING_DATA_ERRORED))
@@ -172,6 +174,30 @@ export const createNewEvent = () => async (dispatch, getState) => {
     const entity = getState().data.entity
     const panel = getState().data.panel
     const metadata = getState().metadata
+        const prevStateValues = getState().data.previousValues
+
+    var values_to_send = []
+    var UpdatedEventPayload = {}
+    if (Object.keys(prevStateValues).length != 0) {
+        Object.keys(prevStateValues).forEach(function (previouskey) {
+            if (prevStateValues[previouskey] != "") {
+                if (prevStateValues[previouskey] != "Pathogen detected") {
+                    values_to_send.push({
+                        dataElement: previouskey,
+                        value: prevStateValues[previouskey]
+                    })
+                }
+            }
+
+        });
+        UpdatedEventPayload = {
+            dataValues: values_to_send,
+            program: panel.program,
+            orgUnit: getState().data.orgUnit.id
+        }
+        // const eveRes = postEvent(UpdatedEventPayload)
+
+    }
     const rules = getRules(
         metadata.eventRules,
         panel.program,
@@ -192,6 +218,7 @@ export const createNewEvent = () => async (dispatch, getState) => {
                 sampleDate: panel.sampleDate,
                 orgUnitCode: orgUnit.code,
             },
+            UpdatedEventPayload,
             
         )
         metadata.calculatedVariables.forEach(variables => {
@@ -246,7 +273,7 @@ export const submitEvent = addMore => async (dispatch, getState) => {
             dispatch(createAction(RESET_PANEL_EVENT))
         }
         else {
-            if (eventValues[ORGANISM_DETECTED] == "Organism detected") {
+            if (eventValues[ORGANISM_DETECTED] == "Pathogen detected") {
                 dispatch(createAction(SET_PREVIOUS_EVENT, { eventValues }))
                 dispatch(AddAndSubmit(false))                
                 dispatch(createAction(PANEL_EDITABLE))
@@ -379,16 +406,15 @@ export const setEventValue = (key, value,isPrev) => (dispatch, getState) => {
     const trackerID = getState().data.entity;
     const tempProgramStage = getState().data.panel.programStage;
     const tempStatus = "ACTIVE";
-    console.log("ORG UNITS",getState())
-    // var dID = ["GqP6sLQ1Wt3", "Gkmu7ySPxjb", "si9RY754UNU", "q7U3sRRnFg5"];
-    // if (isPrev != true) {
-    //     updateEventValue(event.id, key, value, programId,orgUnit,trackerID,tempStatus,tempProgramStage)
-    // }
-    // else if (isPrev == true) {
-    // if (!dID.includes(key)) {
-    // }
-    // }
-    updateEventValue(event.id, key, value, programId,orgUnit,trackerID,tempStatus,tempProgramStage)
+    var dID = ["GqP6sLQ1Wt3", "Gkmu7ySPxjb", "si9RY754UNU", "q7U3sRRnFg5"];
+    if (isPrev != true) {
+        updateEventValue(event.id, key, value, programId,orgUnit,trackerID,tempStatus,tempProgramStage)
+    }
+    else if (isPrev == true) {
+    if (!dID.includes(key)) {
+            updateEventValue(event.id, key, value, programId,orgUnit,trackerID,tempStatus,tempProgramStage)
+    }
+    }
 
     if (key === SAMPLE_ID_ELEMENT && programId == SAMPLE_TESTING_PROGRAM["0"].value) dispatch(checkDuplicacy(value))
 

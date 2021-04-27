@@ -22,7 +22,7 @@ export const DateInput = props => {
         setValue(date)
         props.onChange(props.name, date.format('YYYY-MM-DD'))
     }
-
+    
     const renderField = () => (
         <TextField
             id={props.name}

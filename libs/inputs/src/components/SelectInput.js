@@ -33,7 +33,7 @@ export const SelectInput = props => {
                 dense
             >
                 {props.objects.map(o => (
-                    <option key={o.value} value={o.value}>
+                    <option key={o.value} value={o.value} de_key={o.DE}>
                         {o.label}
                     </option>
                 ))}

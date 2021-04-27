@@ -25,10 +25,10 @@ export const TextInput = props => {
         debouncedValue === value &&
         debouncedValue !== props.value
       ) {
-        if (props.name == "GpAu5HjWAEz" && debouncedValue !== "") {
+        if (props.name == "si9RY754UNU" && debouncedValue !== "") {
           //Checks if lab sample id is filled or not
           passValue(debouncedValue);
-        } else if (props.name != "GpAu5HjWAEz") {
+        } else if (props.name != "si9RY754UNU") {
           passValue(debouncedValue);
         }
       }
@@ -47,8 +47,15 @@ export const TextInput = props => {
      * @returns Appropriate error text. Empty if valid.
      */
     const validate = async value => {
-        const { name, label, required, unique, validateUnique } = props
+        const { name, label, required, unique, validateUnique,type } = props
         let error
+        var isValid = false;
+
+        if (type == "Time") {
+            isValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(value);
+        }
+        if (isValid) error = texts.format
+        
         if (required && !value) error = texts.required
         if (unique && validateUnique && value) {
             dispatch({ type: types.SET_VALIDATING, validating: true })
@@ -63,14 +70,18 @@ export const TextInput = props => {
         if (!validating) dispatch({ type: types.SET_VALUE, value: value })
     }
 
-    const onKeyDown = ({ key }) => {
-        if (key === 'Enter') setDebouncedValue(value)
+    const onKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            setDebouncedValue(value)
+        }
+        if (props.type == "number" || props.type == "NUMBER" ) {
+            return e.key === 'e' && e.preventDefault()
+        }
     }
-
     const onBlur = () => setDebouncedValue(value)
 
     return (
-        <MinWidth onKeyDown={onKeyDown}>
+        <MinWidth onKeyDown={(evt) => onKeyDown(evt)} >
             <StyledInputField
                 required={props.required}
                 name={props.name}
@@ -88,6 +99,7 @@ export const TextInput = props => {
                 type={props.type}
                 dense
                 color={props.color}
+                
             />
             {(validating ||
                 props.uniqueInvalid ||

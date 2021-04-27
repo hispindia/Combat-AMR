@@ -127,8 +127,7 @@ export const EventButtons = ({ history, existingEvent }) => {
     }
 
     const buttons = () =>
-        existingEvent && !pageFirst ? !eventId
-                ? [] : [status.completed ? editButton : submitButton]
+        existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton] : [completeButton, submitButton]
             : removeButtton ? [nextButton] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButton, submitButton] : [completeButton, submitAddButton, submitButton]:[submitAddButton, submitButton]
     return <StyledButtonRow buttons={buttons()} />
 }

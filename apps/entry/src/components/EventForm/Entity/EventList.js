@@ -88,7 +88,7 @@ const Events = ({match, history }) => {
                         if(value.dataElement == 'GqP6sLQ1Wt3'){
                             dataValue['3'] =value;
                         }
-                        if((value.dataElement == 'TJrFZ3sVSG5') || (value.dataElement  =='VbUbBX7G6Jf')){  // id of organism detected data element in sample testing
+                        if((value.dataElement == 'VsNSbOlwed9') || (value.dataElement  =='VbUbBX7G6Jf')){  // id of organism detected data element in sample testing
                             dataValue['4'] =value;
                         }
                         dataValue['5']=date
@@ -109,7 +109,7 @@ const Events = ({match, history }) => {
                                 let data = [ {value: ''}]
                                 dataValue['4']=data
                               }  
-                           if(dataValue['4'].value !== 'Organism detected'){
+                           if(dataValue['4'].value !== 'Pathogen detected'){
                                 data = dataValue;
                         }
                     return (  

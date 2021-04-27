@@ -16,12 +16,12 @@ export const DataElement = ({ id }) => {
     const dispatch = useDispatch()
     const optionSets = useSelector(state => state.metadata.optionSets)
     const completed = useSelector(state => state.data.event.status.completed)
-    var value = useSelector(state => state.data.event.values[id])    
+    var value = useSelector(state => state.data.event.values[id])
     const programId = useSelector(state => state.data.panel.program)
-    // const preValues = useSelector(state => state.data.preValues)
-    // const objLength = Object.keys(preValues).length
-    // if((id === 'GpAu5HjWAEz') && (objLength >0))
-    //   {value =preValues.GpAu5HjWAEz}
+    const preValues = useSelector(state => state.data.previousValues)
+    if (Object.keys(preValues).length && (id in preValues)) {
+        value = preValues[id];
+    }
     const color = useSelector(
         state => state.data.event.programStage.dataElements[id].color
     )
@@ -58,7 +58,7 @@ export const DataElement = ({ id }) => {
         useSelector(state => state.data.event.duplicate)
 
     const onChange = (key, value) => {
-        if((key == ORGANISM_DETECTED) && (value == 'Organism detected'))
+        if((key == ORGANISM_DETECTED) && (value == 'Pathogen detected'))
         {
          dispatch(AddAndSubmit(true))
          dispatch(setEventValue(key, value,false))
@@ -75,9 +75,13 @@ export const DataElement = ({ id }) => {
     if (hide) return null
 
     return (
+
         <Padding>
-            {optionSetValue ? (
-                optionSets[optionSet].length < 5 ? (
+            {
+                optionSetValue ?
+                (
+                        optionSets[optionSet].length < 5 ?
+                            (
                     <RadioInputs
                         objects={optionSets[optionSet]}
                         name={id}
@@ -87,7 +91,8 @@ export const DataElement = ({ id }) => {
                         required={required}
                         disabled={disabled || completed}
                     />
-                ) : (
+                            ) :
+                            (
                     <SelectInput
                         objects={optionSets[optionSet]}
                         name={id}
@@ -98,7 +103,9 @@ export const DataElement = ({ id }) => {
                         disabled={disabled || completed}
                     />
                 )
-            ) : valueType === 'TRUE_ONLY' ? (
+                    ) :
+                    valueType === 'TRUE_ONLY' ?
+                        (
                 <SwitchInput
                     name={id}
                     label={displayFormName}
@@ -108,7 +115,9 @@ export const DataElement = ({ id }) => {
                     value={value}
                     disabled={disabled || completed}
                 />
-            ) : valueType === 'DATE' ? (
+                        ) :
+                        valueType === 'DATE' ?
+                            (
                 <DateInput
                     name={id}
                     label={displayFormName}
@@ -117,7 +126,8 @@ export const DataElement = ({ id }) => {
                     onChange={onChange}
                     disabled={disabled || completed}
                 />
-            ) : (
+                            ) :
+                            (
                 <TextInput
                     name={id}
                     label={displayFormName}
@@ -125,7 +135,7 @@ export const DataElement = ({ id }) => {
                     required={required}
                     onChange={onChange}
                     disabled={disabled || completed}
-                    type={valueType === 'NUMBER' ? 'number' : 'text'}
+                    type={valueType}
                     color={color}
                     unique={id === SAMPLE_ID_ELEMENT}
                     error={
@@ -151,7 +161,8 @@ export const DataElement = ({ id }) => {
                             : false
                     }
                 />
-            )}
+                            )
+            }
         </Padding>
     )
 }

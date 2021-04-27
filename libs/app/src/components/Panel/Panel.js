@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Grid } from '@material-ui/core'
 import { Padding } from '../Padding'
@@ -27,7 +27,7 @@ export const Panel = ({ showEdit }) => {
         organisms,
     } = useSelector(state => state.data.panel)
     const isPrevEvent = useSelector(state => state.data.previousValues)
-    if (Object.keys(isPrevEvent).length) {
+    if (Object.keys(isPrevEvent).length || editable) {
         if (programs) {
             programs = programs.filter(function (element) {
                 return element.value != SAMPLE_TESTING_PROGRAM[0].value;
@@ -45,7 +45,9 @@ export const Panel = ({ showEdit }) => {
     /**
      * Called when something other than program is changed
      */
-    const onChange = (name, value) => dispatch(setPanelValue(name, value))
+    const onChange = (name, value) => {
+            dispatch(setPanelValue(name, value))
+    }
 
     /**
      * Gets the data elements to be rendered.
@@ -56,14 +58,32 @@ export const Panel = ({ showEdit }) => {
             disabled: valid,
             required: true,
         }
-
+        var datedisabled = false;
+        var hideType = Object.keys(isPrevEvent).length;
+        if ((hideType && id == "programStage")|| (id == "programStage" && programs && programs.length < 3)) {
+            id = "null" ;
+        }
+        if (hideType) {
+            datedisabled = true;
+            if (organism) {
+                datedisabled = false;
+            }
+            if (sampleDate) {
+                datedisabled = true;
+            }
+        }
+        else {
+            if (editable) {
+               datedisabled = true; 
+            }
+        }
         switch (id) {
             case `defaultProgram`: 
             return getInput({
                 ...common,
                 id: 'program',
                 name: 'program',
-                label: 'Organism group',
+                label: 'Group',
                 objects: defaultProgram,
                 onChange: onProgramChange,
                 value: program
@@ -73,34 +93,35 @@ export const Panel = ({ showEdit }) => {
                     ...common,
                     id: 'program',
                     name: 'program',
-                    label: 'Organism group',
+                    label: 'Pathogen group',
                     objects: programs,
                     onChange: onProgramChange,
                     value: program,
                 })
             case 'programStage':
-                return getInput({
-                    ...common,
-                    id: 'programStage',
-                    name: 'programStage',
-                    label: 'Type',
-                    objects: stageLists[program],
-                    onChange: onChange,
-                    value: programStage,
-                })
+                    return getInput({
+                        ...common,
+                        id: 'programStage',
+                        name: 'programStage',
+                        label: 'Type',
+                        objects: stageLists[program],
+                        onChange: onChange,
+                        value: programStage,
+                    })
             case 'organism':
                 return getInput({
                     ...common,
                     id: 'organism',
                     name: 'organism',
-                    label: 'Organism',
+                    label: 'Pathogen',
                     objects: organisms,
                     onChange: onChange,
                     value: organism,
                 })
             case 'sampleDate':
                 return getInput({
-                    ...common,
+                    disabled: datedisabled,
+                    required:true,
                     id: 'sampleDate',
                     name: 'sampleDate',
                     label: 'Date of Sample',
