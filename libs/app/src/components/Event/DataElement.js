@@ -49,6 +49,7 @@ export const DataElement = ({ id }) => {
     const valueType = useSelector(
         state => state.data.event.programStage.dataElements[id].valueType
     )
+    const numType = valueType.toUpperCase();
     const warning = useSelector(
         state => state.data.event.programStage.dataElements[id].warning
     )
@@ -136,7 +137,7 @@ export const DataElement = ({ id }) => {
                     onChange={onChange}
                     disabled={disabled || completed}
                     type={valueType}
-                    color={color}
+                    color={numType == "NUMBER" && value && color}
                     unique={id === SAMPLE_ID_ELEMENT}
                     error={
                         error

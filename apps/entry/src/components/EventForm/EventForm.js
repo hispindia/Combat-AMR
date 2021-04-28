@@ -37,6 +37,8 @@ export const EventForm = ({ history, match }) => {
     const event = useSelector(state => state.data.event)
     const eventIDs = useSelector(state => state.data.event.id)
     const previousValues = useSelector(state => state.data.previousValues)
+    const prevValues = Object.keys(previousValues).length ? true : false;
+
     var orgUnit = match.params.orgUnit
     const teiId = match.params.teiId;
     useEffect(() => {
@@ -164,7 +166,9 @@ export const EventForm = ({ history, match }) => {
                         <div id="btn">
                         <Button  destructive={true} onClick={(e)=>onDelete(e)}>Delete</Button>&emsp;&emsp;&emsp;&emsp;&emsp;
                         </div>
-                      <Button onClick={(e)=>onCancel(e)}>Cancel</Button>
+                        {!prevValues &&
+                            <Button onClick={(e) => onCancel(e)}>Cancel</Button>
+                        }
                     </React.Fragment>
                   }
                 >
