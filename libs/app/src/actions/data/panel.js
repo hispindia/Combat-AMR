@@ -6,7 +6,8 @@ export const setPanel = () =>async(dispatch,getState) =>{
     dispatch(createAction(RESET_PANEL_EVENT))
 }
 export const setProgram = program => (dispatch, getState) => {
-    const { programOrganisms, optionSets, stageLists,dataElements } = getState().metadata
+    const { programOrganisms, optionSets, stageLists, dataElements } = getState().metadata
+    const { sampleDate } = getState().data.panel
     const organisms = [];
     var programStage = "";
     if (program) {
@@ -22,7 +23,7 @@ export const setProgram = program => (dispatch, getState) => {
             program,
             programStage,
             organism: '',
-            sampleDate: '',
+            sampleDate: sampleDate,
             organisms,
             valid: false,
         })
