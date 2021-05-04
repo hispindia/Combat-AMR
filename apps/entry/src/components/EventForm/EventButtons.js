@@ -54,7 +54,22 @@ export const EventButtons = ({ history, existingEvent }) => {
     }
 
     const submitAddButton = {
-        label: 'Submit and add new',
+        label: 'Submit and add new sample',
+        onClick: submitAdd,
+        disabled: buttonsDisabled || !!invalid,
+        icon: 'add',
+        primary: true,
+        tooltip:
+            duplicate === DUPLICATE_ERROR
+                ? DUPLICATE_ERROR
+                : invalid
+                ? invalid
+                : 'Submit record and add new record for the same person',
+        loading: buttonLoading === 'submitAdd',
+    }
+
+    const submitAddButtonIso = {
+        label: 'Submit and add new isolate',
         onClick: submitAdd,
         disabled: buttonsDisabled || !!invalid,
         icon: 'add',
@@ -128,6 +143,6 @@ export const EventButtons = ({ history, existingEvent }) => {
 
     const buttons = () =>
         existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton] : [completeButton, submitButton]
-            : removeButtton ? [nextButton] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButton, submitButton] : [completeButton, submitAddButton, submitButton]:[submitAddButton, submitButton]
+            : removeButtton ? [nextButton] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, submitButton] : [completeButton, submitAddButtonIso, submitButton]:[submitAddButton, submitButton]
     return <StyledButtonRow buttons={buttons()} />
 }
