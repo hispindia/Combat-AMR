@@ -7,7 +7,7 @@ import {
     RichButton,
 } from '@hisp-amr/app'
 import { Table } from './Table'
-import { useEvents, getROWS } from './useEvents'
+import { useEvents } from './useEvents'
 import { icmr, tanda } from 'config'
 
 if (!process.env.REACT_APP_DHIS2_TABLE_CONFIG)
@@ -33,8 +33,6 @@ export const EventOverview = ({ match, history }) => {
     const selected = useSelector(state => state.selectedOrgUnit)
     var [eventstatus, setEventstatus] = useState('ACTIVE')
     const { rows, loading, addButtonDisabled, error } = useEvents(status)
-    var stateResult = getROWS()
-    console.log("GET STATES", stateResult, "ROWS ",rows);
     var eventStatus = "ACTIVE"
     const tabValue = [
         { "name": "Pending sample result", "key": "pending", "code": "ST" },
