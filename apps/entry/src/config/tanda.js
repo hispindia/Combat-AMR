@@ -12,6 +12,7 @@ export const tanda = {
         },
         {
             name: 'Ward',
+            options : {display:false},
         },
         {
             name: 'Age',
@@ -30,14 +31,14 @@ export const tanda = {
             name: 'Tracked Entity Instance ID',
             options: { display: false },
         },
-        {
-            name: 'Sample Collection Date',
-    },
-                                {
-            name: 'Sample Type',
-        },
-                                                                {
-            name: 'Lab ID',
-        },
+    //     {
+    //         name: 'Sample Collection Date',
+    // },
+    //                             {
+    //         name: 'Sample Type',
+    //     },
+    //                                                             {
+    //         name: 'Lab ID',
+    //     },
     ],
 }
