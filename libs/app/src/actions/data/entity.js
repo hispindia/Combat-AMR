@@ -12,8 +12,9 @@ import {
 
 } from '../types'
 import { showAlert } from '../alert'
-import { getPersonValues, checkUnique } from 'api'
+import { getPersonValues, checkUnique,updatePerson } from 'api'
 import { entityRules } from 'helpers'
+import { async } from 'regenerator-runtime'
 export const resetPreviousEntity = () => dispatch => dispatch(createAction(RESET_PREVIOUS_ENTITY))
 export const addPreviousEntity = () =>  (
     dispatch,
@@ -66,9 +67,12 @@ export const getEntity = id => async (dispatch, getState) => {
     }
 }
 
-export const setEntityValue = (key, value) => (dispatch, getState) => {
+export const setEntityValue = (key, value) => async (dispatch, getState) => {
     const optionSets = getState().metadata.optionSets
     const state = getState()
+    var editableVal = state.data.editable
+    var entityID = state.data.entity.id
+    var updateData = {};
     const [values, attributes, valid] = entityRules(
         { ...state.data.entity.values, [key]: value },
         state.data.entity.attributes,
@@ -79,7 +83,13 @@ export const setEntityValue = (key, value) => (dispatch, getState) => {
         }
     )
     dispatch(createAction(SET_ENTITY_VALUE, { values, attributes, valid }))
+    if (editableVal) {
+        updateData[key]=value
+        var editResp = await updatePerson(entityID, updateData)
+        dispatch(showAlert('Updated successfully.', { success: true }))
+    }
 }
+
 export const validateUnique = (id, value, label) => async (
     dispatch,
     getState
