@@ -43,92 +43,33 @@ export const EventButtons = ({ history, existingEvent }) => {
         if (exit) history.goBack()
     }, [exit, history])
 
-
-    /*
-    if(event.programStage.id!=='LjiZPsbh1oy'){
-            let res = await Aggregate({
-                event: event,
-                operation: "COMPLETE",
-                dataElements :dataElementObjects,
-                categoryCombos: categoryCombos,
-                dataSets : dataSets,
-                orgUnit: orgUnit,
-                eventList: eventList
-            })
-            if(res){
-                await dispatch(submitEvent(addMore))
-            }else{
-                console.log("aggregation is not working therefore event not completed.")
-            }
-        }else{
-            await dispatch(submitEvent(addMore))
-            console.log("disptch submit without aggregation")
-        }
-    //Here Just consider the submit buttons. Because the others don't do what we want them to do.
-    const submitExit = async () => {
-            await onSubmit(true)
-    }
-    const submitAdd = async () => {
-            await onSubmit(true)
-    }
-    const onEdit = async () => {
-        if(event.programStage.id!=='LjiZPsbh1oy'){
-            let res = await Aggregate({
-                event: event,
-                operation: "INCOMPLETE",
-                dataElements :dataElementObjects,
-                categoryCombos: categoryCombos,
-                dataSets : dataSets,
-                orgUnit: orgUnit,
-                eventList: eventList
-            })
-            if(res){
-                await dispatch(editEvent())
-            }else{
-                console.log("aggregation is not working therefore event not completed.")
-            }
-        }else{
-            await dispatch(editEvent())
-            console.log("disptch submit without aggregation")
-        }
-    }*/
     const onSubmit = async addMore => {
-        if(event.programStage.id!=='LjiZPsbh1oy'){
-            let res = await Aggregate({
-                event:event,
-                operation:"COMPLETE",
-                dataElements:dataElementObjects,
-                categoryCombos: categoryCombos,
-                dataSets: dataSets,
-                orgUnit: orgUnit,
-                eventList: eventList
-            })
-            if(res){
-                await dispatch(submitEvent(addMore))
-            }
-            console.log("programStageId is important but there is an error")
-        }else{
+        let res = await Aggregate({
+            event:event,
+            operation:"COMPLETE",
+            dataElements:dataElementObjects,
+            categoryCombos: categoryCombos,
+            dataSets: dataSets,
+            orgUnit: orgUnit,
+            eventList: eventList
+        })
+        if(res){
             await dispatch(submitEvent(addMore))
         }
     }
     const submitExit = async () => await onSubmit(false)    
     const submitAdd = async () => await onSubmit(true)
     const onEdit = async () => {
-        if(event.programStage.id!=='LjiZPsbh1oy'){
-            let res = await Aggregate({
-                event:event,
-                operation:"INCOMPLETE",
-                dataElements:dataElementObjects,
-                categoryCombos: categoryCombos,
-                dataSets: dataSets,
-                orgUnit: orgUnit,
-                eventList: eventList
-            })
-            if(res){
-                await dispatch(editEvent())
-            }
-            console.log("programStageId is important but there is an error")
-        }else{
+        let res = await Aggregate({
+            event:event,
+            operation:"INCOMPLETE",
+            dataElements:dataElementObjects,
+            categoryCombos: categoryCombos,
+            dataSets: dataSets,
+            orgUnit: orgUnit,
+            eventList: eventList
+        })
+        if(res){
             await dispatch(editEvent())
         }
     }

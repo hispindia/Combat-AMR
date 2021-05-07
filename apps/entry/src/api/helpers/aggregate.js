@@ -17,8 +17,9 @@ const CONSTANTS = {
     defaultCC_code: "default",
     antibioticAttributeCode: 'antibiotic',
     defaultDataSetCode: 'organismsIsolated',
-    antibioticWiseDataSetCode: 'organismsIsolatedAntibioticWise'
-
+    antibioticWiseDataSetCode: 'organismsIsolatedAntibioticWise',
+    ignoreProgramStage:'LjiZPsbh1oy' //TODO change this to a code
+    
 }
 
 
@@ -36,7 +37,11 @@ export const Aggregate = async ({
     orgUnit,
     eventList
 }) => {
-    console.log(event,eventList)
+
+    if(event.programStage.id===CONSTANTS.ignoreProgramStage){
+        //this program stage is not correct
+        return true;
+    }
     //first get the metadata from the evens 
 
     //Now get the location data
@@ -59,7 +64,6 @@ export const Aggregate = async ({
         //loop through the values and look for result data elements if found one save that.
         if (event.values[value] !== "") {
 
-            console.log(event.values[value],dataElements[value])
             if (dataElements[value][CONSTANTS.customAttributeMetadataTypeIdentifier] === CONSTANTS.antibioticAttributeCode) {
                 //This means that this data elemnt is an antibiotic result therefore add it to important values.
 
@@ -117,12 +121,11 @@ export const Aggregate = async ({
                 data: {}
             })
         )
-        console.log("sucessfully sent value ", value, "response is ", SyntaxError)
     } catch (SyntaxError) {
         //This means that the post is working properly
+        //Since there is no response when performing a post request it will create a syntax error.
     }
 
-    console.log("important values",importantValues)
     for (let index in importantValues) {
         let co = importantValues[index]
         let a = await get(
