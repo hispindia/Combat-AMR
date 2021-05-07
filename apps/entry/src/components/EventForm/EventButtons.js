@@ -39,6 +39,7 @@ export const EventButtons = ({ history, existingEvent }) => {
     const removeButtton = useSelector(state => state.data.removebtn)
     const prevValues = Object.keys(useSelector(state => state.data.previousValues)).length ? true : false;
     const isCompleteClicked = useSelector(state => state.data.completeClicked)
+    const entityValid = useSelector(state => state.data.entity.valid)
 
     useEffect(() => {
         if (exit) history.goBack()
@@ -93,7 +94,7 @@ export const EventButtons = ({ history, existingEvent }) => {
     const submitAddButton = {
         label: 'Submit and add new sample',
         onClick: submitAdd,
-        disabled: buttonsDisabled || !!invalid,
+        disabled: !entityValid,
         icon: 'add',
         primary: true,
         tooltip:
@@ -105,9 +106,9 @@ export const EventButtons = ({ history, existingEvent }) => {
         loading: buttonLoading === 'submitAdd',
     }
     const submitButton = {
-        label: 'Submit',
+        label: 'Save',
         onClick: submitExit,
-        disabled: buttonsDisabled || !!invalid,
+        disabled: !entityValid,
         icon: 'done',
         primary: true,
         tooltip:

@@ -29,7 +29,6 @@ const title = {
  */
 export const EventOverview = ({ match, history }) => {
     var status = match.params.status
-    console.log("STATUSSSSS",status)
     const selected = useSelector(state => state.selectedOrgUnit)
     var [eventstatus, setEventstatus] = useState('ACTIVE')
     const { rows, loading, addButtonDisabled, error } = useEvents(status)

@@ -128,7 +128,10 @@ export const removeModal = importEntity => async (dispatch, getState) => {
         )
 }
 
-export const setEditing = () => dispatch => dispatch(createAction(SET_EDITING))
+export const setEditing = () => dispatch => {
+    dispatch(createAction(SET_EDITING))
+    dispatch(showAlert("Fill entries now", { success: true }))
+}
 
 export const resetEntity = () => (dispatch, getState) => {
     const entityMetadata = getState().metadata.person

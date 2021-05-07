@@ -15,6 +15,7 @@ export const Entity = ({ showEdit }) => {
     const id = useSelector(state => state.data.entity.id)
     const attributes = useSelector(state => state.data.entity.attributes)
     const editing = useSelector(state => state.data.entity.editing)
+    var editableVal = useSelector(state => state.data.editable)
 
     const [half] = useState(
         Math.floor(person.trackedEntityTypeAttributes.length / 2)
@@ -25,7 +26,7 @@ export const Entity = ({ showEdit }) => {
     return (
         <CardSection
             heading="Person"
-            buttons={id && !editing && showEdit && <EntityButtons />}
+            buttons={id && showEdit && <EntityButtons />}
         >
             <EntityModal />
             <Grid container spacing={0}>

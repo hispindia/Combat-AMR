@@ -125,6 +125,7 @@ export const EntityInput = ({ attribute }) => {
                         onChange={onChange}
                         name={attribute.trackedEntityAttribute.id}
                         value={valueToFind}
+                        disabled={disabled}
                         />
                 : (
                 <TextInput

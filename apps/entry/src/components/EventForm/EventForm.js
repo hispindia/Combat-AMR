@@ -149,7 +149,7 @@ export const EventForm = ({ history, match }) => {
         <MainSection padded>
             <TitleRow title="Record" history={history} />
             <form autoComplete="off">
-                <Entity showEdit={!panelValid} />
+                <Entity showEdit={true} />
                 <div id="a">
                 <Events />
                 </div>

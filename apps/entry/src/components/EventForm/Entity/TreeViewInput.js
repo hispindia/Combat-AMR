@@ -68,7 +68,8 @@ export const TreeViewInput = (props) => {
       <Cascader options={optionsNew} onChange={onChange} changeOnSelect
         placeholder={placeholder}
         bordered={true}
-        defaultValue = {defaultValue}
+        defaultValue={defaultValue}
+        disabled={props.disabled}
       />
     );
 }
