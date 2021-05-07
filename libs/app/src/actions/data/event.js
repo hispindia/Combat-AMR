@@ -267,7 +267,7 @@ export const submitEvent = addMore => async (dispatch, getState) => {
 
     try {
         
-        await setEventStatus(eventId, true)
+        await setEventStatus(eventId,false)
         if (addMore)
         {
             dispatch(createAction(RESET_PANEL_EVENT))
@@ -284,9 +284,9 @@ export const submitEvent = addMore => async (dispatch, getState) => {
                 dispatch(createAction(EXIT))
             }
         }
-        dispatch(createAction(SET_COMPLETED))
+        // dispatch(createAction(SET_COMPLETED))
 
-        dispatch(showAlert('Submitted successfully.', { success: true }))
+        dispatch(showAlert('Save successfully.', { success: true }))
     } catch (error) {
         console.error(error)
         dispatch(showAlert('Failed to submit.', { critical: true }))

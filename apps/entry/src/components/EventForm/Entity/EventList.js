@@ -130,9 +130,12 @@ const Events = ({match, history }) => {
     return (
             <CardSection heading="Event List">
                 <div  className="btn">
-                <Button destructive={true} onClick={() => OnDelete()}>Delete Record</Button>&nbsp;&nbsp;&nbsp;
                 <Button primary={true} onClick={() => onAddClick()}>Add Sample</Button>&nbsp;&nbsp;&nbsp;
+                <Button destructive={true} onClick={() => OnDelete()}>Delete Record</Button>&nbsp;&nbsp;&nbsp;
+                <Button primary={true} onClick={() => onYes()}>Go Back</Button>&nbsp;&nbsp;&nbsp;
                  </div>
+            <br></br>
+            <br></br>
                 <div className='sidebar'>
                     <Table>
                     <TableRow>
@@ -140,7 +143,7 @@ const Events = ({match, history }) => {
                     <TableCell><b>Location</b></TableCell> 
                     <TableCell><b>Lab ID</b></TableCell> 
                     <TableCell><b>Sample Type</b></TableCell> 
-                    <TableCell><b>Organism</b></TableCell> 
+                    <TableCell><b>Pathogen</b></TableCell> 
                     <TableCell><b>Event Date</b></TableCell>
                     </TableRow>
                         <TableBody>

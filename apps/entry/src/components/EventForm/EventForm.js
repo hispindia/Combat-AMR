@@ -162,13 +162,13 @@ export const EventForm = ({ history, match }) => {
                 closeAnim={{ name: 'hideSweetAlert', duration: 2000 }}
                 customButtons={
                     <React.Fragment>
-                         <EventButtons history={history} existingEvent={teiId} />&emsp;&emsp;&emsp;&emsp;&emsp;
+                         <EventButtons history={history} existingEvent={teiId} />&emsp;
                         <div id="btn">
                         <Button  destructive={true} onClick={(e)=>onDelete(e)}>Delete</Button>&emsp;&emsp;&emsp;&emsp;&emsp;
                         </div>
-                        {!prevValues &&
+                        {/* {!prevValues &&
                             <Button onClick={(e) => onCancel(e)}>Cancel</Button>
-                        }
+                        } */}
                     </React.Fragment>
                   }
                 >

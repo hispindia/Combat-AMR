@@ -41,9 +41,9 @@ export const EventButtons = ({ history, existingEvent }) => {
     const isCompleteClicked = useSelector(state => state.data.completeClicked)
     const entityValid = useSelector(state => state.data.entity.valid)
 
-    useEffect(() => {
-        if (exit) history.goBack()
-    }, [exit, history])
+    const onBack = () => {
+        history.goBack();
+    }
 
     const onSubmit = async addMore => {
         let res = await Aggregate({
@@ -194,8 +194,16 @@ export const EventButtons = ({ history, existingEvent }) => {
         loading: buttonLoading === 'edit',
     }
 
+    const Go_Back = {
+        label: 'Go Back',
+        onClick: onInComplete,
+        primary: true,
+        tooltip: "Go Back",
+        onClick: onBack,
+    }
+
     const buttons = () =>
-        existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton] : [completeButton, submitButton]
-            : removeButtton ? [nextButton] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, submitButtonIso] : [completeButton, submitAddButtonIso, submitButtonIso]:[submitAddButton, submitButton]
+        existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back] : [completeButton, submitButton,Go_Back]
+            : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, submitButtonIso,Go_Back] : [completeButton, submitAddButtonIso, submitButtonIso,Go_Back]:[submitButton,submitAddButton,Go_Back]
     return <StyledButtonRow buttons={buttons()} />
 }
