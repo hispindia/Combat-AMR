@@ -10,6 +10,9 @@ import {
     completeEvent,
     inCompleteEvent,
 } from '@hisp-amr/app'
+import {
+    Aggregate
+} from '../../api/helpers/aggregate'
 
 const StyledButtonRow = styled(ButtonRow)`
     margin: 0px;
@@ -20,11 +23,17 @@ export const EventButtons = ({ history, existingEvent }) => {
     const buttonsDisabled = useSelector(state => state.data.buttonsDisabled)
     var btnStatus = useSelector(state => state.data.btnStatus)
     const status = useSelector(state => state.data.event.status)
+    const event = useSelector(state => state.data.event)
     const eventId = useSelector(state => state.data.event.id)
     const invalid = useSelector(state => state.data.event.invalid)
     const valid = useSelector(state => state.data.panel.valid)
     const duplicate = useSelector(state => state.data.event.duplicate)
     const exit = useSelector(state => state.data.exit)
+    const dataElementObjects = useSelector(state=> state.metadata.dataElementObjects)
+    const categoryCombos = useSelector(state=> state.metadata.categoryCombos)
+    const dataSets = useSelector(state=>state.metadata.dataSets)
+    const eventList = useSelector(state=>state.data.eventList)
+    const orgUnit = useSelector(state=>state.data.orgUnit)
     const buttonLoading = useSelector(state => state.data.buttonLoading)
     const pageFirst = useSelector(state => state.data.pageFirst)
     const removeButtton = useSelector(state => state.data.removebtn)
@@ -34,10 +43,37 @@ export const EventButtons = ({ history, existingEvent }) => {
     useEffect(() => {
         if (exit) history.goBack()
     }, [exit, history])
-    const onSubmit = async addMore => await dispatch(submitEvent(addMore))
+
+    const onSubmit = async addMore => {
+        let res = await Aggregate({
+            event:event,
+            operation:"COMPLETE",
+            dataElements:dataElementObjects,
+            categoryCombos: categoryCombos,
+            dataSets: dataSets,
+            orgUnit: orgUnit,
+            eventList: eventList
+        })
+        if(res){
+            await dispatch(submitEvent(addMore))
+        }
+    }
     const submitExit = async () => await onSubmit(false)    
     const submitAdd = async () => await onSubmit(true)
-    const onEdit = () => dispatch(editEvent())
+    const onEdit = async () => {
+        let res = await Aggregate({
+            event:event,
+            operation:"INCOMPLETE",
+            dataElements:dataElementObjects,
+            categoryCombos: categoryCombos,
+            dataSets: dataSets,
+            orgUnit: orgUnit,
+            eventList: eventList
+        })
+        if(res){
+            await dispatch(editEvent())
+        }
+    }
     const onComplete = () => dispatch(completeEvent())
     const onInComplete = () => dispatch(inCompleteEvent())
 

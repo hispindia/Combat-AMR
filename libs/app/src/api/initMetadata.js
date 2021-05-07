@@ -20,6 +20,8 @@ const getMetadata = async () =>
                 'dataElement',
                 'displayName',
                 'formName',
+                'attributeValues[value,attribute[code]]',
+                'categoryOptionCombos[id,categoryOptions[code,id]]',
                 'id',
                 'name',
                 'options',
@@ -53,6 +55,8 @@ const getMetadata = async () =>
                 'programRuleVariables=true',
                 'programs=true',
                 'trackedEntityTypes=true',
+                'categoryCombos=true',
+                'dataSets=true'
             ],
         })
     )
@@ -311,9 +315,63 @@ export const initMetadata = async isIsolate => {
         })
 
     const dataElements = {}
+    //This is to hold the data elements with their codes and have the whole DE objec referenced.
+    const dataElementObjects = {}
+
+    //this is used to distinguish which data element contains which attribute value.
+    dataElementObjects.attributeGroups={}
+
     data.dataElements.forEach(
-        de => (dataElements[de.id] = de.formName ? de.formName : de.displayName)
+        de => {
+            dataElements[de.id] = de.formName ? de.formName : de.displayName
+
+            //remap the attributeOptionValue with code 
+            de.attributeValues.forEach(attributeValue=>{
+                de[attributeValue.attribute.code]=attributeValue.value
+                if(!dataElementObjects.attributeGroups[attributeValue.value]){
+                    dataElementObjects.attributeGroups[attributeValue.value] =[]
+                }
+                dataElementObjects.attributeGroups[attributeValue.value].push(de.id)
+            })
+            
+            dataElementObjects[de.id]=de
+            dataElementObjects[de.code]=de
+        }  
     )
+
+    const categoryCombos={}
+
+    data.categoryCombos.forEach(categoryCombo=>{
+        categoryCombo.categoryOptions={}
+        categoryCombo.categoryOptionCombos.forEach(categoryOptionCombo=>{
+            //use the code of the options as the identifier for the categoryOptionCode
+            let categoryOptionCodes = []
+            categoryOptionCombo.categoryOptions.forEach(categoryOption=>{
+                categoryOptionCodes.push(categoryOption.code)
+
+                //This adds the categoryOptions as a child of the catCombo it is usefull for DS attributes.
+                if(!categoryCombo.categoryOptions[categoryOption.code]){
+                    categoryCombo.categoryOptions[categoryOption.code]=categoryOption.id
+                }
+            })
+            //sort Ids for handling more than two categoyOptions
+            categoryOptionCodes = categoryOptionCodes.sort();
+            let identifierWithOptionCodes = categoryOptionCodes.join("")
+            categoryCombo.categoryOptionCombos[identifierWithOptionCodes]=categoryOptionCombo.id
+        })
+
+        categoryCombos[categoryCombo.code]=categoryCombo
+    })
+
+    const dataSets = {}
+
+    data.dataSets.forEach(dataSet=>{
+        dataSets[dataSet.code]=dataSet.id
+    })
+
+
+
+
 
     return {
         optionSets,
@@ -324,6 +382,9 @@ export const initMetadata = async isIsolate => {
         programOrganisms,
         constants,
         dataElements,
+        dataElementObjects,
+        categoryCombos,
+        dataSets,
         orgUnits,
         user,
         eventRules,
