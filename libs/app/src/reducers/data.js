@@ -355,7 +355,6 @@ export const data = (state = INITIAL_STATE, { type, payload }) => {
                     program: '',
                     programStage: '',
                     organism: '',
-                    sampleDate: '',
                     valid: false,
                 },
                 event: INITIAL_EVENT,

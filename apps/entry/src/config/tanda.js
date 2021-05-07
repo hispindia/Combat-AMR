@@ -5,7 +5,7 @@ export const tanda = {
     // },
     headers: [
         {
-            name: 'Medical Record Number',
+            name: 'Registration Number',
         },
         {
             name: 'Name of the Patient',

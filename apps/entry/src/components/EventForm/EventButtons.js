@@ -26,6 +26,7 @@ export const EventButtons = ({ history, existingEvent }) => {
     const event = useSelector(state => state.data.event)
     const eventId = useSelector(state => state.data.event.id)
     const invalid = useSelector(state => state.data.event.invalid)
+    const valid = useSelector(state => state.data.panel.valid)
     const duplicate = useSelector(state => state.data.event.duplicate)
     const exit = useSelector(state => state.data.exit)
     const dataElementObjects = useSelector(state=> state.metadata.dataElementObjects)
@@ -90,7 +91,7 @@ export const EventButtons = ({ history, existingEvent }) => {
     }
 
     const submitAddButton = {
-        label: 'Submit and add new',
+        label: 'Submit and add new sample',
         onClick: submitAdd,
         disabled: buttonsDisabled || !!invalid,
         icon: 'add',
@@ -103,11 +104,41 @@ export const EventButtons = ({ history, existingEvent }) => {
                 : 'Submit record and add new record for the same person',
         loading: buttonLoading === 'submitAdd',
     }
-
     const submitButton = {
         label: 'Submit',
         onClick: submitExit,
         disabled: buttonsDisabled || !!invalid,
+        icon: 'done',
+        primary: true,
+        tooltip:
+            duplicate === DUPLICATE_ERROR
+                ? DUPLICATE_ERROR
+                : invalid
+                ? invalid
+                : 'Submit record',
+        loading: buttonLoading === 'submit',
+    }
+
+    
+    const submitAddButtonIso = {
+        label: 'Submit and add new isolate',
+        onClick: submitAdd,
+        disabled: !valid || buttonsDisabled || !!!invalid,
+        icon: 'add',
+        primary: true,
+        tooltip:
+            duplicate === DUPLICATE_ERROR
+                ? DUPLICATE_ERROR
+                : invalid
+                ? invalid
+                : 'Submit record and add new record for the same person',
+        loading: buttonLoading === 'submitAdd',
+    }
+
+    const submitButtonIso = {
+        label: 'Submit',
+        onClick: submitExit,
+        disabled: !valid || buttonsDisabled || !!!invalid,
         icon: 'done',
         primary: true,
         tooltip:
@@ -164,6 +195,6 @@ export const EventButtons = ({ history, existingEvent }) => {
 
     const buttons = () =>
         existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton] : [completeButton, submitButton]
-            : removeButtton ? [nextButton] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButton, submitButton] : [completeButton, submitAddButton, submitButton]:[submitAddButton, submitButton]
+            : removeButtton ? [nextButton] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, submitButtonIso] : [completeButton, submitAddButtonIso, submitButtonIso]:[submitAddButton, submitButton]
     return <StyledButtonRow buttons={buttons()} />
 }
