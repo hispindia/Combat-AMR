@@ -39,6 +39,7 @@ import {
     // SET_PREVALUE
     PAGE_FIRST,
     COMPLETED_CLICKED,
+    RESET_SAMPLE_PANEL_EVENT
 } from '../actions/types'
 
 const INITIAL_EVENT = {
@@ -355,6 +356,20 @@ export const data = (state = INITIAL_STATE, { type, payload }) => {
                     program: '',
                     programStage: '',
                     organism: '',
+                    valid: false,
+                },
+                event: INITIAL_EVENT,
+                buttonsDisabled: false,
+            }
+        case RESET_SAMPLE_PANEL_EVENT:
+            return {
+                ...state,
+                panel: {
+                    ...state.panel,
+                    program: '',
+                    programStage: '',
+                    organism: '',
+                    sampleDate:'',
                     valid: false,
                 },
                 event: INITIAL_EVENT,

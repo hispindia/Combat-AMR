@@ -132,7 +132,7 @@ const Events = ({match, history }) => {
                 <div  className="btn">
                 <Button primary={true} onClick={() => onAddClick()}>Add Sample</Button>&nbsp;&nbsp;&nbsp;
                 <Button destructive={true} onClick={() => OnDelete()}>Delete Record</Button>&nbsp;&nbsp;&nbsp;
-                <Button primary={true} onClick={() => onYes()}>Go Back</Button>&nbsp;&nbsp;&nbsp;
+                <Button primary={true} onClick={() => onYes()}>Back</Button>&nbsp;&nbsp;&nbsp;
                  </div>
             <br></br>
             <br></br>

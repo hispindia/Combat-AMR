@@ -25,6 +25,7 @@ import {
     SET_EVENT,
     PAGE_FIRST,
     COMPLETED_CLICKED,
+    RESET_SAMPLE_PANEL_EVENT,
     INCOMPLETED_CLICKED,
 } from '../types'
 import { deleteEvent } from '@hisp-amr/api'
@@ -267,11 +268,8 @@ export const submitEvent = addMore => async (dispatch, getState) => {
 
     try {
         
-        await setEventStatus(eventId,false)
-        if (addMore)
-        {
-            dispatch(createAction(RESET_PANEL_EVENT))
-        }
+        await setEventStatus(eventId, true)
+        if (addMore) dispatch(createAction(RESET_PANEL_EVENT))
         else {
             if (eventValues[ORGANISM_DETECTED] == "Pathogen detected") {
                 dispatch(createAction(SET_PREVIOUS_EVENT, { eventValues }))
@@ -279,14 +277,49 @@ export const submitEvent = addMore => async (dispatch, getState) => {
                 dispatch(createAction(PANEL_EDITABLE))
                 dispatch(createAction(RESET_PANEL_EVENT))
                 dispatch(createAction(PAGE_FIRST, true))
-            }
-            else {
+            } else {
                 dispatch(createAction(EXIT))
             }
         }
-        // dispatch(createAction(SET_COMPLETED))
+        dispatch(createAction(SET_COMPLETED))
 
-        dispatch(showAlert('Save successfully.', { success: true }))
+        dispatch(showAlert('Submitted successfully.', { success: true }))
+    } catch (error) {
+        console.error(error)
+        dispatch(showAlert('Failed to submit.', { critical: true }))
+        dispatch(createAction(ENABLE_BUTTONS))
+    } finally {
+        batch(() => {
+            dispatch(enableButtons())
+            dispatch(createAction(SET_BUTTON_LOADING, false))
+        })
+    }
+}
+
+export const nextEvent = (next,addMoreSample,addMoreIso) => async (dispatch, getState) => {
+
+    const eventId = getState().data.event.id;    
+    const eventValues = getState().data.event.values;
+    var eveStatus = next;
+
+    try {
+        await setEventStatus(eventId, eveStatus)
+        if (addMoreSample) { dispatch(createAction(RESET_SAMPLE_PANEL_EVENT)) }
+        if (addMoreIso) dispatch(createAction(RESET_PANEL_EVENT))
+        else {
+            if (eventValues[ORGANISM_DETECTED] == "Pathogen detected") {
+                dispatch(createAction(SET_PREVIOUS_EVENT, { eventValues }))
+                dispatch(AddAndSubmit(false))                
+                dispatch(createAction(PANEL_EDITABLE))
+                dispatch(createAction(RESET_PANEL_EVENT))
+                dispatch(createAction(PAGE_FIRST, true))
+            } else {
+                dispatch(createAction(EXIT))
+            }
+        }
+        dispatch(createAction(SET_COMPLETED))
+
+        // dispatch(showAlert('Submitted successfully.', { success: true }))
     } catch (error) {
         console.error(error)
         dispatch(showAlert('Failed to submit.', { critical: true }))
@@ -321,7 +354,7 @@ export const editEvent = () => async (dispatch, getState) => {
     }
 }
 
-export const completeEvent = () => async (dispatch, getState) => {
+export const saveEvent = () => async (dispatch, getState) => {
     batch(() => {
         dispatch(disableButtons())
         dispatch(createAction(SET_BUTTON_LOADING, 'edit'))
@@ -329,9 +362,9 @@ export const completeEvent = () => async (dispatch, getState) => {
     const eventId = getState().data.event.id
 
     try {
-        await setEventStatus(eventId)
-        dispatch(createAction(SET_COMPLETED))
-        dispatch(showAlert('Event Completed'))
+        await setEventStatus(eventId,false)
+        // dispatch(createAction(SET_COMPLETED))
+        dispatch(showAlert('Event Save'))
         dispatch(createAction(COMPLETED_CLICKED,true))
     } catch (error) {
         console.error(error)

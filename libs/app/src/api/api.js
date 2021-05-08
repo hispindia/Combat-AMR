@@ -332,9 +332,11 @@ export const setEventStatus = async (eventId, completed) => {
     let event = await get(url)
     event.status = completed ? 'COMPLETED' : 'ACTIVE'
     const values = {}
-    event.dataValues.forEach(
-        dataValue => (values[dataValue.dataElement] = dataValue.value)
-    )
+    if (event.dataValues) {
+        event.dataValues.forEach(
+            dataValue => (values[dataValue.dataElement] = dataValue.value)
+        )
+    }
     if (values[L1_APPROVAL_STATUS] === 'Resend') {
         values[L1_APPROVAL_STATUS] = ''
         values[L1_REVISION_REASON] = ''

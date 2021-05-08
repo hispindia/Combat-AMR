@@ -5,10 +5,14 @@ import {
     LoadingSection,
     TitleRow,
     RichButton,
+    CardSection
 } from '@hisp-amr/app'
 import { Table } from './Table'
 import { useEvents } from './useEvents'
 import { icmr, tanda } from 'config'
+import "./styles.css";
+import Tabs from "./Tabs";
+import TabPane from "./Tab-Pane";
 
 if (!process.env.REACT_APP_DHIS2_TABLE_CONFIG)
     throw new Error(
@@ -29,23 +33,39 @@ const title = {
  */
 export const EventOverview = ({ match, history }) => {
     var status = match.params.status
+    var SAMPLEPROGRAMCODE = "ST";
+    var PROGRAMCODE = "GP";
     const selected = useSelector(state => state.selectedOrgUnit)
     var [eventstatus, setEventstatus] = useState('ACTIVE')
-    const { rows, loading, addButtonDisabled, error } = useEvents(status)
-    var eventStatus = "ACTIVE"
+    var [code,setCode] = useState(SAMPLEPROGRAMCODE)
+    const { rows, loading, addButtonDisabled, error } = useEvents(status, eventstatus, code)
+    
     const tabValue = [
         { "name": "Pending sample result", "key": "pending", "code": "ST" },
-        { "name": "Sample result received","key": "complete", "code": "ST" }
+        { "name": "Sample result received", "key": "complete", "code": "ST" },
+        { "name": "Pending antibiotics result", "key": "pending", "code": "GP" },
+        { "name": "Antibiotics result received", "key": "complete", "code": "GP" },
+                                        
     ]
-    var PROGRAMCODE = "ST"
     const handleChange = (returnValue) => {
         var programCode = returnValue[2];
         var programStatus = returnValue[1]
-        if(programCode == PROGRAMCODE && programStatus == "pending")
+        if (programCode == SAMPLEPROGRAMCODE && programStatus == "pending") {
             setEventstatus('ACTIVE');
-        if(programCode == PROGRAMCODE && programStatus == "complete")
-            setEventstatus('COMPLETE');
-
+            setCode(SAMPLEPROGRAMCODE);
+        }
+        if (programCode == SAMPLEPROGRAMCODE && programStatus == "complete") {
+            setEventstatus('COMPLETED');
+            setCode(SAMPLEPROGRAMCODE);
+        }
+        if (programCode == PROGRAMCODE && programStatus == "pending") {
+            setEventstatus('ACTIVE');
+            setCode(PROGRAMCODE);
+        }
+        if (programCode == PROGRAMCODE && programStatus == "complete") {
+            setEventstatus('COMPLETED');
+            setCode(PROGRAMCODE);
+        }
     };
 
     /**
@@ -76,6 +96,18 @@ export const EventOverview = ({ match, history }) => {
                     </div>
                 }
             />
+            <CardSection>
+                <Tabs>
+                    {tabValue.map((tabValues) => (
+                        <TabPane
+                            name={tabValues.name}
+                            tabvalue={tabValues.key}
+                            onClick={handleChange}
+                            code={tabValues.code}
+                        >
+                        </TabPane>
+                    ))}
+                </Tabs> 
             {!error &&
                 (loading ? (
                     <LoadingSection />
@@ -86,7 +118,8 @@ export const EventOverview = ({ match, history }) => {
                         onEventClick={onEventClick}
                         title={selected.displayName}
                     />
-                ))}
+                    ))}
+            </CardSection>
         </MainSection>
     )
 }

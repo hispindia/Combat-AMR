@@ -2,6 +2,7 @@ import { useEffect, useReducer } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { showAlert } from '@hisp-amr/app'
 import { getTEI } from 'api'
+import { GP_PROGRAM_ID } from './constants'
 
 const INITIAL_STATE = {
     rows: null,
@@ -49,7 +50,8 @@ const reducer = (state, action) => {
     }
 }
 
-export const useEvents = status => {
+export const useEvents = (status, eventstatus, code) => {
+    var programApi = [];
     const dispatch = useDispatch()
     const categories = useSelector(state => state.appConfig.categories)
     const programList = useSelector(state => state.metadata.programList)
@@ -61,18 +63,22 @@ export const useEvents = status => {
         return element.label ===  sampleLable;
     }).value;
 
+    if (code == "ST")
+        programApi = [sampleTestingProgram]
+    if (code == "GP")
+        programApi = GP_PROGRAM_ID       
     const [state, dispatcher] = useReducer(reducer, INITIAL_STATE)
 
     useEffect(() => {
         const noProgram = !programList.find(p => p.orgUnits.includes(selected))
         if (noProgram !== state.addButtonDisabled)
             dispatcher({ type: NEW_PROGRAMS, disable: noProgram })
-    }, [selected, programList, state.addButtonDisabled])
+    }, [selected, programList, state.addButtonDisabled,eventstatus])
 
     useEffect(() => {
         const getData = async () => {
             try {
-                const events = await getTEI(selected,sampleTestingProgram).then((eventResult) =>
+                const events = await getTEI(selected,programApi,eventstatus).then((eventResult) =>
                                 dispatcher({
                                 type: NEW_ROWS,
                                 rows: eventResult,
@@ -88,7 +94,7 @@ export const useEvents = status => {
 
         dispatcher({ type: LOADING })
         getData()
-    }, [selected, status, categories, dispatch, user.username])
+    }, [selected, status, categories, dispatch, user.username,eventstatus,code])
 
     return state
 }

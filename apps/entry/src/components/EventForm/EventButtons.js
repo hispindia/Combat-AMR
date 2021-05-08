@@ -7,12 +7,15 @@ import {
     editEvent,
     setDeletePrompt,
     DUPLICATE_ERROR,
-    completeEvent,
+    saveEvent,
     inCompleteEvent,
+    nextEvent,
 } from '@hisp-amr/app'
 import {
     Aggregate
 } from '../../api/helpers/aggregate'
+import $ from "jquery"
+
 
 const StyledButtonRow = styled(ButtonRow)`
     margin: 0px;
@@ -40,9 +43,17 @@ export const EventButtons = ({ history, existingEvent }) => {
     const prevValues = Object.keys(useSelector(state => state.data.previousValues)).length ? true : false;
     const isCompleteClicked = useSelector(state => state.data.completeClicked)
     const entityValid = useSelector(state => state.data.entity.valid)
-
+    var { sampleDate, defaultProgram } = useSelector(state => state.data.panel)
+    var editable = useSelector(state => state.data.editable)
+    var addSampleValid = (defaultProgram.length && !editable && sampleDate) ? false : true
+    
     const onBack = () => {
-        history.goBack();
+        if (!prevValues && editable) {
+            $("#popup").hide();
+         }
+        else {
+            history.goBack();
+        }
     }
 
     const onSubmit = async addMore => {
@@ -60,7 +71,6 @@ export const EventButtons = ({ history, existingEvent }) => {
         }
     }
     const submitExit = async () => await onSubmit(false)    
-    const submitAdd = async () => await onSubmit(true)
     const onEdit = async () => {
         let res = await Aggregate({
             event:event,
@@ -75,7 +85,15 @@ export const EventButtons = ({ history, existingEvent }) => {
             await dispatch(editEvent())
         }
     }
-    const onComplete = () => dispatch(completeEvent())
+
+    // Next button ,Submit and Add New ISO, Submit and Add New Sample, Save start
+    const onNextSubmit = async (next,addMoreSample,addMoreIso) => await dispatch(nextEvent(next,addMoreSample,addMoreIso))
+    const onNext = async () => await onNextSubmit(true,false,false)     //next,addMoreSample,addMoreIso
+    const submitAddSample = async () => await onNextSubmit(false, true, false)
+    const submitAddIso = async () => await onNextSubmit(false,false,true)
+    const onSave = async () => await dispatch(saveEvent())
+    // Next button ,Submit and Add New ISO, Submit and Add New Sample, Save end
+
     const onInComplete = () => dispatch(inCompleteEvent())
 
     const editButton = {
@@ -93,8 +111,8 @@ export const EventButtons = ({ history, existingEvent }) => {
 
     const submitAddButton = {
         label: 'Submit and add new sample',
-        onClick: submitAdd,
-        disabled: !entityValid,
+        onClick: submitAddSample,
+        disabled: addSampleValid,
         icon: 'add',
         primary: true,
         tooltip:
@@ -105,26 +123,11 @@ export const EventButtons = ({ history, existingEvent }) => {
                 : 'Submit record and add new record for the same person',
         loading: buttonLoading === 'submitAdd',
     }
-    const submitButton = {
-        label: 'Save',
-        onClick: submitExit,
-        disabled: !entityValid,
-        icon: 'done',
-        primary: true,
-        tooltip:
-            duplicate === DUPLICATE_ERROR
-                ? DUPLICATE_ERROR
-                : invalid
-                ? invalid
-                : 'Submit record',
-        loading: buttonLoading === 'submit',
-    }
-
     
     const submitAddButtonIso = {
         label: 'Submit and add new isolate',
-        onClick: submitAdd,
-        disabled: !valid || buttonsDisabled || !!!invalid,
+        onClick: submitAddIso,
+        disabled: !valid || buttonsDisabled,
         icon: 'add',
         primary: true,
         tooltip:
@@ -151,9 +154,24 @@ export const EventButtons = ({ history, existingEvent }) => {
         loading: buttonLoading === 'submit',
     }
 
+    const submitButton = {
+        label: 'Save',
+        onClick: onSave,
+        disabled: !entityValid,
+        icon: 'done',
+        primary: true,
+        tooltip:
+            duplicate === DUPLICATE_ERROR
+                ? DUPLICATE_ERROR
+                : invalid
+                ? invalid
+                : 'Submit record',
+        loading: buttonLoading === 'submit',
+    }
+
     const nextButton = {
         label: 'Next',
-        onClick: submitExit,
+        onClick: onNext,
         disabled: buttonsDisabled || !!invalid,
         icon: 'arrow_forward',
         primary: true,
@@ -168,7 +186,7 @@ export const EventButtons = ({ history, existingEvent }) => {
 
     const completeButton = {
         label: 'Complete',
-        onClick: onComplete,
+        onClick: submitExit,
         disabled: buttonsDisabled || !!invalid,
         icon: 'done',
         primary: true,
@@ -195,15 +213,14 @@ export const EventButtons = ({ history, existingEvent }) => {
     }
 
     const Go_Back = {
-        label: 'Go Back',
-        onClick: onInComplete,
+        label: 'Back',
         primary: true,
         tooltip: "Go Back",
         onClick: onBack,
     }
 
     const buttons = () =>
-        existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back] : [completeButton, submitButton,Go_Back]
-            : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, submitButtonIso,Go_Back] : [completeButton, submitAddButtonIso, submitButtonIso,Go_Back]:[submitButton,submitAddButton,Go_Back]
+        existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back] : [completeButton, submitButton, Go_Back]
+            : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, Go_Back] : [completeButton, submitAddButtonIso, Go_Back]:[submitAddButton,Go_Back]
     return <StyledButtonRow buttons={buttons()} />
 }

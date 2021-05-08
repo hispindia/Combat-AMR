@@ -5,7 +5,7 @@ const Tabs = (props) => {
     const { children } = props;
     const [tabHeader, setTabHeader] = useState([]);
     const [childContent, setChildConent] = useState({});
-    const [active, setActive] = useState("");
+    const [active, setActive] = useState(0);
     
     useEffect(() => {
         const headers = [];
@@ -19,23 +19,27 @@ const Tabs = (props) => {
             childCnt[name] = element.props.children;
         });
         setTabHeader(headers);
-        setActive(headers[0][0]);
         setChildConent({ ...childCnt });
     }, [props, children]);
 
-    const changeTab = (returnValue) => {
-        setActive(returnValue[0]);
-        children[0].props.onClick(returnValue)
+  const changeTab = (returnValue,index) => {
+      children[0].props.onClick(returnValue)
     };
+  
+  const changeActive = (returnValue,index) => {
+    setActive(index);
+    }
 
   return (
     <div className="tabs">
       <ul className="tab-header">
-        {tabHeader.map((item) => (
+        {tabHeader.map((item,index) => (
           <li
-            onClick={() => changeTab(item)}
+            onClick={() => changeTab(item,index)}
             key={item[1]}
-            className={item[0] === active ? "active" : ""}
+            index={index}
+            onMouseDown = {()=> changeActive(item,index)}
+            className={index == active ? "active" : ""}
           >
             {item[0]}
           </li>
