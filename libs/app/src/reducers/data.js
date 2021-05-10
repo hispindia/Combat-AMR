@@ -198,6 +198,7 @@ export const data = (state = INITIAL_STATE, { type, payload }) => {
                     organism: '',
                     sampleDate: '',
                     valid: false,
+                    completeClicked:false,
                 },
             }
         
@@ -360,6 +361,7 @@ export const data = (state = INITIAL_STATE, { type, payload }) => {
                 },
                 event: INITIAL_EVENT,
                 buttonsDisabled: false,
+                completeClicked:false,
             }
         case RESET_SAMPLE_PANEL_EVENT:
             return {

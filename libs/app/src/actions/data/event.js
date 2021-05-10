@@ -260,7 +260,7 @@ export const submitEvent = addMore => async (dispatch, getState) => {
     batch(() => {
         dispatch(disableButtons())
         dispatch(
-            createAction(SET_BUTTON_LOADING, addMore ? 'submitAdd' : 'submit')
+            createAction(SET_BUTTON_LOADING, addMore ? 'complete' : 'complete')
         )
     })
     const eventId = getState().data.event.id;    
@@ -282,7 +282,7 @@ export const submitEvent = addMore => async (dispatch, getState) => {
             }
         }
         dispatch(createAction(SET_COMPLETED))
-
+        dispatch(createAction(COMPLETED_CLICKED,true))
         dispatch(showAlert('Submitted successfully.', { success: true }))
     } catch (error) {
         console.error(error)
@@ -357,12 +357,23 @@ export const editEvent = () => async (dispatch, getState) => {
 export const saveEvent = () => async (dispatch, getState) => {
     batch(() => {
         dispatch(disableButtons())
-        dispatch(createAction(SET_BUTTON_LOADING, 'edit'))
+        dispatch(createAction(SET_BUTTON_LOADING, 'save'))
     })
-    const eventId = getState().data.event.id
+    const eventId = getState().data.event.id;
+    const eventValues = getState().data.event.values;
+
 
     try {
-        await setEventStatus(eventId,false)
+        await setEventStatus(eventId, false)
+        if (eventValues[ORGANISM_DETECTED] == "Pathogen detected") {
+                dispatch(createAction(SET_PREVIOUS_EVENT, { eventValues }))
+                dispatch(AddAndSubmit(false))                
+                dispatch(createAction(PANEL_EDITABLE))
+                dispatch(createAction(RESET_PANEL_EVENT))
+                dispatch(createAction(PAGE_FIRST, true))
+            } else {
+                dispatch(createAction(EXIT))
+        }
         // dispatch(createAction(SET_COMPLETED))
         dispatch(showAlert('Event Save'))
         dispatch(createAction(COMPLETED_CLICKED,true))
@@ -380,7 +391,7 @@ export const saveEvent = () => async (dispatch, getState) => {
 export const inCompleteEvent = () => async (dispatch, getState) => {
     batch(() => {
         dispatch(disableButtons())
-        dispatch(createAction(SET_BUTTON_LOADING, 'edit'))
+        dispatch(createAction(SET_BUTTON_LOADING, 'incomplete'))
     })
     const eventId = getState().data.event.id
 

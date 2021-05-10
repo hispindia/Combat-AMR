@@ -1,0 +1,1 @@
+export const SAMPLE_TYPEID = "o4ujbXNx7d6"

@@ -8,6 +8,8 @@ import './main.css'
 import $ from "jquery"
 import SweetAlert from 'react-bootstrap-sweetalert';
 import { deleteTEI, deleteEvent } from '@hisp-amr/api'
+import { SAMPLE_TYPEID } from './constants';
+
 const Events = ({match, history }) => {
     var data = [];
     const dispatch = useDispatch()
@@ -15,6 +17,10 @@ const Events = ({match, history }) => {
     var programs = useSelector(state => state.metadata.programs);
     var teiId = match.params.teiId
     var orgUnit = match.params.orgUnit
+    
+    const { programOrganisms, optionSets } = useSelector(state => state.metadata)
+    console.log("OPTIONSS SETS ",optionSets)
+
     useEffect(() => {
         $("#msg1").hide();
         $('#succes1').hide();
@@ -69,14 +75,23 @@ const Events = ({match, history }) => {
             const v = events.map((ele, index) => {
                 if (ele) {
                     var proId = ele.program;
-                    var name=[], dataValue= [], data= [], date =[];
+                    var name = [], dataValue = [], data = [], date = [];
+                    var listorganisms = [];
+                    var orgValue = [];
+                    var orgn = ""
+                    var sampleVal = [];
                      //date['value'] =  JSON.stringify(new Date(ele.eventDate)).slice(1,11);
                      date['value'] =  ele.eventDate.substring(0, 10);
                      for (let program of programs) {
                         if (program.id == proId) {
-                             name['value'] = program.name;
+                            name['value'] = program.name;
+                            optionSets[programOrganisms[program.id]].forEach(o => {
+                            if (!listorganisms.find(org => org.value === o.value)) listorganisms.push(o);
+                            });
                         }
                     }
+
+
                     for( let value of ele.dataValues){
                             dataValue['0']=name
                         if(value.dataElement == 'q7U3sRRnFg5'){
@@ -85,11 +100,27 @@ const Events = ({match, history }) => {
                         if(value.dataElement == 'si9RY754UNU'){
                             dataValue['2'] =value;
                         }
-                        if(value.dataElement == 'GqP6sLQ1Wt3'){
-                            dataValue['3'] =value;
+                        if (value.dataElement == 'GqP6sLQ1Wt3') {
+                            optionSets[SAMPLE_TYPEID].forEach(o => {
+                                if (o.value == value.value) {
+                                    value.value = o.label
+                                }
+                           });
+                            sampleVal['value'] = value.value;
+                            dataValue['3'] = sampleVal;
+
                         }
                         if((value.dataElement == 'VsNSbOlwed9') || (value.dataElement  =='VbUbBX7G6Jf')){  // id of organism detected data element in sample testing
-                            dataValue['4'] =value;
+                            if (listorganisms.length > 0) {
+                            orgn = listorganisms.find(element => {
+                            return element.value ==  value.value;
+                            });
+                            if (orgn) {
+                                value.value = orgn.label
+                            }
+                            }
+                            orgValue['value'] = value.value;
+                            dataValue['4'] = orgValue;
                         }
                         dataValue['5']=date
                      }   
@@ -116,7 +147,11 @@ const Events = ({match, history }) => {
                         <>
                         { data.length ? 
                          <TableRow >
-                            {data.map(ele =>(<TableCell>{ele.value}</TableCell>))}
+                                    {data.map(ele => (
+                                        <TableCell>
+                                            {ele.value}
+                                        </TableCell>
+                                    ))}
                             <Button primary={true} onClick={() => onEdit(ele.orgUnit, ele.event, ele.dataValues)}>Edit</Button>
                         </TableRow> 
                         : ''}

@@ -42,9 +42,9 @@ export const EventOverview = ({ match, history }) => {
     
     const tabValue = [
         { "name": "Pending sample result", "key": "pending", "code": "ST" },
-        { "name": "Sample result received", "key": "complete", "code": "ST" },
         { "name": "Pending antibiotics result", "key": "pending", "code": "GP" },
         { "name": "Antibiotics result received", "key": "complete", "code": "GP" },
+        { "name": "Sterile samples", "key": "complete", "code": "ST" },
                                         
     ]
     const handleChange = (returnValue) => {

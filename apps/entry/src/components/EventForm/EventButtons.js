@@ -181,7 +181,7 @@ export const EventButtons = ({ history, existingEvent }) => {
                 : invalid
                 ? invalid
                 : 'Submit record',
-        loading: buttonLoading === 'submit',
+        loading: buttonLoading === 'save',
     }
 
     const nextButton = {
@@ -196,7 +196,7 @@ export const EventButtons = ({ history, existingEvent }) => {
                 : invalid
                 ? invalid
                 : 'Next record',
-        loading: buttonLoading === 'submit',
+        loading: buttonLoading === 'next',
     }
 
     const completeButton = {
@@ -211,7 +211,7 @@ export const EventButtons = ({ history, existingEvent }) => {
                 : invalid
                 ? invalid
                 : 'Complete Event',
-        loading: buttonLoading === 'submit',
+        loading: buttonLoading === 'complete',
     }
 
     const incompleteButton = {
@@ -224,7 +224,7 @@ export const EventButtons = ({ history, existingEvent }) => {
             buttonsDisabled || !status.editable
                 ? 'Records with this approval status cannot be edited'
                 : 'Edit record',
-        loading: buttonLoading === 'edit',
+        loading: buttonLoading === 'incomplete',
     }
 
     const Go_Back = {
