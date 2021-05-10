@@ -18,8 +18,52 @@ const CONSTANTS = {
     antibioticAttributeCode: 'antibiotic',
     defaultDataSetCode: 'organismsIsolated',
     antibioticWiseDataSetCode: 'organismsIsolatedAntibioticWise',
-    ignoreProgramStage:'LjiZPsbh1oy' //TODO change this to a code
-    
+    codesOfProgramsToAggregate: ["Gram negative", "Gram positive"] //TODO change this to a code
+
+}
+
+let getValue = async ({
+    period,
+    dataSet,
+    de,
+    orgUnit,
+    cc,
+    cp,
+    co,
+    operation
+}) => {
+    let a = await get(
+        request(`dataValues.json`, {
+            options: [`pe=${period}&ds=${dataSet}&de=${de}&ou=${orgUnit}&cc=${cc}&cp=${cp}&co=${co}`],
+        })
+    )
+    let value = 0
+
+    if (a.httpStatus === "Conflict") {
+        //this means that the value does not exist so return 0
+    } else {
+        //this means that the value exists and is returned so return that.
+        value = parseInt(a[0]);
+    }
+
+    //Now that we have the value, perform increment or decrement
+    if (operation === "COMPLETE") {
+        value = value + 1
+    } else if (operation === "INCOMPLETE" && value > 0) {
+        value = value - 1;
+    } else {
+        //if code reaches here, then it is in an unstable state so respond with an error
+        return {
+            response: false,
+            message: `Received an invalid value when aggregating for dataSet,${dataSet}.`
+        }
+    }
+
+    return {
+        response: true,
+        value: value
+    }
+
 }
 
 
@@ -35,16 +79,28 @@ export const Aggregate = async ({
     categoryCombos,
     dataSets,
     orgUnit,
-    eventList
+    programs
 }) => {
 
-    if(event.programStage.id===CONSTANTS.ignoreProgramStage){
-        //this program stage is not correct
-        return true;
+    //get the programCode of the event
+    let programCode = ""
+    programs.forEach(program => {
+        program.programStages.forEach(stage => {
+            if (stage.id === event.programStage.id) {
+                programCode = program.code
+            }
+        })
+    })
+
+    //check if program is part of the programs to aggregate
+    if (CONSTANTS.codesOfProgramsToAggregate.indexOf(programCode) === -1) {
+        //Then this program is not part of the programs which are aggregated
+        return {
+            response: true,
+            message: "Ignored program"
+        }
     }
     //first get the metadata from the evens 
-
-    //Now get the location data
     let locationDataElement = dataElements.attributeGroups[CONSTANTS.locationCode][0] //There is only one DataElement
     let locationData = event.values[locationDataElement]
 
@@ -66,12 +122,11 @@ export const Aggregate = async ({
 
             if (dataElements[value][CONSTANTS.customAttributeMetadataTypeIdentifier] === CONSTANTS.antibioticAttributeCode) {
                 //This means that this data elemnt is an antibiotic result therefore add it to important values.
-
+                
                 let tempArray = [dataElements[value].code, event.values[value]]
                 tempArray = tempArray.sort();
                 let categoryOptionCombo = tempArray.join("");
                 categoryOptionCombo = categoryCombos[CONSTANTS.antibioticCC_Code].categoryOptionCombos[categoryOptionCombo]
-
                 importantValues.push(categoryOptionCombo)
             }
         }
@@ -84,31 +139,31 @@ export const Aggregate = async ({
     let defaultDataSet = dataSets[CONSTANTS.defaultDataSetCode]
     let antibioticWiseDataSet = dataSets[CONSTANTS.antibioticWiseDataSetCode]
 
+    //TODO change the date to the latest date.
     let lastMonth = new Date()
-    lastMonth.setMonth(lastMonth.getMonth()-1)
-    let period = (lastMonth).toISOString().substring(0,7).replace('-',"");
+    lastMonth.setMonth(lastMonth.getMonth() - 1)
+    let period = (lastMonth).toISOString().substring(0, 7).replace('-', "");
 
     //now every metadata is fetched so for each get and update the data.
-    let a = await get(
-        request(`dataValues.json`, {
-            options: [`pe=${period}&ds=${defaultDataSet}&de=${de}&ou=${orgUnit.id}&cc=${cc}&cp=${cp}&co=${coDefault}`],
-        })
-    )
+    let defaultResponse = await getValue({
+        period: period,
+        dataSet: defaultDataSet,
+        de: de,
+        orgUnit: orgUnit,
+        cc: cc,
+        cp: cp,
+        co: coDefault,
+        operation: operation
+    })
 
-    let value = 0
-
-    if (a.httpStatus === "Conflict") {
-        //this means that the value does not exist
-        if (operation === "COMPLETE") {
-            value = 1
-        } else {
-            value = 0
-        }
+    let defaultValue = 0;
+    if (defaultResponse.response) { //this means that there have been a successfull fetching of data
+        defaultValue = defaultResponse.value
     } else {
-        if (operation === "COMPLETE") {
-            value = parseInt(a[0]) + 1
-        } else {
-            value = parseInt(a[0]) - 1
+        //if code reaches here, then it is in an unstable state so respond with an error
+        return {
+            response: false,
+            message: defaultResponse.message
         }
     }
 
@@ -116,47 +171,86 @@ export const Aggregate = async ({
         let b = await post(
             request(`dataValues.json`, {
                 options: [
-                    `pe=${period}&ds=${defaultDataSet}&de=${de}&ou=${orgUnit.id}&cc=${cc}&cp=${cp}&value=${value}&co=${coDefault}`,
+                    `pe=${period}&ds=${defaultDataSet}&de=${de}&ou=${orgUnit}&cc=${cc}&cp=${cp}&value=${defaultValue}&co=${coDefault}`,
                 ],
                 data: {}
             })
         )
-    } catch (SyntaxError) {
-        //This means that the post is working properly
-        //Since there is no response when performing a post request it will create a syntax error.
+        console.error("Post request not working. Response received:",b)
+        return {
+            response: false,
+            message: "Unable to send data to data set"
+        }
+    } catch (error) {
+        if (error.toString().startsWith("SyntaxError: Unexpected end of JSON")) {
+            //this is because post request doesn't send back a response and it is a successful request.
+
+        } else {
+            console.error("Error in posting default value", error);
+            return {
+                response: false,
+                message: "Unable to send data to data set"
+            }
+        }
     }
 
     for (let index in importantValues) {
         let co = importantValues[index]
-        let a = await get(
-            request(`dataValues.json`, {
-                options: [`pe=${period}&ds=${antibioticWiseDataSet}&de=${deAntibioticWise}&ou=${orgUnit.id}&cc=${cc}&cp=${cp}&co=${co}`],
-            })
-        )
 
-        let value = 0
+        let individualResponse = await getValue({
+            period: period,
+            dataSet: antibioticWiseDataSet,
+            de: deAntibioticWise,
+            cc: cc,
+            cp: cp,
+            co: co,
+            orgUnit: orgUnit,
+            operation: operation
+        })
 
-        if (a.httpStatus === "Conflict") {
-            //this means that the value does not exist
-            value = 1
+        let individualValue = 0
+
+        if (individualResponse.response) { //this means that there have been a successfull fetching of data
+            individualValue = individualResponse.value
         } else {
-            value = parseInt(a[0]) + 1
+            //if code reaches here, then it is in an unstable state so respond with an error
+            return {
+                response: false,
+                message: individualResponse.message
+            }
         }
-
         try {
             let b = await post(
                 request(`dataValues.json`, {
                     options: [
-                        `pe=${period}&ds=${antibioticWiseDataSet}&de=${deAntibioticWise}&ou=${orgUnit.id}&cc=${cc}&cp=${cp}&value=${value}&co=${co}`,
+                        `pe=${period}&ds=${antibioticWiseDataSet}&de=${deAntibioticWise}&ou=${orgUnit}&cc=${cc}&cp=${cp}&value=${individualValue}&co=${co}`,
                     ],
                     data: {}
                 })
             )
-        } catch (SyntaxError) {
-            console.log("sucessfully sent value ", value, "response is ", SyntaxError)
-            //This means that the post is working properly
+            //if code reaches here then it means that there is an error in the post request.
+            console.error("Post request not working. Response received:",b)
+            return {
+                response: false,
+                message: "Unable to aggregate data"
+            }
+        } catch (error) {
+            if (error.toString().startsWith("SyntaxError: Unexpected end of JSON")) {
+                //this is because post request doesn't send back a response and 
+                //The syntax error is because of a successfull post request.
+            } else {
+                //This means that the post is working properly
+                console.error("Unable to post data", error)
+                return {
+                    response: false,
+                    message: "Unable to aggregate data"
+                }
+            }
         }
     };
 
-    return true;
+    return {
+        response: true,
+        message: "Successfull"
+    };
 }

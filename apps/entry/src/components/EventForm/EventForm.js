@@ -24,6 +24,9 @@ import { Entity } from './Entity'
 import { EventButtons } from './EventButtons'
 import Events from './Entity/EventList'
 import $ from "jquery"
+import {
+    Aggregate
+} from '../../api/helpers/aggregate'
 import { deleteEvent } from '@hisp-amr/api'
 import SweetAlert from 'react-bootstrap-sweetalert';
 export const EventForm = ({ history, match }) => {
@@ -35,9 +38,14 @@ export const EventForm = ({ history, match }) => {
     var eventEditable = useSelector(state => state.data.eventEditable)
     var editable = useSelector(state => state.data.editable)
     const event = useSelector(state => state.data.event)
+    const dataElementObjects = useSelector(state=> state.metadata.dataElementObjects)
+    const programs = useSelector(state=>state.metadata.programs)
+    const categoryCombos = useSelector(state=> state.metadata.categoryCombos)
+    const dataSets = useSelector(state=>state.metadata.dataSets)
     const eventIDs = useSelector(state => state.data.event.id)
     const previousValues = useSelector(state => state.data.previousValues)
     const prevValues = Object.keys(previousValues).length ? true : false;
+
 
     var orgUnit = match.params.orgUnit
     const teiId = match.params.teiId;
@@ -120,18 +128,31 @@ export const EventForm = ({ history, match }) => {
            $("#panel").hide();
            $("#popup").hide();       
     }
-   const onConfirm=(e)=>{
-    e.preventDefault();
-    let eventID =localStorage.getItem('eventId')
-     deleteEvent(eventID).then(res => {
-        if(res.httpStatus == 'OK')
-        {
-        $('#success').show();
+   const onConfirm=async(e)=>{
+        e.preventDefault();
+        let eventID =localStorage.getItem('eventId')
+        let res = await Aggregate(
+            {
+                event: event,
+                operation: "INCOMPLETE",
+                dataElements: dataElementObjects,
+                categoryCombos: categoryCombos,
+                dataSets: dataSets,
+                orgUnit: orgUnit,
+                programs: programs
+            }
+        )
+        if(res.response){
+            await deleteEvent(eventID).then(res => {
+                if(res.httpStatus == 'OK')
+                {
+                    $('#success').show();
+                }
+            })
+            $("#popup").hide();
+            $("#panel").hide();
+            $('#msg').hide();
         }
-   })
-     $("#popup").hide();
-     $("#panel").hide();
-     $('#msg').hide();
     }
    const onNo =(e) =>{
           e.preventDefault();

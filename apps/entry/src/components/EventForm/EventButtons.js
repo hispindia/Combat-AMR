@@ -33,9 +33,9 @@ export const EventButtons = ({ history, existingEvent }) => {
     const duplicate = useSelector(state => state.data.event.duplicate)
     const exit = useSelector(state => state.data.exit)
     const dataElementObjects = useSelector(state=> state.metadata.dataElementObjects)
+    const programs = useSelector(state=>state.metadata.programs)
     const categoryCombos = useSelector(state=> state.metadata.categoryCombos)
     const dataSets = useSelector(state=>state.metadata.dataSets)
-    const eventList = useSelector(state=>state.data.eventList)
     const orgUnit = useSelector(state=>state.data.orgUnit)
     const buttonLoading = useSelector(state => state.data.buttonLoading)
     const pageFirst = useSelector(state => state.data.pageFirst)
@@ -63,10 +63,10 @@ export const EventButtons = ({ history, existingEvent }) => {
             dataElements:dataElementObjects,
             categoryCombos: categoryCombos,
             dataSets: dataSets,
-            orgUnit: orgUnit,
-            eventList: eventList
+            orgUnit: orgUnit.id,
+            programs: programs
         })
-        if(res){
+        if(res.response){
             await dispatch(submitEvent(addMore))
         }
     }
@@ -78,10 +78,10 @@ export const EventButtons = ({ history, existingEvent }) => {
             dataElements:dataElementObjects,
             categoryCombos: categoryCombos,
             dataSets: dataSets,
-            orgUnit: orgUnit,
-            eventList: eventList
+            orgUnit: orgUnit.id,
+            programs: programs
         })
-        if(res){
+        if(res.response){
             await dispatch(editEvent())
         }
     }
@@ -94,7 +94,22 @@ export const EventButtons = ({ history, existingEvent }) => {
     const onSave = async () => await dispatch(saveEvent())
     // Next button ,Submit and Add New ISO, Submit and Add New Sample, Save end
 
-    const onInComplete = () => dispatch(inCompleteEvent())
+    const onInComplete = async () => {
+        let res = await Aggregate(
+            {
+                event: event,
+                operation: "INCOMPLETE",
+                dataElements: dataElementObjects,
+                categoryCombos: categoryCombos,
+                dataSets: dataSets,
+                orgUnit: orgUnit.id,
+                programs: programs
+            }
+        )
+        if(res.response){
+            await dispatch( inCompleteEvent() )   
+        }
+    }
 
     const editButton = {
         label: 'Edit',
