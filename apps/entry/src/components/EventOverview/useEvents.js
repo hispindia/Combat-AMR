@@ -1,7 +1,7 @@
 import { useEffect, useReducer } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { showAlert } from '@hisp-amr/app'
-import { getTEI } from 'api'
+import { getTEI,getSterileTEI } from 'api'
 import { GP_PROGRAM_ID } from './constants'
 
 const INITIAL_STATE = {
@@ -78,12 +78,22 @@ export const useEvents = (status, eventstatus, code) => {
     useEffect(() => {
         const getData = async () => {
             try {
-                const events = await getTEI(selected,programApi,eventstatus).then((eventResult) =>
-                                dispatcher({
-                                type: NEW_ROWS,
-                                rows: eventResult,
-                                })
-                )
+                if (eventstatus == "COMPLETED" && programApi.length < 2) {
+                    const eventsData = await getSterileTEI(selected,programApi,eventstatus).then((eventResult) =>
+                    dispatcher({
+                    type: NEW_ROWS,
+                    rows: eventResult,
+                    })
+                    )
+                }
+                else {
+                    const events = await getTEI(selected, programApi, eventstatus).then((eventResult) =>
+                        dispatcher({
+                            type: NEW_ROWS,
+                            rows: eventResult,
+                        })
+                    )
+                }
 
             } catch (error) {
                 console.error(error)

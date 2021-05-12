@@ -19,7 +19,6 @@ const Events = ({match, history }) => {
     var orgUnit = match.params.orgUnit
     
     const { programOrganisms, optionSets } = useSelector(state => state.metadata)
-    console.log("OPTIONSS SETS ",optionSets)
 
     useEffect(() => {
         $("#msg1").hide();

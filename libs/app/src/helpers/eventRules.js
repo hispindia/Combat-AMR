@@ -115,10 +115,11 @@ export const eventRules = (
                         totalId.forEach(deKey => {
                             let de = deKey == "dataElement" ? stage.dataElements[r.dataElement.id] : r.content ? { id: r.content.slice(2, -1), hasCalculatedVar: true } : null
                             if (!cond) {
-                                if (values[de.id]) {
-                                    values[de.id] = ""
-                                    // if (!de.hasCalculatedVar) if (pushChanges) updateValue(de.id, r.data)
-                                }
+                                return;
+                                // if (values[de.id]) {
+                                //     values[de.id] = ""
+                                //     // if (!de.hasCalculatedVar) if (pushChanges) updateValue(de.id, r.data)
+                                // }
                             } else {
                                 setColors(rule.condition, de, r.data)
                                 // Assigning value.

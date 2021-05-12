@@ -40,6 +40,7 @@ export const EventOverview = ({ match, history }) => {
     var [code,setCode] = useState(SAMPLEPROGRAMCODE)
     const { rows, loading, addButtonDisabled, error } = useEvents(status, eventstatus, code)
     
+    
     const tabValue = [
         { "name": "Pending sample result", "key": "pending", "code": "ST" },
         { "name": "Pending antibiotics result", "key": "pending", "code": "GP" },

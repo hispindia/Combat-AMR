@@ -300,7 +300,8 @@ export const nextEvent = (next,addMoreSample,addMoreIso) => async (dispatch, get
 
     const eventId = getState().data.event.id;    
     const eventValues = getState().data.event.values;
-    var eveStatus = next;
+    var eveStatus = getState().data.event.invalid == false ? true:false;
+    // var eveStatus = next;
 
     try {
         await setEventStatus(eventId, eveStatus)
@@ -317,7 +318,10 @@ export const nextEvent = (next,addMoreSample,addMoreIso) => async (dispatch, get
                 dispatch(createAction(EXIT))
             }
         }
-        dispatch(createAction(SET_COMPLETED))
+        if (!eveStatus) {
+            dispatch(createAction(SET_COMPLETED))
+        }
+        // dispatch(createAction(SET_COMPLETED))
 
         // dispatch(showAlert('Submitted successfully.', { success: true }))
     } catch (error) {
@@ -355,17 +359,23 @@ export const editEvent = () => async (dispatch, getState) => {
 }
 
 export const saveEvent = () => async (dispatch, getState) => {
+    var addMore = false
     batch(() => {
         dispatch(disableButtons())
-        dispatch(createAction(SET_BUTTON_LOADING, 'save'))
+        dispatch(
+            createAction(SET_BUTTON_LOADING, addMore ? 'submitAdd' : 'submit')
+        )
     })
-    const eventId = getState().data.event.id;
+    const eventId = getState().data.event.id;    
     const eventValues = getState().data.event.values;
-
+    var eveStatus = getState().data.event.invalid == false ? true:false;
 
     try {
-        await setEventStatus(eventId, false)
-        if (eventValues[ORGANISM_DETECTED] == "Pathogen detected") {
+        
+        await setEventStatus(eventId, eveStatus)
+        if (addMore) dispatch(createAction(RESET_PANEL_EVENT))
+        else {
+            if (eventValues[ORGANISM_DETECTED] == "Pathogen detected") {
                 dispatch(createAction(SET_PREVIOUS_EVENT, { eventValues }))
                 dispatch(AddAndSubmit(false))                
                 dispatch(createAction(PANEL_EDITABLE))
@@ -373,17 +383,21 @@ export const saveEvent = () => async (dispatch, getState) => {
                 dispatch(createAction(PAGE_FIRST, true))
             } else {
                 dispatch(createAction(EXIT))
+            }
         }
-        // dispatch(createAction(SET_COMPLETED))
-        dispatch(showAlert('Event Save'))
-        dispatch(createAction(COMPLETED_CLICKED,true))
+        if (eveStatus) {
+            dispatch(createAction(SET_COMPLETED))
+        }
+
+        dispatch(showAlert('Event Saved', { success: true }))
     } catch (error) {
         console.error(error)
-        dispatch(showAlert('Failed to edit record.', { critical: true }))
+        dispatch(showAlert('Failed to submit.', { critical: true }))
+        dispatch(createAction(ENABLE_BUTTONS))
     } finally {
         batch(() => {
-            dispatch(createAction(SET_BUTTON_LOADING, false))
             dispatch(enableButtons())
+            dispatch(createAction(SET_BUTTON_LOADING, false))
         })
     }
 }

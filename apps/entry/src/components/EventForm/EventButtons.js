@@ -154,10 +154,10 @@ export const EventButtons = ({ history, existingEvent }) => {
         loading: buttonLoading === 'submitAdd',
     }
 
-    const submitButtonIso = {
+    const submitButton = {
         label: 'Submit',
-        onClick: submitExit,
-        disabled: !valid || buttonsDisabled || !!!invalid,
+        onClick: onSave,
+        disabled: addSampleValid,
         icon: 'done',
         primary: true,
         tooltip:
@@ -169,7 +169,7 @@ export const EventButtons = ({ history, existingEvent }) => {
         loading: buttonLoading === 'submit',
     }
 
-    const submitButton = {
+    const Save = {
         label: 'Save',
         onClick: onSave,
         disabled: !entityValid,
@@ -235,7 +235,7 @@ export const EventButtons = ({ history, existingEvent }) => {
     }
 
     const buttons = () =>
-        existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back] : [completeButton, submitButton, Go_Back]
-            : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, Go_Back] : [completeButton, submitAddButtonIso, Go_Back]:[submitAddButton,Go_Back]
+        existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back] : [completeButton, Save, Go_Back]
+            : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, Go_Back] : [completeButton, submitAddButtonIso, Go_Back]:[submitButton,submitAddButton,Go_Back]
     return <StyledButtonRow buttons={buttons()} />
 }
