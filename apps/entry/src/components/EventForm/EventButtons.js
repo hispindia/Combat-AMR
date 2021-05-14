@@ -111,19 +111,6 @@ export const EventButtons = ({ history, existingEvent }) => {
         }
     }
 
-    const editButton = {
-        label: 'Edit',
-        onClick: onEdit,
-        disabled: buttonsDisabled || !status.editable || btnStatus,
-        icon: 'edit',
-        primary: true,
-        tooltip:
-            buttonsDisabled || !status.editable
-                ? 'Records with this approval status cannot be edited'
-                : 'Edit record',
-        loading: buttonLoading === 'edit',
-    }
-
     const submitAddButton = {
         label: 'Submit and add new sample',
         onClick: submitAddSample,
@@ -227,6 +214,19 @@ export const EventButtons = ({ history, existingEvent }) => {
         loading: buttonLoading === 'incomplete',
     }
 
+    const editButton = {
+        label: 'Edit',
+        onClick: onEdit,
+        disabled: buttonsDisabled || !status.editable || btnStatus,
+        icon: 'edit',
+        primary: true,
+        tooltip:
+            buttonsDisabled || !status.editable
+                ? 'Records with this approval status cannot be edited'
+                : 'Edit record',
+        loading: buttonLoading === 'edit',
+    }
+
     const Go_Back = {
         label: 'Back',
         primary: true,
@@ -234,8 +234,15 @@ export const EventButtons = ({ history, existingEvent }) => {
         onClick: onBack,
     }
 
+    const Go_BackIso = {
+        label: 'Back',
+        primary: true,
+        tooltip: "Go Back",
+        onClick: onBack,
+        disabled: !valid || buttonsDisabled,
+    }
     const buttons = () =>
         existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back] : [completeButton, Save, Go_Back]
-            : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, Go_Back] : [completeButton, submitAddButtonIso, Go_Back]:[submitButton,submitAddButton,Go_Back]
+            : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, Go_BackIso] : [completeButton, submitAddButtonIso, Go_BackIso]:[submitButton,submitAddButton,Go_Back]
     return <StyledButtonRow buttons={buttons()} />
 }

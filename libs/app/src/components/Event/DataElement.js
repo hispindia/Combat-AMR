@@ -59,12 +59,13 @@ export const DataElement = ({ id }) => {
         useSelector(state => state.data.event.duplicate)
 
     const onChange = (key, value) => {
+        var results = ["Not available","Rejected","Sterile"]
         if((key == ORGANISM_DETECTED) && (value == 'Pathogen detected'))
         {
          dispatch(AddAndSubmit(true))
          dispatch(setEventValue(key, value,false))
         }
-        else if((key == ORGANISM_DETECTED) && (value == 'Sterile')) {
+        else if((key == ORGANISM_DETECTED) && (results.indexOf(value) > -1)) {
          dispatch(AddAndSubmit(false))
          dispatch(setEventValue(key, value,false))
         }

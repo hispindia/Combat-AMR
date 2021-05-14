@@ -344,7 +344,7 @@ export const editEvent = () => async (dispatch, getState) => {
     const eventId = getState().data.event.id
 
     try {
-        await setEventStatus(eventId)
+        await setEventStatus(eventId,false)
         dispatch(createAction(SET_INCOMPLETED))
         dispatch(showAlert('Record is editable.'))
     } catch (error) {
@@ -410,7 +410,7 @@ export const inCompleteEvent = () => async (dispatch, getState) => {
     const eventId = getState().data.event.id
 
     try {
-        await setEventStatus(eventId)
+        await setEventStatus(eventId,false)
         dispatch(createAction(SET_INCOMPLETED))
         dispatch(showAlert('Record is editable.'))
         dispatch(createAction(COMPLETED_CLICKED,false))
