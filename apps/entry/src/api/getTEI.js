@@ -2,19 +2,12 @@ import axios from 'axios'
 
 export const getTEI = async (orgUnit,sampleTestingProgram,eventStatus) => {
     var teiRows = []
-    var tracklist = []
-    var SampleList = [];
-    var url = ""
-    var SampleDict = {};
-    var result = []
     var api_sample = ``
     var api_GP1 = ``
     var api_GP2 = ``
     var requestOne = ''
     var requestTwo = ''
     var requestThree = ''
-
-
   
     if (sampleTestingProgram.length < 2) {
         var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStatus=${eventStatus}&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&assignedUser=&pageSize=50&page=1&totalPages=false`
@@ -26,12 +19,6 @@ export const getTEI = async (orgUnit,sampleTestingProgram,eventStatus) => {
         requestTwo = axios.get(api_GP1);
         requestThree = axios.get(api_GP2);
     }
-    // var api1 = `../../../api/trackedEntityInstances.json?ouMode=DESCENDANTS&program=${sampleTestingProgram}&ou=${orgUnit}`
-
-    // let api3 = '../../../api/29/sqlViews/gxov92xU7S7/data.json&paging=false' // Local Db
-    // let api4 = '../../../api/29/sqlViews/jBJk7UjdEUF/data.json?paging=false' // Baseline DB
-
-    // const requestThree = axios.get(api4);
 
    return axios
   .all([requestOne,requestTwo,requestThree])
@@ -123,7 +110,9 @@ export const getSterileTEI = async (orgUnit,sampleTestingProgram,eventStatus) =>
                 (dataElement[dataValue.dataElement] = dataValue.value)
             );
 
-            if (dataElement["VbUbBX7G6Jf"] == "Sterile")
+          if ((dataElement["VbUbBX7G6Jf"] == "Sterile") ||
+            (dataElement["VbUbBX7G6Jf"] == "Not available") ||
+            (dataElement["VbUbBX7G6Jf"] == "Rejected"))
               dataValue["deCode"] = dataElement["VbUbBX7G6Jf"];
             eventData.dataValues = dataValue;
             events.push(eventData);          
@@ -135,7 +124,7 @@ export const getSterileTEI = async (orgUnit,sampleTestingProgram,eventStatus) =>
           events.forEach((event) => {
             let eventTei = event.tei;
             let eventDeCode = event.dataValues.deCode;
-            if (eventDeCode == "Sterile") {
+            if ((eventDeCode == "Sterile") || (eventDeCode == "Not available") || (eventDeCode == "Rejected")) {
               responseOne.data.rows.forEach((teis) => {
                 const trackedEntityInstance = teis[0]
                 if (eventTei == trackedEntityInstance) {
