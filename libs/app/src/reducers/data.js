@@ -39,7 +39,8 @@ import {
     // SET_PREVALUE
     PAGE_FIRST,
     COMPLETED_CLICKED,
-    RESET_SAMPLE_PANEL_EVENT
+    RESET_SAMPLE_PANEL_EVENT,
+    AGGREGATION_ON_PROGRESS //This is a reducer to disable buttons when aggregation is on progress.
 } from '../actions/types'
 
 const INITIAL_EVENT = {
@@ -80,6 +81,7 @@ const INITIAL_STATE = {
     buttonLoading: false,
     completeClicked: false,
     inCompleteClicked:false,
+    aggregationOnProgress: false,
 }
 
 export const data = (state = INITIAL_STATE, { type, payload }) => {
@@ -460,6 +462,11 @@ export const data = (state = INITIAL_STATE, { type, payload }) => {
             return {
                 ...state,
                 buttonLoading: payload,
+            }
+        case AGGREGATION_ON_PROGRESS:
+            return{
+                ...state,
+                aggregationOnProgress: payload,
             }
         default:
             return state

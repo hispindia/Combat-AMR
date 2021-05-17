@@ -60,6 +60,9 @@ export const COMPLETED_CLICKED = 'COMPLETED_CLICKED'
 export const RESET_SAMPLE_PANEL_EVENT = 'RESET_SAMPLE_PANEL_EVENT'
 
 
+//Added for aggregation progress
+export const AGGREGATION_ON_PROGRESS = 'AGGREGATION_ON_PROGRESS'
+
 
 
 

@@ -10,6 +10,7 @@ import {
     saveEvent,
     inCompleteEvent,
     nextEvent,
+    setAggregationProgress
 } from '@hisp-amr/app'
 import {
     Aggregate
@@ -46,6 +47,14 @@ export const EventButtons = ({ history, existingEvent }) => {
     var { sampleDate, defaultProgram } = useSelector(state => state.data.panel)
     var editable = useSelector(state => state.data.editable)
     var addSampleValid = (defaultProgram.length && !editable && sampleDate) ? false : true
+    var aggregationOnProgress = useSelector (state=>state.data.aggregationOnProgress)
+
+    const changeAggregationStatus = (status)=>{
+        
+        console.log("changing aggregation status to ",status);
+        dispatch(setAggregationProgress(status))
+        aggregationOnProgress = status
+    }
     
     const onBack = () => {
         if (!prevValues && editable) {
@@ -64,8 +73,10 @@ export const EventButtons = ({ history, existingEvent }) => {
             categoryCombos: categoryCombos,
             dataSets: dataSets,
             orgUnit: orgUnit.id,
-            programs: programs
+            programs: programs,
+            changeStatus : changeAggregationStatus
         })
+        changeAggregationStatus(false);
         if(res.response){
             await dispatch(submitEvent(addMore))
         }
@@ -79,8 +90,10 @@ export const EventButtons = ({ history, existingEvent }) => {
             categoryCombos: categoryCombos,
             dataSets: dataSets,
             orgUnit: orgUnit.id,
-            programs: programs
+            programs: programs,
+            changeStatus : changeAggregationStatus
         })
+        changeAggregationStatus(false);
         if(res.response){
             await dispatch(editEvent())
         }
@@ -103,9 +116,11 @@ export const EventButtons = ({ history, existingEvent }) => {
                 categoryCombos: categoryCombos,
                 dataSets: dataSets,
                 orgUnit: orgUnit.id,
-                programs: programs
+                programs: programs,
+                changeStatus : changeAggregationStatus
             }
         )
+        changeAggregationStatus(false);
         if(res.response){
             await dispatch( inCompleteEvent() )   
         }
@@ -129,7 +144,7 @@ export const EventButtons = ({ history, existingEvent }) => {
     const submitAddButtonIso = {
         label: 'Submit and add new isolate',
         onClick: submitAddIso,
-        disabled: !valid || buttonsDisabled,
+        disabled: !valid || buttonsDisabled || aggregationOnProgress,
         icon: 'add',
         primary: true,
         tooltip:
@@ -144,7 +159,7 @@ export const EventButtons = ({ history, existingEvent }) => {
     const submitButton = {
         label: 'Submit',
         onClick: onSave,
-        disabled: addSampleValid,
+        disabled: addSampleValid || aggregationOnProgress,
         icon: 'done',
         primary: true,
         tooltip:
@@ -159,7 +174,7 @@ export const EventButtons = ({ history, existingEvent }) => {
     const Save = {
         label: 'Save',
         onClick: onSave,
-        disabled: !entityValid,
+        disabled: !entityValid || aggregationOnProgress,
         icon: 'done',
         primary: true,
         tooltip:
@@ -189,7 +204,7 @@ export const EventButtons = ({ history, existingEvent }) => {
     const completeButton = {
         label: 'Complete',
         onClick: submitExit,
-        disabled: buttonsDisabled || !!invalid,
+        disabled: buttonsDisabled || !!invalid || aggregationOnProgress,
         icon: 'done',
         primary: true,
         tooltip:
@@ -204,7 +219,7 @@ export const EventButtons = ({ history, existingEvent }) => {
     const incompleteButton = {
         label: 'Incomplete',
         onClick: onInComplete,
-        disabled: buttonsDisabled || !status.editable || btnStatus,
+        disabled: buttonsDisabled || !status.editable || btnStatus || aggregationOnProgress,
         icon: 'edit',
         primary: true,
         tooltip:
@@ -217,9 +232,9 @@ export const EventButtons = ({ history, existingEvent }) => {
     const editButton = {
         label: 'Edit',
         onClick: onEdit,
-        disabled: buttonsDisabled || !status.editable || btnStatus,
+        disabled: buttonsDisabled || !status.editable || btnStatus || aggregationOnProgress,
         icon: 'edit',
-        primary: true,
+        primary: true, 
         tooltip:
             buttonsDisabled || !status.editable
                 ? 'Records with this approval status cannot be edited'

@@ -49,8 +49,8 @@ let getValue = async ({
     //Now that we have the value, perform increment or decrement
     if (operation === "COMPLETE") {
         value = value + 1
-    } else if (operation === "INCOMPLETE" && value > 0) {
-        value = value - 1;
+    } else if (operation === "INCOMPLETE") {
+        value = (value == 0 ? 0 : value - 1); //if value is 0 return 0 else return decremented value
     } else {
         //if code reaches here, then it is in an unstable state so respond with an error
         return {
@@ -79,7 +79,8 @@ export const Aggregate = async ({
     categoryCombos,
     dataSets,
     orgUnit,
-    programs
+    programs,
+    changeStatus
 }) => {
 
     //get the programCode of the event
@@ -100,6 +101,7 @@ export const Aggregate = async ({
             message: "Ignored program"
         }
     }
+    changeStatus(true);
     //first get the metadata from the evens 
     let locationDataElement = dataElements.attributeGroups[CONSTANTS.locationCode][0] //There is only one DataElement
     let locationData = event.values[locationDataElement]
@@ -161,6 +163,7 @@ export const Aggregate = async ({
         defaultValue = defaultResponse.value
     } else {
         //if code reaches here, then it is in an unstable state so respond with an error
+        changeStatus(false)
         return {
             response: false,
             message: defaultResponse.message
@@ -176,7 +179,8 @@ export const Aggregate = async ({
                 data: {}
             })
         )
-        console.error("Post request not working. Response received:",b)
+        console.error("Post request not working. Response received:", b)
+        changeStatus(false)
         return {
             response: false,
             message: "Unable to send data to data set"
@@ -187,6 +191,7 @@ export const Aggregate = async ({
 
         } else {
             console.error("Error in posting default value", error);
+            changeStatus(false)
             return {
                 response: false,
                 message: "Unable to send data to data set"
@@ -213,6 +218,7 @@ export const Aggregate = async ({
         if (individualResponse.response) { //this means that there have been a successfull fetching of data
             individualValue = individualResponse.value
         } else {
+            changeStatus(false)
             //if code reaches here, then it is in an unstable state so respond with an error
             return {
                 response: false,
@@ -229,7 +235,8 @@ export const Aggregate = async ({
                 })
             )
             //if code reaches here then it means that there is an error in the post request.
-            console.error("Post request not working. Response received:",b)
+            console.error("Post request not working. Response received:", b)
+            changeStatus(false)
             return {
                 response: false,
                 message: "Unable to aggregate data"
@@ -241,6 +248,7 @@ export const Aggregate = async ({
             } else {
                 //This means that the post is working properly
                 console.error("Unable to post data", error)
+                changeStatus(false)
                 return {
                     response: false,
                     message: "Unable to aggregate data"
@@ -249,6 +257,7 @@ export const Aggregate = async ({
         }
     };
 
+    changeStatus(false)
     return {
         response: true,
         message: "Successfull"
