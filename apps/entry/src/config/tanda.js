@@ -1,4 +1,4 @@
-export const tanda = {
+export var tanda = {
     // titles: {
     //     complete: 'Completed records',
     //     incomplete: 'Incomplete records',
@@ -30,6 +30,9 @@ export const tanda = {
         {
             name: 'Tracked Entity Instance ID',
             options: { display: false },
+        },
+        {
+            name: 'Action',
         },
     //     {
     //         name: 'Sample Collection Date',

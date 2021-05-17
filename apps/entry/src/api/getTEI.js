@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-export const getTEI = async (orgUnit,sampleTestingProgram,eventStatus) => {
+export const getTEI = async (orgUnit,sampleTestingProgram,eventStatus,isFollowUp) => {
     var teiRows = []
     var api_sample = ``
     var api_GP1 = ``
@@ -8,6 +8,7 @@ export const getTEI = async (orgUnit,sampleTestingProgram,eventStatus) => {
     var requestOne = ''
     var requestTwo = ''
     var requestThree = ''
+
   
     if (sampleTestingProgram.length < 2) {
         var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStatus=${eventStatus}&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&assignedUser=&pageSize=50&page=1&totalPages=false`
@@ -41,7 +42,9 @@ export const getTEI = async (orgUnit,sampleTestingProgram,eventStatus) => {
             teiRows[index]['4'] = teis[12] //Sex
             teiRows[index]['5'] = teis[14] //Address
             teiRows[index]['6'] = orgUnit
-            teiRows[index]['7'] = trackedEntityInstance   
+            teiRows[index]['7'] = trackedEntityInstance
+            isFollowUp[teis[7].toString()] = true
+  
         })
         }
         if (responseTwo.data || responseThree.data) {
@@ -62,11 +65,14 @@ export const getTEI = async (orgUnit,sampleTestingProgram,eventStatus) => {
             teiRows[index]['5'] = teis[14] //Address
             teiRows[index]['6'] = orgUnit
             teiRows[index]['7'] = trackedEntityInstance
+            isFollowUp[teis[7].toString()] = true
         })
         }
-        return teiRows
+      return { teiRows, isFollowUp }
     })
-    ).then((teiRows) => { return teiRows })
+   ).then(({ teiRows, isFollowUp }) => {
+     return { teiRows, isFollowUp }
+   })
   .catch(errors => {
     console.error(errors);
   });

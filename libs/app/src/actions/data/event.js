@@ -27,6 +27,7 @@ import {
     COMPLETED_CLICKED,
     RESET_SAMPLE_PANEL_EVENT,
     INCOMPLETED_CLICKED,
+    MARKED_FOLLOW
 } from '../types'
 import { deleteEvent } from '@hisp-amr/api'
 
@@ -508,4 +509,22 @@ export const checkDuplicacy = sampleId => async (dispatch, getState) => {
         sampleId,
     })
     dispatch(createAction(DUPLICACY, duplicate))
+}
+
+export const followEvent = followup => async (dispatch, getState) => {
+    console.log(" Follow up before ", followup)
+    var existingFollow = getState().data.followup
+    console.log(" GET STATE : ",getState())
+    if (existingFollow) {
+        for (let [key, value] of Object.entries(followup)) {
+            if (existingFollow.hasOwnProperty(key)) {
+                existingFollow[key] = value
+            }
+        }
+    }
+    else {
+        existingFollow = followup
+    }
+    dispatch(createAction(MARKED_FOLLOW, { existingFollow }))
+    console.log("FOLLOW UPS After", existingFollow)
 }

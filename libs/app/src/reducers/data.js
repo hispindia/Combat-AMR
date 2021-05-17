@@ -39,7 +39,8 @@ import {
     // SET_PREVALUE
     PAGE_FIRST,
     COMPLETED_CLICKED,
-    RESET_SAMPLE_PANEL_EVENT
+    RESET_SAMPLE_PANEL_EVENT,
+    MARKED_FOLLOW,
 } from '../actions/types'
 
 const INITIAL_EVENT = {
@@ -79,7 +80,8 @@ const INITIAL_STATE = {
     event: INITIAL_EVENT,
     buttonLoading: false,
     completeClicked: false,
-    inCompleteClicked:false,
+    inCompleteClicked: false,
+    followup:{},
 }
 
 export const data = (state = INITIAL_STATE, { type, payload }) => {
@@ -337,6 +339,11 @@ export const data = (state = INITIAL_STATE, { type, payload }) => {
                 ...state,
                 completeClicked:payload,
             }
+        case MARKED_FOLLOW:
+            return {
+                ...state,
+                followup:payload.existingFollow?payload.existingFollow:{},
+        }
         case SET_EVENT:
                     return {
                         ...state,

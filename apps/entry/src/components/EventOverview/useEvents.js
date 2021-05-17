@@ -1,8 +1,10 @@
 import { useEffect, useReducer } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { showAlert } from '@hisp-amr/app'
+import { showAlert,followEvent } from '@hisp-amr/app'
 import { getTEI,getSterileTEI } from 'api'
 import { GP_PROGRAM_ID } from './constants'
+import { createAction } from '@hisp-amr/app/dist/actions/createAction'
+import { MARKED_FOLLOW } from '@hisp-amr/app/dist/actions/types'
 
 const INITIAL_STATE = {
     rows: null,
@@ -57,6 +59,7 @@ export const useEvents = (status, eventstatus, code) => {
     const programList = useSelector(state => state.metadata.programList)
     const user = useSelector(state => state.metadata.user)
     const selected = useSelector(state => state.selectedOrgUnit.id)
+    var isFollowUp = useSelector(state => state.data.followup)
 
     var sampleTestingProgram = programList.find(element => {
         var sampleLable = "Sample testing"
@@ -87,11 +90,15 @@ export const useEvents = (status, eventstatus, code) => {
                     )
                 }
                 else {
-                    const events = await getTEI(selected, programApi, eventstatus).then((eventResult) =>
-                        dispatcher({
-                            type: NEW_ROWS,
-                            rows: eventResult,
-                        })
+                    const events = await getTEI(selected, programApi, eventstatus, isFollowUp).then(({ teiRows, isFollowUp }) => {
+                        if (teiRows) {
+                            dispatcher({
+                                type: NEW_ROWS,
+                                rows: teiRows,
+                            })
+                            dispatch(followEvent(isFollowUp))
+                        }
+                    }
                     )
                 }
 

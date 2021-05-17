@@ -8,7 +8,7 @@ import { ButtonPadding, ButtonContainer } from './style'
  * Row of buttons.
  */
 export const ButtonRow = ({ buttons, initialFocus, className }) => (
-    <ButtonContainer className={className}>
+    <ButtonContainer >
         {buttons.map(button => (
             <ButtonPadding key={button.label} title={button.tooltip}>
                 <Button
@@ -29,8 +29,10 @@ export const ButtonRow = ({ buttons, initialFocus, className }) => (
                     initialFocus={
                         initialFocus && (button.primary || button.destructive)
                     }
+                    className={className}
                 >
                     {button.label}
+                    
                 </Button>
             </ButtonPadding>
         ))}
