@@ -47,11 +47,12 @@ export const EventButtons = ({ history, existingEvent }) => {
     var { sampleDate, defaultProgram } = useSelector(state => state.data.panel)
     var editable = useSelector(state => state.data.editable)
     var addSampleValid = (defaultProgram.length && !editable && sampleDate) ? false : true
-    var aggregationOnProgress = useSelector (state=>state.data.aggregationOnProgress)
-
+    var aggregationOnProgress = useSelector(state => state.data.aggregationOnProgress)
+    var { program } = useSelector(state => state.data.panel);
+    var programCheck = program == "WhYipXYg2Nh" ? false : true;
+    
     const changeAggregationStatus = (status)=>{
         
-        console.log("changing aggregation status to ",status);
         dispatch(setAggregationProgress(status))
         aggregationOnProgress = status
     }
@@ -257,7 +258,7 @@ export const EventButtons = ({ history, existingEvent }) => {
         disabled: !valid || buttonsDisabled,
     }
     const buttons = () =>
-        existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back] : [completeButton, Save, Go_Back]
+        existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back] : programCheck ? [completeButton, Save, Go_Back] : [Save, Go_Back]
             : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, Go_BackIso] : [completeButton, submitAddButtonIso, Go_BackIso]:[submitButton,submitAddButton,Go_Back]
     return <StyledButtonRow buttons={buttons()} />
 }

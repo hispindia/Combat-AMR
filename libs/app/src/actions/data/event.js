@@ -282,7 +282,9 @@ export const submitEvent = addMore => async (dispatch, getState) => {
             }
         }
         dispatch(createAction(SET_COMPLETED))
-        dispatch(createAction(COMPLETED_CLICKED,true))
+        if (eventValues[ORGANISM_DETECTED] != "Pathogen detected") {
+            dispatch(createAction(COMPLETED_CLICKED, true))
+        }
         dispatch(showAlert('Submitted successfully.', { success: true }))
     } catch (error) {
         console.error(error)
