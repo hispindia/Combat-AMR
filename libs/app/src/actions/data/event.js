@@ -27,6 +27,7 @@ import {
     COMPLETED_CLICKED,
     RESET_SAMPLE_PANEL_EVENT,
     INCOMPLETED_CLICKED,
+    MARKED_FOLLOW
 } from '../types'
 import { deleteEvent } from '@hisp-amr/api'
 
@@ -36,12 +37,13 @@ import {
     setEventStatus,
     updateEventValue,
     isDuplicateRecord,
+    updateEnrollmentValue,
     existingRecordTei
 } from 'api'
 import { entityRules, eventRules, getRules } from 'helpers'
 import { DUPLICATE_CHECKING } from 'constants/duplicacy'
 import { LOADING, SUCCESS } from 'constants/statuses'
-import { SAMPLE_ID_ELEMENT, ORGANISM_SET , ORGANISM_DETECTED, SAMPLE_TESTING_PROGRAM} from 'constants/dhis2'
+import { SAMPLE_ID_ELEMENT, ORGANISM_SET , ORGANISM_DETECTED, SAMPLE_TESTING_PROGRAM, PERSON_TYPE} from 'constants/dhis2'
 import { showAlert } from '../alert'  
 export const resetData = () => dispatch => dispatch(createAction(RESET_DATA))
 export const disableButtons = () => dispatch =>dispatch(createAction(DISABLE_BUTTONS))
@@ -265,6 +267,12 @@ export const submitEvent = addMore => async (dispatch, getState) => {
     })
     const eventId = getState().data.event.id;    
     const eventValues = getState().data.event.values;
+    const org = getState().data.orgUnit.id;
+    const trackerEntityID = getState().data.entity.id
+    const trackerType = PERSON_TYPE
+    const followup = true
+    const program = getState().data.panel.program
+    const followupsValues = [org,trackerEntityID,trackerType,followup,program]
 
     try {
         
@@ -285,6 +293,8 @@ export const submitEvent = addMore => async (dispatch, getState) => {
         if (eventValues[ORGANISM_DETECTED] != "Pathogen detected") {
             dispatch(createAction(COMPLETED_CLICKED, true))
         }
+        dispatch(createAction(COMPLETED_CLICKED, true))
+        updateEnrollmentValue(followupsValues)
         dispatch(showAlert('Submitted successfully.', { success: true }))
     } catch (error) {
         console.error(error)
@@ -510,4 +520,29 @@ export const checkDuplicacy = sampleId => async (dispatch, getState) => {
         sampleId,
     })
     dispatch(createAction(DUPLICACY, duplicate))
+}
+
+export const followEvent = (followup,followValues) => async (dispatch, getState) => {
+    var existingFollow = getState().data.followup
+    if (followValues != undefined && followValues.length != 0) {
+        var isFollowed = followValues[3]
+        if (existingFollow) {
+            for (let [key, value] of Object.entries(followup)) {
+                if (existingFollow.hasOwnProperty(key)) {
+                    existingFollow[key] = value
+                }
+            }
+        }
+        else {
+            existingFollow = followup
+        }
+        dispatch(createAction(MARKED_FOLLOW, { existingFollow }))
+        updateEnrollmentValue(followValues)
+        if (isFollowed == true) {
+            dispatch(showAlert('Marked for follow up', { success: true }))
+        }
+        else {
+            dispatch(showAlert('Unmarked for follow up', { success: true }))
+        }
+    }
 }

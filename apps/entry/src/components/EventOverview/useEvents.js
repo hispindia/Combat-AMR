@@ -1,8 +1,10 @@
 import { useEffect, useReducer } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { showAlert } from '@hisp-amr/app'
-import { getTEI,getSterileTEI } from 'api'
+import { showAlert,followEvent } from '@hisp-amr/app'
+import { getTEI, getSterileTEI, getAntibioticFollowTEI, getSampleTEI,getAllTei } from 'api'
 import { GP_PROGRAM_ID } from './constants'
+import { createAction } from '@hisp-amr/app/dist/actions/createAction'
+import { MARKED_FOLLOW } from '@hisp-amr/app/dist/actions/types'
 
 const INITIAL_STATE = {
     rows: null,
@@ -50,23 +52,34 @@ const reducer = (state, action) => {
     }
 }
 
-export const useEvents = (status, eventstatus, code) => {
+export const useEvents = (status, eventstatus, code,isFollowUp) => {
     var programApi = [];
     const dispatch = useDispatch()
     const categories = useSelector(state => state.appConfig.categories)
     const programList = useSelector(state => state.metadata.programList)
     const user = useSelector(state => state.metadata.user)
     const selected = useSelector(state => state.selectedOrgUnit.id)
+    var isFollowUp = useSelector(state => state.data.followup)
 
     var sampleTestingProgram = programList.find(element => {
         var sampleLable = "Sample testing"
         return element.label ===  sampleLable;
     }).value;
 
-    if (code == "ST")
+    if (code == "ST") {
         programApi = [sampleTestingProgram]
-    if (code == "GP")
-        programApi = GP_PROGRAM_ID       
+    }
+    else if (code == "GP") {
+        programApi = GP_PROGRAM_ID
+    }
+    else if (code == "ALL") {        
+        for (let i = 0; i < programList.length; ++i) {
+            const item = programList[i];
+            if (!programApi.includes(item.value)) {
+                programApi.push(item.value)
+            }
+        }
+    }
     const [state, dispatcher] = useReducer(reducer, INITIAL_STATE)
 
     useEffect(() => {
@@ -78,7 +91,11 @@ export const useEvents = (status, eventstatus, code) => {
     useEffect(() => {
         const getData = async () => {
             try {
+                                                        
+
                 if (eventstatus == "COMPLETED" && programApi.length < 2) {
+                                        
+
                     const eventsData = await getSterileTEI(selected,programApi,eventstatus).then((eventResult) =>
                     dispatcher({
                     type: NEW_ROWS,
@@ -86,16 +103,56 @@ export const useEvents = (status, eventstatus, code) => {
                     })
                     )
                 }
-                else {
-                    const events = await getTEI(selected, programApi, eventstatus).then((eventResult) =>
-                        dispatcher({
-                            type: NEW_ROWS,
-                            rows: eventResult,
-                        })
+                else if (eventstatus == "ACTIVE" && programApi.length < 2) {
+                    const eventsSample = await getSampleTEI(selected, programApi, eventstatus).then((teiRows) => {
+                        if (teiRows) {
+                            dispatcher({
+                                type: NEW_ROWS,
+                                rows: teiRows,
+                            })
+                        }
+                    }
+                    )
+                }
+                else if (eventstatus == "COMPLETED" && programApi.length == 2) {
+                                        
+
+                    const eventsDataAntio = await getAntibioticFollowTEI(selected,programApi,eventstatus,isFollowUp).then(({ teiRows, isFollowUp }) =>
+                    dispatcher({
+                    type: NEW_ROWS,
+                    rows: teiRows,
+                    })
+                    )
+                }
+                else if (eventstatus == "ACTIVE" && programApi.length == 2) {
+                                        
+
+                    const eventsTei = await getTEI(selected, programApi, eventstatus).then((teiRows) => {
+                        if (teiRows) {
+                            dispatcher({
+                                type: NEW_ROWS,
+                                rows: teiRows,
+                            })
+                        }
+                    }
+                    )
+                }
+                else if (eventstatus == "ALL" && programApi.length > 2) {
+                    
+                    const eventsTeiall = await getAllTei(selected, programApi, eventstatus).then((teiRows) => {
+                        if (teiRows) {
+                            dispatcher({
+                                type: NEW_ROWS,
+                                rows: teiRows,
+                            })
+                        }
+                    }
                     )
                 }
 
-            } catch (error) {
+
+            }
+            catch (error) {
                 console.error(error)
                 dispatcher({ type: EVENTS_ERRORED })
                 dispatch(showAlert('Failed to get records', { critical: true }))
@@ -104,7 +161,7 @@ export const useEvents = (status, eventstatus, code) => {
 
         dispatcher({ type: LOADING })
         getData()
-    }, [selected, status, categories, dispatch, user.username,eventstatus,code])
+    }, [selected, status, categories, dispatch, user.username,eventstatus,code,isFollowUp])
 
     return state
 }

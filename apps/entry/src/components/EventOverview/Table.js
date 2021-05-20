@@ -11,7 +11,7 @@ const StyledCard = styled(Card)`
 /**
  * Table containg the persons events.
  */
-export const Table = ({ title, rows, headers, onEventClick }) => (
+export const Table = ({ title, rows, headers, onEventClick,onRowClickSelect }) => (
     <StyledCard>
         <MUIDataTable
             title={title}
@@ -21,6 +21,7 @@ export const Table = ({ title, rows, headers, onEventClick }) => (
                 selectableRows: 'none',
                 elevation: 0,
                 onRowClick: onEventClick,
+                onRowsSelect:onRowClickSelect,
                 responsive: 'stacked',
             }}
         />
@@ -30,6 +31,7 @@ export const Table = ({ title, rows, headers, onEventClick }) => (
 Table.propTypes = {
     title: string,
     onEventClick: func.isRequired,
+    onRowClickSelect:func.isRequired,
     rows: arrayOf(arrayOf(string)).isRequired,
     headers: arrayOf(
         shape({

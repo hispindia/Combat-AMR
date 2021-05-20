@@ -40,7 +40,8 @@ import {
     PAGE_FIRST,
     COMPLETED_CLICKED,
     RESET_SAMPLE_PANEL_EVENT,
-    AGGREGATION_ON_PROGRESS //This is a reducer to disable buttons when aggregation is on progress.
+    AGGREGATION_ON_PROGRESS, //This is a reducer to disable buttons when aggregation is on progress.
+    MARKED_FOLLOW,
 } from '../actions/types'
 
 const INITIAL_EVENT = {
@@ -82,6 +83,8 @@ const INITIAL_STATE = {
     completeClicked: false,
     inCompleteClicked:false,
     aggregationOnProgress: false,
+    inCompleteClicked: false,
+    followup:{},
 }
 
 export const data = (state = INITIAL_STATE, { type, payload }) => {
@@ -339,6 +342,11 @@ export const data = (state = INITIAL_STATE, { type, payload }) => {
                 ...state,
                 completeClicked:payload,
             }
+        case MARKED_FOLLOW:
+            return {
+                ...state,
+                followup:payload.existingFollow?payload.existingFollow:{},
+        }
         case SET_EVENT:
                     return {
                         ...state,
