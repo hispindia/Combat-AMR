@@ -403,3 +403,27 @@ export const isDuplicateRecord = async ({
         ? DUPLICACY.DUPLICATE_ERROR
         : ""
 }
+
+export const updateEnrollmentValue = async (followValues) => {
+    let enrollmentsList = []
+    var followVals = followValues[3];
+    var enrollmentID = ""
+    var enrollmentBody = ""
+    enrollmentsList = 
+        await get(
+            request('enrollments.json', {
+                options: [`ou=${followValues[0]}&trackedEntityInstance=${followValues[1]}&program=${followValues[4]}&paging=false`],
+            })
+        ).then(function (enrollresult) {
+            enrollmentID = enrollresult.enrollments[0].enrollment
+            enrollresult.enrollments[0]['followup'] = followVals
+            enrollmentBody = enrollresult.enrollments[0]            
+            var dataBody = enrollmentBody
+            let postResponse = syncRequest('PUT', `../../../api/enrollments/${enrollmentID}`, {
+            json: dataBody
+            });
+            let apiResponse = JSON.parse(postResponse.getBody('utf8'));
+        })
+    return enrollmentsList
+}
+

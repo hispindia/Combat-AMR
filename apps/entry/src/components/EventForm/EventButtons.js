@@ -232,7 +232,6 @@ export const EventButtons = ({ history, existingEvent }) => {
         primary: true,
         tooltip: "Go Back",
         onClick: onBack,
-        icon:'star_outline'
     }
 
     const Go_BackIso = {

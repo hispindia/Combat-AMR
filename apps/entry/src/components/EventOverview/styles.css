@@ -94,3 +94,10 @@ footer img {
 .FollowUp {
   padding-right: 2px !important;
 }
+.FollowUp.secondary {
+  background-color: rgb(232, 232, 232) !important;
+}
+.FollowUp > span > svg {
+  width: 15px !important;
+  height: 15px !important;
+}
