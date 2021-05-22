@@ -43,7 +43,6 @@ export const EventOverview = ({ match, history }) => {
     var [code, setCode] = useState("ALL")
     const tabValue = TABVALUES
     const { rows, loading, addButtonDisabled, error } = useEvents(status, eventstatus, code, isFollowUp)
-    console.log( " ROWS : ",rows)
     
     const handleChange = (returnValue) => {
         var programCode = returnValue[2];

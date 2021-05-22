@@ -17,6 +17,7 @@ export const TableList = (props) => {
     var [followupMaps, setFollowupMaps] = useState(isFollowUp);
     var [followValues, setFollowValues] = useState([]);
     var headers = []
+    var isPink = eventStatus == "COMPLETED" && code == "GP"?true:false
 
 
     const starbuttons = async (e, tableMeta,isFollowUp) => {
@@ -44,7 +45,7 @@ export const TableList = (props) => {
                             <Link
                                 component="button"
                                 variant="body2"
-                                color = "secondary"
+                                color = "inherit"
                                 onClick={() => {
                                     onEventClick(tableMeta.rowData,tableMeta.rowData[6], tableMeta.rowData[7])
                                 }}
@@ -57,6 +58,22 @@ export const TableList = (props) => {
             },
             {
                 name: 'Name of the Patient',
+                                options: {
+                    customBodyRender: (value, tableMeta, updateValue) => {
+                        return (
+                            <Link
+                                component="button"
+                                variant="body2"
+                                color = "inherit"
+                                onClick={() => {
+                                    onEventClick(tableMeta.rowData,tableMeta.rowData[6], tableMeta.rowData[7])
+                                }}
+                            >
+                                {tableMeta.rowData[1]}
+                            </Link>
+                        );
+                    }
+                }
             },
             {
                 name: 'Ward',
@@ -64,12 +81,60 @@ export const TableList = (props) => {
             },
             {
                 name: 'Age',
+                                options: {
+                    customBodyRender: (value, tableMeta, updateValue) => {
+                        return (
+                            <Link
+                                component="button"
+                                variant="body2"
+                                color = "inherit"
+                                onClick={() => {
+                                    onEventClick(tableMeta.rowData,tableMeta.rowData[6], tableMeta.rowData[7])
+                                }}
+                            >
+                                {tableMeta.rowData[3]}
+                            </Link>
+                        );
+                    }
+                }
             },
             {
                 name: 'Sex',
+                                options: {
+                    customBodyRender: (value, tableMeta, updateValue) => {
+                        return (
+                            <Link
+                                component="button"
+                                variant="body2"
+                                color = "inherit"
+                                onClick={() => {
+                                    onEventClick(tableMeta.rowData,tableMeta.rowData[6], tableMeta.rowData[7])
+                                }}
+                            >
+                                {tableMeta.rowData[4]}
+                            </Link>
+                        );
+                    }
+                }
             },
             {
                 name: 'Address',
+                                options: {
+                    customBodyRender: (value, tableMeta, updateValue) => {
+                        return (
+                            <Link
+                                component="button"
+                                variant="body2"
+                                color = "inherit"
+                                onClick={() => {
+                                    onEventClick(tableMeta.rowData,tableMeta.rowData[6], tableMeta.rowData[7])
+                                }}
+                            >
+                                {tableMeta.rowData[5]}
+                            </Link>
+                        );
+                    }
+                }
             },
             {
                 name: 'Organisation unit ID',
@@ -193,7 +258,7 @@ export const TableList = (props) => {
             }]
     }
 
-    const onEventClick = (row,org, tei) => {
+    const onEventClick = (row, org, tei) => {
         props.onEventClick(row,org,tei)
     }
 
@@ -201,7 +266,7 @@ export const TableList = (props) => {
         <Table
         rows={rows}
         headers={headers}
-        onEventClick={eventStatus != "COMPLETED" && code != "GP" && onEventClick}
+        onEventClick={!isPink && onEventClick}
         title={title}
         />
     )
