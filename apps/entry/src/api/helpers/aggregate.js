@@ -80,7 +80,8 @@ export const Aggregate = async ({
     dataSets,
     orgUnit,
     programs,
-    changeStatus
+    changeStatus,
+    sampleDate
 }) => {
 
     //get the programCode of the event
@@ -113,6 +114,41 @@ export const Aggregate = async ({
     let sampleTypeData = event.values[sampleTypeDataElement]
 
 
+    if(!(locationData && pathogenData && sampleTypeData)){
+        //if there is any missing data don't process the aggregation
+        if(operation === "COMPLETE"){
+            return {
+                response: false,
+                message: "Mandatory fields missing"
+            }
+        }else if (operation === "INCOMPLETE"){
+            //if there is a missing data and incomplete is called, then don't 
+            //enforce aggregation because the operation might be delete.
+
+            return {
+                response: true,
+                message: "Ignored aggregation"
+            };
+        }
+    }
+
+    //check if aggregation is called in the right position
+    if(event.status.completed && operation === "COMPLETE"){
+        //If event is complete and aggregate is called, ignore it
+        return {
+            response: true,
+            message: "Event already completed."
+        };
+    }
+
+    if((!event.status.completed) && operation === "INCOMPLETE"){
+        //if Event is not completed and incomplete is called, don't process it because it is already not aggregated.
+        return {
+            response: true,
+            message: "Ignored aggregation"
+        };
+    }
+
     let cc = categoryCombos[CONSTANTS.sampleAndLocationCC_Code].id
     let cp = categoryCombos[CONSTANTS.sampleAndLocationCC_Code].categoryOptions[locationData]
     cp = cp + ";" + categoryCombos[CONSTANTS.sampleAndLocationCC_Code].categoryOptions[sampleTypeData]
@@ -141,11 +177,8 @@ export const Aggregate = async ({
     let defaultDataSet = dataSets[CONSTANTS.defaultDataSetCode]
     let antibioticWiseDataSet = dataSets[CONSTANTS.antibioticWiseDataSetCode]
 
-    //TODO change the date to the latest date.
-    let lastMonth = new Date()
-    lastMonth.setMonth(lastMonth.getMonth() - 1)
-    let period = (lastMonth).toISOString().substring(0, 7).replace('-', "");
-
+    let period = sampleDate.substring(0, 7).replace('-', "");
+    
     //now every metadata is fetched so for each get and update the data.
     let defaultResponse = await getValue({
         period: period,

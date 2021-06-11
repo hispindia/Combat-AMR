@@ -171,6 +171,70 @@ export const getExistingEvent = (orgUnit, tieId, eventId, editStatus, btnStatus)
         dispatch(createAction(EXISTING_DATA_ERRORED))
     }
 }
+
+export const getEventObject = async (metadata, orgUnit, tieId, eventId, editStatus, btnStatus) => {
+    const programs = metadata.programs
+    const optionSets = metadata.optionSets
+    const { trackedEntityTypeAttributes, rules } = metadata.person
+    try {
+        const data = await existingRecord(programs, orgUnit, tieId, eventId)
+        const [entityValues, attributes] = entityRules(
+            { ...metadata.person.values, ...data.entityValues },
+            trackedEntityTypeAttributes,
+            {
+                rules,
+                optionSets,
+                uniques: [],
+            }
+        )
+        data.TeiID = tieId;
+        data.btnStatus=btnStatus;
+        data.editable = editStatus;
+        data.eventRules = getRules(
+            metadata.eventRules,
+            data.program,
+            data.programStage.id
+        )
+        metadata.calculatedVariables.forEach(variables => {
+            for (let key in data.eventValues)
+                if ((key != variables.id) && data.program == variables.program) data.eventValues[variables.id] = "";
+        })
+        const tempSTATUS = "ACTIVE";
+        const [eventValues, programStage, invalid] = eventRules(
+            data.eventValues,
+            data.programStage,
+            {
+                rules: data.eventRules,
+                optionSets,
+                pushChanges: !data.status.completed,
+                updateValue: (key, value) =>
+                updateEventValue(data.eventId, key, value,data.program,orgUnit,tieId,tempSTATUS,data.programStage.id),
+            }
+        )
+        data.entityValues = entityValues
+        data.entityAttributes = attributes
+        data.values = eventValues
+        data.programStage = programStage
+        data.orgUnit = {
+            id: orgUnit,
+            code: getCode(orgUnit, metadata.orgUnits),
+        }
+        data.programs = metadata.programList
+        data.organisms = optionSets[ORGANISM_SET]
+        data.invalid = invalid
+        data.rules = getRules(
+            metadata.eventRules,
+            data.program,
+            data.programStage.id
+        )
+        return data;
+    }
+    catch (error) {
+        console.error(error)
+        return null
+    }
+}
+
 export const createNewEvent = () => async (dispatch, getState) => {
     dispatch(disableButtons)
     const orgUnit = getState().data.orgUnit

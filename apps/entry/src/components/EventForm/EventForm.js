@@ -15,7 +15,7 @@ import {
     addEntity,
     resetPreviousEntity,
     setEventValue,
-   
+    setAggregationProgress
 } from '@hisp-amr/app'
 import {
     Button,
@@ -45,6 +45,8 @@ export const EventForm = ({ history, match }) => {
     const eventIDs = useSelector(state => state.data.event.id)
     const previousValues = useSelector(state => state.data.previousValues)
     const prevValues = Object.keys(previousValues).length ? true : false;
+    var aggregationOnProgress = useSelector(state => state.data.aggregationOnProgress)
+    var { sampleDate } = useSelector(state => state.data.panel)
 
 
     var orgUnit = match.params.orgUnit
@@ -128,6 +130,11 @@ export const EventForm = ({ history, match }) => {
            $("#panel").hide();
            $("#popup").hide();       
     }
+
+    const changeAggregationStatus = (status)=>{
+        dispatch(setAggregationProgress(status))
+        aggregationOnProgress = status
+    }
    const onConfirm=async(e)=>{
         e.preventDefault();
         let eventID =localStorage.getItem('eventId')
@@ -139,9 +146,12 @@ export const EventForm = ({ history, match }) => {
                 categoryCombos: categoryCombos,
                 dataSets: dataSets,
                 orgUnit: orgUnit,
-                programs: programs
+                programs: programs,
+                sampleDate: sampleDate,
+                changeStatus: changeAggregationStatus
             }
         )
+        changeAggregationStatus(false);
         if(res.response){
             await deleteEvent(eventID).then(res => {
                 if(res.httpStatus == 'OK')
@@ -212,8 +222,8 @@ export const EventForm = ({ history, match }) => {
                 title="Are you sure?"
                 customButtons={
                     <React.Fragment>
-                      <Button primary={true} onClick={(e)=>onConfirm(e)}>Yes</Button>&emsp;&emsp;&emsp;
-                      <Button onClick={(e)=>onNo(e)}>No</Button>
+                      <Button disabled={aggregationOnProgress} primary={true} onClick={(e)=>onConfirm(e)}>Yes</Button>&emsp;&emsp;&emsp;
+                      <Button disabled={aggregationOnProgress} onClick={(e)=>onNo(e)}>No</Button>
                     </React.Fragment>
                   }
                 >

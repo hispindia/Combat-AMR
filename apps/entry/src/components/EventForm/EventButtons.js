@@ -75,12 +75,13 @@ export const EventButtons = ({ history, existingEvent }) => {
             dataSets: dataSets,
             orgUnit: orgUnit.id,
             programs: programs,
+            sampleDate: sampleDate,
             changeStatus : changeAggregationStatus
         })
-        changeAggregationStatus(false);
         if(res.response){
             await dispatch(submitEvent(addMore))
         }
+        changeAggregationStatus(false);
     }
     const submitExit = async () => await onSubmit(false)    
     const onEdit = async () => {
@@ -90,14 +91,16 @@ export const EventButtons = ({ history, existingEvent }) => {
             dataElements:dataElementObjects,
             categoryCombos: categoryCombos,
             dataSets: dataSets,
+            sampleDate: sampleDate,
             orgUnit: orgUnit.id,
             programs: programs,
             changeStatus : changeAggregationStatus
         })
-        changeAggregationStatus(false);
+        
         if(res.response){
             await dispatch(editEvent())
         }
+        changeAggregationStatus(false);
     }
 
     // Next button ,Submit and Add New ISO, Submit and Add New Sample, Save start
@@ -116,15 +119,16 @@ export const EventButtons = ({ history, existingEvent }) => {
                 dataElements: dataElementObjects,
                 categoryCombos: categoryCombos,
                 dataSets: dataSets,
+                sampleDate: sampleDate,
                 orgUnit: orgUnit.id,
                 programs: programs,
                 changeStatus : changeAggregationStatus
             }
         )
-        changeAggregationStatus(false);
         if(res.response){
             await dispatch( inCompleteEvent() )   
         }
+        changeAggregationStatus(false);
     }
 
     const submitAddButton = {
