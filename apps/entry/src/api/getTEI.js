@@ -20,7 +20,7 @@ export const getAntibioticFollowTEI = async (orgUnit,sampleTestingProgram,eventS
   requestTwo = axios.get(api_GP1);
   requestThree = axios.get(api_GP2);
 
-    
+
 
    return axios
   .all([requestTwoFollow,requestThreeFollow,requestTwo,requestThree])
@@ -58,7 +58,7 @@ export const getAntibioticFollowTEI = async (orgUnit,sampleTestingProgram,eventS
             rowList.forEach((teis, index) => {
             const trackedEntityInstance = teis[0]
             const orgUnit = teis[3]
-            teiRows[index] = ['', '', '', '', '', '', '', '', '', '', ''] 
+            teiRows[index] = ['', '', '', '', '', '', '', '', '', '', '']
             teiRows[index]['0'] = teis[7] //CR Number
             teiRows[index]['1'] = teis[8] //Name
             teiRows[index]['3'] = teis[11] //Age
@@ -79,7 +79,7 @@ export const getAntibioticFollowTEI = async (orgUnit,sampleTestingProgram,eventS
   .catch(errors => {
     console.error(errors);
   });
-  
+
 }
 
 export const getTEI = async (orgUnit,sampleTestingProgram,eventStatus) => {
@@ -106,7 +106,7 @@ export const getTEI = async (orgUnit,sampleTestingProgram,eventStatus) => {
       const responseThree = responses[1];
 
       if (responseTwo.data || responseThree.data) {
-          
+
           responseTwo.data.rows.forEach((responseTwoteis, index) => {
                 rowList.push(responseTwoteis)
             })
@@ -117,7 +117,7 @@ export const getTEI = async (orgUnit,sampleTestingProgram,eventStatus) => {
             rowList.forEach((teis, index) => {
             const trackedEntityInstance = teis[0]
             const orgUnit = teis[3]
-            teiRows[index] = ['', '', '', '', '', '', '', '', '', '', ''] 
+            teiRows[index] = ['', '', '', '', '', '', '', '', '', '', '']
             teiRows[index]['0'] = teis[7] //CR Number
             teiRows[index]['1'] = teis[8] //Name
             teiRows[index]['3'] = teis[11] //Age
@@ -131,12 +131,12 @@ export const getTEI = async (orgUnit,sampleTestingProgram,eventStatus) => {
       return teiRows
     })
    ).then((teiRows) => {
-     return teiRows 
+     return teiRows
    })
   .catch(errors => {
     console.error(errors);
   });
-  
+
 }
 
 export const getSterileTEI = async (orgUnit,sampleTestingProgram,eventStatus) => {
@@ -159,7 +159,7 @@ export const getSterileTEI = async (orgUnit,sampleTestingProgram,eventStatus) =>
       axios.spread((...responses) => {
         const responseOne = responses[0];
         const responseTwo = responses[1];
-        
+
         responseTwo.data.events.forEach((event) => {
           var eventData = {};
           var dataElement = {};
@@ -175,10 +175,10 @@ export const getSterileTEI = async (orgUnit,sampleTestingProgram,eventStatus) =>
             (dataElement["VbUbBX7G6Jf"] == "Rejected"))
               dataValue["deCode"] = dataElement["VbUbBX7G6Jf"];
             eventData.dataValues = dataValue;
-            events.push(eventData);          
+            events.push(eventData);
         });
 
-        
+
         if (responseOne.data) {
           var index = 0
           events.forEach((event) => {
@@ -211,11 +211,11 @@ export const getSterileTEI = async (orgUnit,sampleTestingProgram,eventStatus) =>
           return teiSterileRows
         }
         return teiSterileRows
-      })  
+      })
     ).then((teiSterileRows) => { return teiSterileRows })
   .catch(errors => {
     console.error(errors);
-  });  
+  });
 }
 
 
@@ -226,20 +226,20 @@ export const getSampleTEI = async (orgUnit,sampleTestingProgram,eventStatus) => 
   var requestOne = ''
 
   var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStatus=${eventStatus}&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&assignedUser=&pageSize=50&page=1&totalPages=false`
-  requestOne = axios.get(api_sample);    
+  requestOne = axios.get(api_sample);
 
   return axios
     .all([requestOne])
     .then(
       axios.spread((...responses) => {
         const responseOne = responses[0];
-        
-          if (responseOne.data) {            
+
+          if (responseOne.data) {
             responseOne.data.rows.forEach((teis, index) => {
             const trackedEntityInstance = teis[0]
             const orgUnit = teis[3]
             teiRows[index] = ['', '', '', '', '', '', '', '', '', '', '']
-                
+
             teiRows[index]['0'] = teis[7] //CR Number
             teiRows[index]['1'] = teis[8] //Name
             teiRows[index]['3'] = teis[11] //Age
@@ -247,15 +247,15 @@ export const getSampleTEI = async (orgUnit,sampleTestingProgram,eventStatus) => 
             teiRows[index]['5'] = teis[14] //Address
             teiRows[index]['6'] = orgUnit
             teiRows[index]['7'] = trackedEntityInstance
-  
+
         })
         }
         return teiRows
-      })  
+      })
     ).then((teiRows) => { return teiRows })
   .catch(errors => {
     console.error(errors);
-  });  
+  });
 }
 
 export const getAllTei = async (orgUnit,sampleTestingProgram,eventStatus) => {
@@ -274,7 +274,7 @@ export const getAllTei = async (orgUnit,sampleTestingProgram,eventStatus) => {
   requestTwo = axios.get(api_GP2);
   requestThree = axios.get(api_GP3);
 
-    
+
 
    return axios
   .all([requestOne,requestTwo,requestThree])
@@ -286,7 +286,7 @@ export const getAllTei = async (orgUnit,sampleTestingProgram,eventStatus) => {
       const responseThree = responses[2];
 
       if (responseTwo.data || responseThree.data || responseOne.data) {
-            
+
             responseOne.data.rows.forEach((responseOneTei) => {
               rowList.push(responseOneTei)
             })
@@ -297,11 +297,11 @@ export const getAllTei = async (orgUnit,sampleTestingProgram,eventStatus) => {
               rowList.push(responseThreeteis)
             })
 
-        
-            rowList.forEach((teis, index) => {
+            let rowUnique = Array.from(new Set(rowList.map(JSON.stringify)), JSON.parse);
+            rowUnique.forEach((teis, index) => {
             const trackedEntityInstance = teis[0]
             const orgUnit = teis[3]
-            teiRows[index] = ['', '', '', '', '', '', '', '', '', '', ''] 
+            teiRows[index] = ['', '', '', '', '', '', '', '', '', '', '']
             teiRows[index]['0'] = teis[7] //CR Number
             teiRows[index]['1'] = teis[8] //Name
             teiRows[index]['3'] = teis[11] //Age
@@ -315,10 +315,10 @@ export const getAllTei = async (orgUnit,sampleTestingProgram,eventStatus) => {
       return teiRows
     })
    ).then((teiRows) => {
-     return teiRows 
+     return teiRows
    })
   .catch(errors => {
     console.error(errors);
   });
-  
+
 }
