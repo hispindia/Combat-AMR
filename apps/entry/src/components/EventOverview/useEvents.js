@@ -1,7 +1,7 @@
 import { useEffect, useReducer } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { showAlert,followEvent } from '@hisp-amr/app'
-import { getTEI, getSterileTEI, getAntibioticFollowTEI, getSampleTEI,getAllTei } from 'api'
+import { getPendingAntiResult, getSterileTEI, getAntibioticFollowTEI, getPendingSampleResult,getAllTei } from 'api'
 import { GP_PROGRAM_ID } from './constants'
 import { createAction } from '@hisp-amr/app/dist/actions/createAction'
 import { MARKED_FOLLOW } from '@hisp-amr/app/dist/actions/types'
@@ -72,7 +72,7 @@ export const useEvents = (status, eventstatus, code,isFollowUp) => {
     else if (code == "GP") {
         programApi = GP_PROGRAM_ID
     }
-    else if (code == "ALL") {        
+    else if (code == "ALL") {
         for (let i = 0; i < programList.length; ++i) {
             const item = programList[i];
             if (!programApi.includes(item.value)) {
@@ -91,10 +91,10 @@ export const useEvents = (status, eventstatus, code,isFollowUp) => {
     useEffect(() => {
         const getData = async () => {
             try {
-                                                        
+
 
                 if (eventstatus == "COMPLETED" && programApi.length < 2) {
-                                        
+
 
                     const eventsData = await getSterileTEI(selected,programApi,eventstatus).then((eventResult) =>
                     dispatcher({
@@ -104,7 +104,7 @@ export const useEvents = (status, eventstatus, code,isFollowUp) => {
                     )
                 }
                 else if (eventstatus == "ACTIVE" && programApi.length < 2) {
-                    const eventsSample = await getSampleTEI(selected, programApi, eventstatus).then((teiRows) => {
+                    const eventsSample = await getPendingSampleResult(selected, programApi, eventstatus).then((teiRows) => {
                         if (teiRows) {
                             dispatcher({
                                 type: NEW_ROWS,
@@ -115,7 +115,7 @@ export const useEvents = (status, eventstatus, code,isFollowUp) => {
                     )
                 }
                 else if (eventstatus == "COMPLETED" && programApi.length == 2) {
-                                        
+
 
                     const eventsDataAntio = await getAntibioticFollowTEI(selected,programApi,eventstatus,isFollowUp).then(({ teiRows, isFollowUp }) =>
                     dispatcher({
@@ -125,9 +125,9 @@ export const useEvents = (status, eventstatus, code,isFollowUp) => {
                     )
                 }
                 else if (eventstatus == "ACTIVE" && programApi.length == 2) {
-                                        
 
-                    const eventsTei = await getTEI(selected, programApi, eventstatus).then((teiRows) => {
+
+                    const eventsTei = await getPendingAntiResult(selected, programApi, eventstatus).then((teiRows) => {
                         if (teiRows) {
                             dispatcher({
                                 type: NEW_ROWS,
@@ -138,7 +138,7 @@ export const useEvents = (status, eventstatus, code,isFollowUp) => {
                     )
                 }
                 else if (eventstatus == "ALL" && programApi.length > 2) {
-                    
+
                     const eventsTeiall = await getAllTei(selected, programApi, eventstatus).then((teiRows) => {
                         if (teiRows) {
                             dispatcher({
