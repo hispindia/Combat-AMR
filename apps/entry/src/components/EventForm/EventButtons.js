@@ -63,6 +63,7 @@ export const EventButtons = ({ history, existingEvent }) => {
          }
         else {
             history.goBack();
+            setTimeout(function(){window.location.reload();}, 100);
         }
     }
 
