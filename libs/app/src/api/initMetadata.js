@@ -104,7 +104,7 @@ export const initMetadata = async isIsolate => {
                     if(!checkValue) calculatedVariables.push({id: name, program:reqID.program.id});
                     id = name;
                 }
-               
+
                 if(id) {
                     c = c.replace(
                         new RegExp('#{' + name + '}', 'g'),
@@ -231,7 +231,7 @@ export const initMetadata = async isIsolate => {
         ).id
         const remove = []
         p.programStages
-            .filter(ps => ps.access.data.write)
+            .filter(ps => ps.access.data.write || ps.access.data.read)
             .forEach(ps => {
                 stages.push({
                     value: ps.id,
@@ -325,7 +325,7 @@ export const initMetadata = async isIsolate => {
         de => {
             dataElements[de.id] = de.formName ? de.formName : de.displayName
 
-            //remap the attributeOptionValue with code 
+            //remap the attributeOptionValue with code
             de.attributeValues.forEach(attributeValue=>{
                 de[attributeValue.attribute.code]=attributeValue.value
                 if(!dataElementObjects.attributeGroups[attributeValue.value]){
@@ -333,10 +333,10 @@ export const initMetadata = async isIsolate => {
                 }
                 dataElementObjects.attributeGroups[attributeValue.value].push(de.id)
             })
-            
+
             dataElementObjects[de.id]=de
             dataElementObjects[de.code]=de
-        }  
+        }
     )
 
     const categoryCombos={}

@@ -60,7 +60,14 @@ export const useEvents = (status, eventstatus, code,isFollowUp) => {
     const user = useSelector(state => state.metadata.user)
     const selected = useSelector(state => state.selectedOrgUnit.id)
     var isFollowUp = useSelector(state => state.data.followup)
+    const programs = useSelector(state => state.metadata.programs)
+    var userAccess = false;
 
+    programs.forEach(p => {
+        p.programStages.forEach(ps => {
+            userAccess = ps.access.data.write
+        })
+    })
     var sampleTestingProgram = programList.find(element => {
         var sampleLable = "Sample testing"
         return element.label ===  sampleLable;
@@ -86,6 +93,10 @@ export const useEvents = (status, eventstatus, code,isFollowUp) => {
         const noProgram = !programList.find(p => p.orgUnits.includes(selected))
         if (noProgram !== state.addButtonDisabled)
             dispatcher({ type: NEW_PROGRAMS, disable: noProgram })
+        if (!userAccess) {
+            console.log(" User Accesss : ",userAccess)
+            dispatcher({ type: NEW_PROGRAMS, disable: !userAccess })
+        }
     }, [selected, programList, state.addButtonDisabled,eventstatus])
 
     useEffect(() => {

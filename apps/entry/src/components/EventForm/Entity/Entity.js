@@ -16,6 +16,13 @@ export const Entity = ({ showEdit }) => {
     const attributes = useSelector(state => state.data.entity.attributes)
     const editing = useSelector(state => state.data.entity.editing)
     var editableVal = useSelector(state => state.data.editable)
+    const programs = useSelector(state => state.metadata.programs)
+    var userAccess = false;
+    programs.forEach(p => {
+        p.programStages.forEach(ps => {
+            userAccess = ps.access.data.write
+        })
+    })
 
     const [half] = useState(
         Math.floor(person.trackedEntityTypeAttributes.length / 2)
@@ -26,7 +33,7 @@ export const Entity = ({ showEdit }) => {
     return (
         <CardSection
             heading="Person"
-            buttons={id && showEdit && <EntityButtons />}
+            buttons={id && showEdit && userAccess && <EntityButtons />}
         >
             <EntityModal />
             <Grid container spacing={0}>
@@ -35,6 +42,7 @@ export const Entity = ({ showEdit }) => {
                         <EntityInput
                             attribute={a}
                             key={a.trackedEntityAttribute.id}
+                            userAccess = {userAccess}
                         />
                     ))}
                 </Grid>
@@ -43,6 +51,8 @@ export const Entity = ({ showEdit }) => {
                         <EntityInput
                             attribute={a}
                             key={a.trackedEntityAttribute.id}
+                            userAccess = {userAccess}
+
                         />
                     ))}
                 </Grid>

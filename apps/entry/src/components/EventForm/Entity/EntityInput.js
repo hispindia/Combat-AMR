@@ -12,7 +12,7 @@ const Padding = styled.div`
 /**
  * Entity information section.
  */
-export const EntityInput = ({ attribute }) => {
+export const EntityInput = ({ attribute,userAccess }) => {
     const dispatch = useDispatch()
     const { optionSets } = useSelector(state => state.metadata)
     const { id: entityId, editing } = useSelector(state => state.data.entity)
@@ -20,12 +20,12 @@ export const EntityInput = ({ attribute }) => {
     const value = useSelector(state => state.data.entity.values[id])
     const unique = useSelector(state => state.data.entity.uniques[id])
     const modal = useSelector(state => state.data.entity.modal)
-    const disabled = entityId && !editing ? true : false
+    const disabled = entityId && !editing && !userAccess? true : false
     const valueType = attribute.trackedEntityAttribute.valueType;
     var { orgUnits } = useSelector(state => state.metadata)
     var valueToFind = "";
     function newOrgInsert(testorgs)
-    { 
+    {
     var testorgss = testorgs
     var isParent = false;
     if(Array.isArray(testorgs)){
