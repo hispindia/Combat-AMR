@@ -51,25 +51,32 @@ export const EventForm = ({ history, match }) => {
 
     var orgUnit = match.params.orgUnit
     const teiId = match.params.teiId;
+
+    var userAccess = false;
+    programs.forEach(p => {
+        p.programStages.forEach(ps => {
+            userAccess = ps.access.data.write
+        })
+    })
     useEffect(() => {
         if( pageFirst ){
-            $("#a").hide(); 
+            $("#a").hide();
         } else {
-            $("#a").show(); 
+            $("#a").show();
             $("#panel").hide();
         }
         $("#btn").hide();
       if(eventEditable === true){
         $("#btn").show();
         $("#popup").show();
-        } 
+        }
         $("#msg").hide();
         $('#success').hide();
       });
     useEffect(() => {
         // let previousEvent = ""
         // if(!pageFirst) {
-        //     previousEvent = "";  
+        //     previousEvent = "";
         // }
         dispatch(resetData())
         if (teiId) {
@@ -81,7 +88,7 @@ export const EventForm = ({ history, match }) => {
         setIsFirstRender(false)
     }, [])
 
-    //for Previous event value 
+    //for Previous event value
     useEffect(()=> {
         // dispatch(PreValue(previousValues))
         if (eventIDs && editable) {
@@ -98,8 +105,8 @@ export const EventForm = ({ history, match }) => {
             // dispatch(resetPreviousEntity())
         }
     }, [eventIDs])
-    
-    // for previous entity values 
+
+    // for previous entity values
 
     useEffect(() => {
         if (previousValues.id) {
@@ -121,14 +128,14 @@ export const EventForm = ({ history, match }) => {
         e.preventDefault();
         $('#msg').show();
     }
-    
+
     const  onCancel =(e) =>{
         e.preventDefault();
         if(pageFirst){
             history.goBack()
         }
            $("#panel").hide();
-           $("#popup").hide();       
+           $("#popup").hide();
     }
 
     const changeAggregationStatus = (status)=>{
@@ -195,7 +202,9 @@ export const EventForm = ({ history, match }) => {
                     <React.Fragment>
                          <EventButtons history={history} existingEvent={teiId} />&emsp;
                         <div id="btn">
-                        <Button  destructive={true} onClick={(e)=>onDelete(e)}>Delete</Button>&emsp;&emsp;&emsp;&emsp;&emsp;
+                            {userAccess &&
+                                <Button destructive={true} onClick={(e) => onDelete(e)}>Delete</Button>}&emsp;&emsp;&emsp;&emsp;&emsp;
+
                         </div>
                         {/* {!prevValues &&
                             <Button onClick={(e) => onCancel(e)}>Cancel</Button>
@@ -205,9 +214,9 @@ export const EventForm = ({ history, match }) => {
                 >
                 <Panel />
                 <Event />
-               </SweetAlert> 
+               </SweetAlert>
                 </div> :
-                <div id="panel"> 
+                <div id="panel">
                 <Panel showEdit={panelValid} />
                 <Event />
                 <EventButtons history={history} existingEvent={teiId} />
@@ -231,7 +240,7 @@ export const EventForm = ({ history, match }) => {
                 </SweetAlert>
             </div>
             <div id='success'>
-            <SweetAlert success title="Event Delete Success"   
+            <SweetAlert success title="Event Delete Success"
              customButtons={
                 <React.Fragment>
                   <Button primary={true} onClick={(e)=>onYes(e)}>Ok</Button>&emsp;&emsp;&emsp;

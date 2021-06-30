@@ -50,6 +50,12 @@ export const EventButtons = ({ history, existingEvent }) => {
     var aggregationOnProgress = useSelector(state => state.data.aggregationOnProgress)
     var { program } = useSelector(state => state.data.panel);
     var programCheck = program == "WhYipXYg2Nh" ? false : true;
+    var userAccess = false;
+    programs.forEach(p => {
+        p.programStages.forEach(ps => {
+            userAccess = ps.access.data.write
+        })
+    })
 
     const changeAggregationStatus = (status)=>{
 
@@ -265,5 +271,8 @@ export const EventButtons = ({ history, existingEvent }) => {
     const buttons = () =>
         existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back] : programCheck ? [completeButton, Save, Go_Back] : [Save, Go_Back]
             : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, Go_BackIso] : [completeButton, submitAddButtonIso, Go_BackIso]:[submitButton,submitAddButton,Go_Back]
-    return <StyledButtonRow buttons={buttons()} />
+
+    const buttonsReadUsers = () =>
+        [Go_Back]
+    return <StyledButtonRow buttons={userAccess ? buttons() : buttonsReadUsers()} />
 }
