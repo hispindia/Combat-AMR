@@ -39,7 +39,7 @@ const getMetadata = async () =>
                 code,valueType,optionSetValue,optionSet]]]`,
                 `trackedEntityTypeAttributes[name,id,displayName,valueType,
                 unique,optionSetValue,optionSet,mandatory,
-                trackedEntityAttribute[name,id,displayName,valueType,
+                trackedEntityAttribute[name,id,displayName,formName,valueType,
                 unique,optionSetValue,optionSet]]`,
                 'value',
                 'programRuleVariableSourceType'
