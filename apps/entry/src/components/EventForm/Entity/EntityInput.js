@@ -22,8 +22,11 @@ export const EntityInput = ({ attribute,userAccess }) => {
     const modal = useSelector(state => state.data.entity.modal)
     const disabled = entityId && !editing && !userAccess? true : false
     const valueType = attribute.trackedEntityAttribute.valueType;
+    const displayLabel = attribute.trackedEntityAttribute.formName ? attribute.trackedEntityAttribute.formName : attribute.trackedEntityAttribute.displayName
     var { orgUnits } = useSelector(state => state.metadata)
     var valueToFind = "";
+
+
     function newOrgInsert(testorgs)
     {
     var testorgss = testorgs
@@ -83,7 +86,7 @@ export const EntityInput = ({ attribute,userAccess }) => {
                     required={attribute.mandatory}
                     unique={attribute.trackedEntityAttribute.unique}
                     name={attribute.trackedEntityAttribute.id}
-                    label={attribute.trackedEntityAttribute.displayName}
+                    label={displayLabel}
                     value={value}
                     onChange={onChange}
                     disabled={disabled}
@@ -99,7 +102,7 @@ export const EntityInput = ({ attribute,userAccess }) => {
                             ]
                         }
                         name={attribute.trackedEntityAttribute.id}
-                        label={attribute.trackedEntityAttribute.displayName}
+                        label={displayLabel}
                         value={value}
                         onChange={onChange}
                         disabled={disabled}
@@ -113,7 +116,7 @@ export const EntityInput = ({ attribute,userAccess }) => {
                             ]
                         }
                         name={attribute.trackedEntityAttribute.id}
-                        label={attribute.trackedEntityAttribute.displayName}
+                        label={displayLabel}
                         value={value}
                         onChange={onChange}
                         disabled={disabled}
@@ -121,7 +124,7 @@ export const EntityInput = ({ attribute,userAccess }) => {
                 )
                 ) : valueType === "ORGANISATION_UNIT" ?
                         <TreeViewInput data={orgUnitsLabels}
-                        placeholder={attribute.trackedEntityAttribute.displayName}
+                        placeholder={displayLabel}
                         onChange={onChange}
                         name={attribute.trackedEntityAttribute.id}
                         value={valueToFind}
@@ -135,7 +138,7 @@ export const EntityInput = ({ attribute,userAccess }) => {
                     validateUnique
                     onValidation={onValidation}
                     name={attribute.trackedEntityAttribute.id}
-                    label={attribute.trackedEntityAttribute.displayName}
+                    label={displayLabel}
                     value={value}
                     onChange={onChange}
                     disabled={
