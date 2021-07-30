@@ -20,12 +20,11 @@ export const EntityInput = ({ attribute,userAccess }) => {
     const value = useSelector(state => state.data.entity.values[id])
     const unique = useSelector(state => state.data.entity.uniques[id])
     const modal = useSelector(state => state.data.entity.modal)
-    const disabled = entityId && !editing && !userAccess? true : false
+    const disabled = entityId && !editing ? true : false
     const valueType = attribute.trackedEntityAttribute.valueType;
     const displayLabel = attribute.trackedEntityAttribute.formName ? attribute.trackedEntityAttribute.formName : attribute.trackedEntityAttribute.displayName
     var { orgUnits } = useSelector(state => state.metadata)
     var valueToFind = "";
-
 
     function newOrgInsert(testorgs)
     {
