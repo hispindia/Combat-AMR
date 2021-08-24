@@ -214,7 +214,7 @@ export const EventButtons = ({ history, existingEvent }) => {
     }
 
     const completeButton = {
-        label: 'Marked Complete',
+        label: 'Mark Complete',
         onClick: submitExit,
         disabled: buttonsDisabled || !!invalid || aggregationOnProgress,
         icon: 'done',
@@ -229,7 +229,7 @@ export const EventButtons = ({ history, existingEvent }) => {
     }
 
     const incompleteButton = {
-        label: 'Marked Incomplete',
+        label: 'Mark Incomplete',
         onClick: onInComplete,
         disabled: buttonsDisabled || !status.editable || btnStatus || aggregationOnProgress,
         icon: 'edit',
