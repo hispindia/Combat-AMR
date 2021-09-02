@@ -12,12 +12,6 @@ import { ExportMenuSectionHeader } from './ExportMenuSectionHeader'
 import { ImportMenuSectionHeader } from './ImportMenuSectionHeader'
 import styles from './Sidebar.module.css'
 
-const dataImportPage = {
-    name: i18n.t('Data import'),
-    code: 'data-import',
-    icon: <DataIcon />,
-    path: '/import/data',
-}
 
 const dataExportPage = {
     name: i18n.t('Data export'),
@@ -26,9 +20,6 @@ const dataExportPage = {
     icon: <DataIcon />,
 }
 
-const importPages = [
-    dataImportPage
-]
 
 const exportPages = [
     dataExportPage
@@ -85,20 +76,6 @@ const Sidebar = () => {
                 code={'home'}
                 active={pathname == '/'}
             />
-            <ImportMenuSectionHeader />
-            {importPages.map(({ icon, name, code, path }) => {
-                const active = pathname == path
-                return (
-                    <SidebarItem
-                        name={name}
-                        path={path}
-                        code={code}
-                        icon={icon}
-                        active={active}
-                        key={path}
-                    />
-                )
-            })}
             <ExportMenuSectionHeader />
             {exportPages.map(({ icon, name, code, path }) => {
                 const active = pathname == path

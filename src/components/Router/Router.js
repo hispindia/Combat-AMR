@@ -1,7 +1,6 @@
 import React from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import {
-    DataImport,
     DataExport,
     JobOverview,
     Home,
@@ -13,7 +12,6 @@ const Router = () => {
         <ScrollToTop>
             <Switch>
                 <Route exact path="/" component={Home} />
-                <Route path="/import/data" component={DataImport} />
                 <Route path="/export/data" component={DataExport} />
                 <Route path="/utils/job-overview" component={JobOverview} />
                 <Redirect from="*" to="/" />

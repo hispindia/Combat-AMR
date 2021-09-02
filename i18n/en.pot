@@ -5,8 +5,8 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
-"POT-Creation-Date: 2021-09-02T09:14:11.562Z\n"
-"PO-Revision-Date: 2021-09-02T09:14:11.562Z\n"
+"POT-Creation-Date: 2021-09-02T09:59:01.608Z\n"
+"PO-Revision-Date: 2021-09-02T09:59:01.608Z\n"
 
 msgid "Something went wrong when loading the current user!"
 msgstr ""
@@ -688,9 +688,6 @@ msgstr ""
 msgid "Export"
 msgstr ""
 
-msgid "Data import"
-msgstr ""
-
 msgid "Data export"
 msgstr ""
 
@@ -732,19 +729,10 @@ msgstr ""
 msgid "Export data"
 msgstr ""
 
-msgid "Import data values from ADX XML, DXF 2 XML, JSON, CSV or PDF files."
-msgstr ""
-
-msgid "Supported file types: JSON, CSV, XML, ADX and PDF."
-msgstr ""
-
 msgid "Overview: Import/Export"
 msgstr ""
 
 msgid "Import or export DHIS2 data."
-msgstr ""
-
-msgid "Import data"
 msgstr ""
 
 msgid "An overview of all import jobs started this session."
