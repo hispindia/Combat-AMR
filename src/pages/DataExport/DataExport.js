@@ -60,6 +60,8 @@ const DataExport = () => {
     const { baseUrl } = useConfig()
     const [dataSets, setDataSets] = useState([])
     const [dataSetError, setDataSetError] = useState(undefined)
+    const [initValues , setInitValues] = useState (initialValues)
+
     const onSubmit = onExport(baseUrl, setExportEnabled)
 
     const { dataSetError: resourceError, resourceName, query } = { resourceName: 'dataSets', query: dataSetQuery }
@@ -76,16 +78,18 @@ const DataExport = () => {
                 list.push(dataSet.id)
             });
 
-            setDataSets(list)
-            initialValues.selectedDataSets = list
+            if (list.length > 0) {
+                setDataSets(list);
+                let newObj = {...initValues}
+                newObj.selectedDataSets = list;
+                setInitValues(newObj)
+            }
         },
         onError: error => {
             setDataSetError(error)
             console.error(`Picking dataSets error (${error})`)
         }
     })
-
-    console.log("melaeke outside ",initialValues)
 
     return (
         <Page
@@ -102,34 +106,36 @@ const DataExport = () => {
                 </Help>
 
             }
-            <Form
-                onSubmit={onSubmit}
-                initialValues={initialValues}
-                validate={validate}
-                subscription={{
-                    values: true,
-                    submitError: true,
-                }}
-                render={({ handleSubmit, form, submitError }) => (
-                    <form onSubmit={handleSubmit}>
-                        <BasicOptions>
-                            <OrgUnitTree />
-                            <Dates
-                                label={i18n.t('Date range to export data for')}
-                            >
-                                <StartMonth />
-                                <EndMonth />
-                            </Dates>
-                        </BasicOptions>
-                        <ValidationSummary />
-                        <ExportButton
-                            label={i18n.t('Export data')}
-                            disabled={!exportEnabled}
-                        />
-                        <FormAlerts alerts={submitError} />
-                    </form>
-                )}
-            />
+            {dataSets.length > 0 &&
+                <Form
+                    onSubmit={onSubmit}
+                    initialValues={initValues}
+                    validate={validate}
+                    subscription={{
+                        values: true,
+                        submitError: true,
+                    }}
+                    render={({ handleSubmit, form, submitError }) => (
+                        <form onSubmit={handleSubmit}>
+                            <BasicOptions>
+                                <OrgUnitTree />
+                                <Dates
+                                    label={i18n.t('Date range to export data for')}
+                                >
+                                    <StartMonth />
+                                    <EndMonth />
+                                </Dates>
+                            </BasicOptions>
+                            <ValidationSummary />
+                            <ExportButton
+                                label={i18n.t('Export data')}
+                                disabled={!exportEnabled}
+                            />
+                            <FormAlerts alerts={submitError} />
+                        </form>
+                    )}
+                />
+            }
         </Page>
     )
 }

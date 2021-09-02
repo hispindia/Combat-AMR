@@ -68,8 +68,7 @@ const createInitialValues = prevJobDetails => ({
     ),
     dataElementIdScheme:
         prevJobDetails.dataElementIdScheme || defaultDataElementIdSchemeOption,
-    orgUnitIdScheme:
-        prevJobDetails.orgUnitIdScheme || defaultOrgUnitIdSchemeOption,
+    orgUnitIdScheme: 'CODE',
     idScheme: prevJobDetails.idScheme || defaultIdSchemeOption,
     skipExistingCheck: getInitialBoolValue(
         prevJobDetails.skipExistingCheck,
@@ -127,25 +126,7 @@ const DataImport = () => {
                                     }
                                 )}
                             />
-                            <Format
-                                availableFormats={formatAdxPdfOptions}
-                                type="import"
-                            />
-                            <FirstRowIsHeader show={values.format == 'csv'} />
-                            <Strategy value={values.strategy} />
-                            <PreheatCache />
-                            <WithAuthority pred={hasAuthorityToSkipAudit}>
-                                <SkipAudit />
-                            </WithAuthority>
                         </BasicOptions>
-                        <MoreOptions>
-                            <SchemeContainer>
-                                <DataElementIdScheme />
-                                <OrgUnitIdScheme />
-                                <IdScheme />
-                            </SchemeContainer>
-                            <SkipExistingCheck />
-                        </MoreOptions>
                         <ValidationSummary />
                         <ImportButtonStrip form={form} />
                         <FormAlerts alerts={submitError} />
