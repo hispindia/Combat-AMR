@@ -8,7 +8,6 @@ import {
     DataIcon,
     TasksIcon,
 } from '../index'
-import { ExportMenuSectionHeader } from './ExportMenuSectionHeader'
 import { ImportMenuSectionHeader } from './ImportMenuSectionHeader'
 import styles from './Sidebar.module.css'
 
@@ -19,20 +18,10 @@ const dataImportPage = {
     path: '/import/data',
 }
 
-const dataExportPage = {
-    name: i18n.t('Data export'),
-    code: 'data-export',
-    path: '/export/data',
-    icon: <DataIcon />,
-}
-
 const importPages = [
     dataImportPage
 ]
 
-const exportPages = [
-    dataExportPage
-]
 
 const jobOverviewPage = {
     name: i18n.t('Job overview'),
@@ -99,20 +88,7 @@ const Sidebar = () => {
                     />
                 )
             })}
-            <ExportMenuSectionHeader />
-            {exportPages.map(({ icon, name, code, path }) => {
-                const active = pathname == path
-                return (
-                    <SidebarItem
-                        name={name}
-                        path={path}
-                        code={code}
-                        icon={icon}
-                        active={active}
-                        key={path}
-                    />
-                )
-            })}
+            
             <Divider />
             <SidebarItem
                 name={jobOverviewPage.name}

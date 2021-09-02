@@ -1,9 +1,4 @@
 import i18n from '@dhis2/d2-i18n'
-// export pages
-import {
-    PAGE_NAME as DATA_EXPORT_PAGE_NAME,
-    PAGE_DESCRIPTION as DATA_EXPORT_DESCRIPTION,
-} from '../DataExport/DataExport'
 import {
     PAGE_NAME as DATA_IMPORT_PAGE_NAME,
     PAGE_DESCRIPTION as DATA_IMPORT_DESCRIPTION,
@@ -16,15 +11,6 @@ const capitalizeName = name =>
 const capitalizePages = pages =>
     pages.map(p => ({ ...p, name: capitalizeName(p.name) }))
 
-const exportPages = capitalizePages([
-    {
-        name: DATA_EXPORT_PAGE_NAME,
-        description: DATA_EXPORT_DESCRIPTION,
-        linkText: i18n.t('Export data'),
-        to: '/export/data',
-    }
-])
-
 const importPages = capitalizePages([
     {
         name: DATA_IMPORT_PAGE_NAME,
@@ -34,4 +20,4 @@ const importPages = capitalizePages([
     }
 ])
 
-export { exportPages, importPages }
+export { importPages }
