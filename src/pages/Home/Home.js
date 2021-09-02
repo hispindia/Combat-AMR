@@ -6,10 +6,10 @@ import { HomeCard } from './HomeCard'
 import { exportPages } from './pages'
 
 // PAGE INFO
-const PAGE_NAME = i18n.t('Overview: Import/Export', {
+const PAGE_NAME = i18n.t('Overview: Export', {
     nsSeparator: '>',
 })
-const PAGE_DESCRIPTION = i18n.t('Import or export DHIS2 data.')
+const PAGE_DESCRIPTION = i18n.t('Export DHIS2 data.')
 
 const Home = () => (
     <Page title={PAGE_NAME} desc={PAGE_DESCRIPTION} dataTest="page-overview">

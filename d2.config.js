@@ -1,7 +1,7 @@
 const config = {
     type: 'app',
-    name: 'import-export',
-    title: 'Import/Export',
+    name: 'export',
+    title: 'Export',
     coreApp: true,
 
     entryPoints: {
