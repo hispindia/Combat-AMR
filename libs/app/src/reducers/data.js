@@ -42,6 +42,8 @@ import {
     RESET_SAMPLE_PANEL_EVENT,
     AGGREGATION_ON_PROGRESS, //This is a reducer to disable buttons when aggregation is on progress.
     MARKED_FOLLOW,
+    CLINICIAN_CLICKED,
+    SET_CLINICIAN,
 } from '../actions/types'
 
 const INITIAL_EVENT = {
@@ -84,12 +86,13 @@ const INITIAL_STATE = {
     inCompleteClicked:false,
     aggregationOnProgress: false,
     inCompleteClicked: false,
-    followup:{},
+    followup: {},
+    clinicianClicked:false,
 }
 
 export const data = (state = INITIAL_STATE, { type, payload }) => {
     switch (type) {
-         case SET_PREVIOUS_ENTITY: 
+         case SET_PREVIOUS_ENTITY:
         return {
             ...state,
             previousValues: payload.entity
@@ -206,7 +209,7 @@ export const data = (state = INITIAL_STATE, { type, payload }) => {
                     completeClicked:false,
                 },
             }
-        
+
             case PAGE_FIRST: {
                 return {
                     ...state,
@@ -266,7 +269,7 @@ export const data = (state = INITIAL_STATE, { type, payload }) => {
             case EXISTING_TEI_DATA_RECEIVED:
             return {
                 ...state,
-                btnStatus: payload.btnStatus, 
+                btnStatus: payload.btnStatus,
                 eventEditable: payload.editable,
                 eventList: payload.eventList,
                 entity: {
@@ -282,7 +285,7 @@ export const data = (state = INITIAL_STATE, { type, payload }) => {
         case EXISTING_DATA_RECEIVED:
             return {
                 ...state,
-                btnStatus: payload.btnStatus, 
+                btnStatus: payload.btnStatus,
                 eventEditable: payload.editable,
                 eventList: payload.eventList,
                 entity: {
@@ -346,18 +349,23 @@ export const data = (state = INITIAL_STATE, { type, payload }) => {
             return {
                 ...state,
                 followup:payload.existingFollow?payload.existingFollow:{},
-        }
+            }
+         case CLINICIAN_CLICKED:
+             return {
+             ...state,
+             clinicianClicked:payload,
+             }
         case SET_EVENT:
                     return {
                         ...state,
                         event: payload
                     }
-        case SET_PREVIOUS_EVENT: 
+        case SET_PREVIOUS_EVENT:
                 return {
                     ...state,
                     previousValues: payload.eventValues
                 }
-        
+
 
         case RESET_PANEL_EVENT:
             return {

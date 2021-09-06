@@ -27,7 +27,8 @@ import {
     COMPLETED_CLICKED,
     RESET_SAMPLE_PANEL_EVENT,
     INCOMPLETED_CLICKED,
-    MARKED_FOLLOW
+    MARKED_FOLLOW,
+    CLINICIAN_CLICKED,
 } from '../types'
 import { deleteEvent } from '@hisp-amr/api'
 
@@ -44,7 +45,7 @@ import { entityRules, eventRules, getRules } from 'helpers'
 import { DUPLICATE_CHECKING } from 'constants/duplicacy'
 import { LOADING, SUCCESS } from 'constants/statuses'
 import { SAMPLE_ID_ELEMENT, ORGANISM_SET , ORGANISM_DETECTED, SAMPLE_TESTING_PROGRAM, PERSON_TYPE} from 'constants/dhis2'
-import { showAlert } from '../alert'  
+import { showAlert } from '../alert'
 export const resetData = () => dispatch => dispatch(createAction(RESET_DATA))
 export const disableButtons = () => dispatch =>dispatch(createAction(DISABLE_BUTTONS))
 export const enableButtons = () => dispatch =>dispatch(createAction(ENABLE_BUTTONS))
@@ -94,6 +95,7 @@ export const getExistingEvent = (orgUnit, tieId, eventId, editStatus, btnStatus)
     dispatch,
     getState
 ) => {
+    dispatch(createAction(CLINICIAN_CLICKED, false))
     const state = getState()
     const programs = state.metadata.programs
     const optionSets = state.metadata.optionSets
@@ -236,6 +238,7 @@ export const getEventObject = async (metadata, orgUnit, tieId, eventId, editStat
 }
 
 export const createNewEvent = () => async (dispatch, getState) => {
+    dispatch(createAction(CLINICIAN_CLICKED, false))
     dispatch(disableButtons)
     const orgUnit = getState().data.orgUnit
     const entity = getState().data.entity
@@ -286,7 +289,7 @@ export const createNewEvent = () => async (dispatch, getState) => {
                 orgUnitCode: orgUnit.code,
             },
             UpdatedEventPayload,
-            
+
         )
         metadata.calculatedVariables.forEach(variables => {
             for (let key in data.eventValues)
@@ -329,7 +332,7 @@ export const submitEvent = addMore => async (dispatch, getState) => {
             createAction(SET_BUTTON_LOADING, addMore ? 'complete' : 'complete')
         )
     })
-    const eventId = getState().data.event.id;    
+    const eventId = getState().data.event.id;
     const eventValues = getState().data.event.values;
     const org = getState().data.orgUnit.id;
     const trackerEntityID = getState().data.entity.id
@@ -339,13 +342,13 @@ export const submitEvent = addMore => async (dispatch, getState) => {
     const followupsValues = [org,trackerEntityID,trackerType,followup,program]
 
     try {
-        
+
         await setEventStatus(eventId, true)
         if (addMore) dispatch(createAction(RESET_PANEL_EVENT))
         else {
             if (eventValues[ORGANISM_DETECTED] == "Pathogen detected") {
                 dispatch(createAction(SET_PREVIOUS_EVENT, { eventValues }))
-                dispatch(AddAndSubmit(false))                
+                dispatch(AddAndSubmit(false))
                 dispatch(createAction(PANEL_EDITABLE))
                 dispatch(createAction(RESET_PANEL_EVENT))
                 dispatch(createAction(PAGE_FIRST, true))
@@ -374,7 +377,7 @@ export const submitEvent = addMore => async (dispatch, getState) => {
 
 export const nextEvent = (next,addMoreSample,addMoreIso) => async (dispatch, getState) => {
 
-    const eventId = getState().data.event.id;    
+    const eventId = getState().data.event.id;
     const eventValues = getState().data.event.values;
     var eveStatus = getState().data.event.invalid == false ? true:false;
     // var eveStatus = next;
@@ -386,7 +389,7 @@ export const nextEvent = (next,addMoreSample,addMoreIso) => async (dispatch, get
         else {
             if (eventValues[ORGANISM_DETECTED] == "Pathogen detected") {
                 dispatch(createAction(SET_PREVIOUS_EVENT, { eventValues }))
-                dispatch(AddAndSubmit(false))                
+                dispatch(AddAndSubmit(false))
                 dispatch(createAction(PANEL_EDITABLE))
                 dispatch(createAction(RESET_PANEL_EVENT))
                 dispatch(createAction(PAGE_FIRST, true))
@@ -442,18 +445,18 @@ export const saveEvent = () => async (dispatch, getState) => {
             createAction(SET_BUTTON_LOADING, addMore ? 'submitAdd' : 'submit')
         )
     })
-    const eventId = getState().data.event.id;    
+    const eventId = getState().data.event.id;
     const eventValues = getState().data.event.values;
     var eveStatus = getState().data.event.invalid == false ? true:false;
 
     try {
-        
+
         await setEventStatus(eventId, eveStatus)
         if (addMore) dispatch(createAction(RESET_PANEL_EVENT))
         else {
             if (eventValues[ORGANISM_DETECTED] == "Pathogen detected") {
                 dispatch(createAction(SET_PREVIOUS_EVENT, { eventValues }))
-                dispatch(AddAndSubmit(false))                
+                dispatch(AddAndSubmit(false))
                 dispatch(createAction(PANEL_EDITABLE))
                 dispatch(createAction(RESET_PANEL_EVENT))
                 dispatch(createAction(PAGE_FIRST, true))
@@ -608,5 +611,48 @@ export const followEvent = (followup,followValues) => async (dispatch, getState)
         else {
             dispatch(showAlert('Unmarked for follow up', { success: true }))
         }
+    }
+}
+
+export const clinicianEvent = (next, addMoreSample, addMoreIso) => async (dispatch, getState) => {
+    dispatch(createAction(CLINICIAN_CLICKED, true))
+    const eventId = getState().data.event.id;
+    const eventValues = getState().data.event.values;
+    var eveStatus = getState().data.event.invalid == false ? true:false;
+    // var eveStatus = next;
+
+    try {
+        await setEventStatus(eventId, eveStatus)
+        if (addMoreSample) { dispatch(createAction(RESET_SAMPLE_PANEL_EVENT)) }
+        if (addMoreIso) {
+            dispatch(createAction(RESET_PANEL_EVENT))
+            dispatch(createAction(PAGE_FIRST, true))
+        }
+        else {
+            if (eventValues[ORGANISM_DETECTED] == "Pathogen detected") {
+                dispatch(createAction(SET_PREVIOUS_EVENT, { eventValues }))
+                dispatch(AddAndSubmit(false))
+                dispatch(createAction(PANEL_EDITABLE))
+                dispatch(createAction(RESET_PANEL_EVENT))
+                dispatch(createAction(PAGE_FIRST, true))
+            } else {
+                dispatch(createAction(EXIT))
+            }
+        }
+        if (!eveStatus) {
+            dispatch(createAction(SET_COMPLETED))
+        }
+        // dispatch(createAction(SET_COMPLETED))
+
+        // dispatch(showAlert('Submitted successfully.', { success: true }))
+    } catch (error) {
+        console.error(error)
+        dispatch(showAlert('Failed to submit.', { critical: true }))
+        dispatch(createAction(ENABLE_BUTTONS))
+    } finally {
+        batch(() => {
+            dispatch(enableButtons())
+            dispatch(createAction(SET_BUTTON_LOADING, false))
+        })
     }
 }

@@ -10,13 +10,18 @@ export const setProgram = program => (dispatch, getState) => {
     const { sampleDate } = getState().data.panel
     const organisms = [];
     var programStage = "";
+    var isClinicianClicked = getState().data.clinicianClicked
     if (program) {
         optionSets[programOrganisms[program]].forEach(o => {
             if (!organisms.find(org => org.value === o.value)) organisms.push(o);
         });
-    
-        programStage =
-            stageLists[program].length > 1 ? '' : stageLists[program][0].value
+        if (isClinicianClicked) {
+            programStage = stageLists[program][1].value
+        }
+        else {
+            programStage =
+                stageLists[program].length > 1 ? stageLists[program][0].value : stageLists[program][0].value
+        }
     }
     dispatch(
         createAction(SET_PANEL, {

@@ -63,9 +63,5 @@ export const MARKED_FOLLOW  = 'MARKED_FOLLOW'
 //Added for aggregation progress
 export const AGGREGATION_ON_PROGRESS = 'AGGREGATION_ON_PROGRESS'
 
-
-
-
-
-
-
+export const CLINICIAN_CLICKED = "CLINICIAN_CLICKED"
+export const SET_CLINICIAN = "SET_CLINICIAN"
