@@ -145,8 +145,8 @@ export const getPendingAntiResult = async (orgUnit,sampleTestingProgram,eventSta
   var api_GP1 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
   var api_GP2 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
 
-  var eventApi_GP1 = `../../../api/events.json?orgUnit=${orgUnit}&program=${sampleTestingProgram[0]}&programStatus=ACTIVE&paging=false`
-  var eventApi_GP2 = `../../../api/events.json?orgUnit=${orgUnit}&program=${sampleTestingProgram[1]}&programStatus=ACTIVE&paging=false`
+  var eventApi_GP1 = `../../../api/events.json?orgUnit=${orgUnit}&program=${sampleTestingProgram[0]}&status=ACTIVE&programStatus=ACTIVE&paging=false`
+  var eventApi_GP2 = `../../../api/events.json?orgUnit=${orgUnit}&program=${sampleTestingProgram[1]}&status=ACTIVE&programStatus=ACTIVE&paging=false`
 
   requestTwo = axios.get(api_GP1);
   requestThree = axios.get(api_GP2);
