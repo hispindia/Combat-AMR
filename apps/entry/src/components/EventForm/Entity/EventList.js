@@ -25,6 +25,7 @@ const Events = ({match, history }) => {
     const dataSets = useSelector(state=>state.metadata.dataSets)
     var aggregationOnProgress = useSelector(state => state.data.aggregationOnProgress)
     var userAccess = false;
+    const programStage = useSelector(state => state.data.event)
 
     programs.forEach(p => {
         p.programStages.forEach(ps => {

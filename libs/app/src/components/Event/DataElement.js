@@ -19,15 +19,22 @@ export const DataElement = ({ id }) => {
     var value = useSelector(state => state.data.event.values[id])
     const programId = useSelector(state => state.data.panel.program)
     const preValues = useSelector(state => state.data.previousValues)
+    const programStage = useSelector(state => state.data.event.programStage)
+    const username = useSelector(state => state.metadata.user.username)
+    console.log(" hellloooos ", programStage)
+
     if (Object.keys(preValues).length && (id in preValues)) {
         value = preValues[id];
     }
     const color = useSelector(
         state => state.data.event.programStage.dataElements[id].color
     )
-    const disabled = useSelector(
+    var disabled = useSelector(
         state => state.data.event.programStage.dataElements[id].disabled
     )
+    if (username == "labtech" && programStage.displayName == "Clinician Notes" && value) {
+        disabled = true
+    }
     const displayFormName = useSelector(
         state => state.data.event.programStage.dataElements[id].displayFormName
     )

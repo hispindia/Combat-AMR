@@ -47,7 +47,6 @@ export const EventForm = ({ history, match }) => {
     const prevValues = Object.keys(previousValues).length ? true : false;
     var aggregationOnProgress = useSelector(state => state.data.aggregationOnProgress)
     var { sampleDate } = useSelector(state => state.data.panel)
-    const programStage = useSelector(state => state.data)
 
 
 

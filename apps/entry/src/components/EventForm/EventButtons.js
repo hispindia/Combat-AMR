@@ -325,11 +325,11 @@ export const EventButtons = ({ history, existingEvent }) => {
     const clinicianDataBtn = username == "labtech" ? viewClinician : Clinician
 
     const buttonsLab = () =>
-        existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back,viewClinician] : programCheck ? [completeButton, Save, Go_Back,viewClinician] : [Save, Go_Back,viewClinician]
+        existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back] : programCheck ? [completeButton, Save, Go_Back] : [Save, Go_Back]
             : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, Go_BackIso] : [completeButton, submitAddButtonIso, Go_BackIso]:[submitButton,submitAddButton,Go_Back]
 
     const buttonsWrite = () =>
-        existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back,viewClinician] : programCheck ? [completeButton, Save, Go_Back,clinicianDataBtn] : [Save, Go_Back,clinicianDataBtn]
+        existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back] : programCheck ? [completeButton, Save, Go_Back,clinicianDataBtn] : [Save, Go_Back,clinicianDataBtn]
             : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, Go_BackIso, clinicianDataBtn] : [completeButton, submitAddButtonIso, Go_BackIso,clinicianDataBtn]:[submitButton,submitAddButton,Go_Back]
 
 
