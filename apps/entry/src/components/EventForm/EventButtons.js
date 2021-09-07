@@ -73,6 +73,7 @@ export const EventButtons = ({ history, existingEvent }) => {
         // dispatch(falseClinicianEvent())
         if (!prevValues && editable) {
             $("#popup").hide();
+            window.location.reload()
          }
         else {
             history.goBack();
