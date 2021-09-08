@@ -238,13 +238,12 @@ export const getEventObject = async (metadata, orgUnit, tieId, eventId, editStat
 }
 
 export const createNewEvent = () => async (dispatch, getState) => {
-    dispatch(createAction(CLINICIAN_CLICKED, false))
     dispatch(disableButtons)
     const orgUnit = getState().data.orgUnit
     const entity = getState().data.entity
     const panel = getState().data.panel
     const metadata = getState().metadata
-        const prevStateValues = getState().data.previousValues
+    const prevStateValues = getState().data.previousValues
 
     var values_to_send = []
     var UpdatedEventPayload = {}
@@ -618,14 +617,34 @@ export const clinicianEvent = (next, addMoreSample, addMoreIso) => async (dispat
     dispatch(createAction(CLINICIAN_CLICKED, true))
     const eventId = getState().data.event.id;
     const eventValues = getState().data.event.values;
-    var eveStatus = getState().data.event.invalid == false ? true:false;
+    var eveStatus = getState().data.event.invalid == false ? true : false;
+    const programs = getState().metadata.programs
     // var eveStatus = next;
+
+    var { program, programStage, organism, organisms, sampleDate } = getState().data.panel
+    const { stageLists } = getState().metadata
+    if (program) {
+        programStage = stageLists[program][1].value
+    }
+    var programStageId = programStage
+    const prStage = programs.find(p => p.id === program)
+    .programStages.find(ps => (ps.id == programStageId))
 
     try {
         await setEventStatus(eventId, eveStatus)
         if (addMoreSample) { dispatch(createAction(RESET_SAMPLE_PANEL_EVENT)) }
         if (addMoreIso) {
             dispatch(createAction(RESET_PANEL_EVENT))
+            dispatch(
+            createAction(SET_PANEL, {
+                program,
+                programStage,
+                organism,
+                sampleDate,
+                organisms,
+                valid: true,
+                })
+            )
             dispatch(createAction(PAGE_FIRST, true))
         }
         else {

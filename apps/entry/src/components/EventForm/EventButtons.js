@@ -331,7 +331,7 @@ export const EventButtons = ({ history, existingEvent }) => {
 
     const buttonsWrite = () =>
         existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back] : programCheck ? [completeButton, Save, Go_Back,clinicianDataBtn] : [Save, Go_Back,clinicianDataBtn]
-            : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, Go_BackIso, clinicianDataBtn] : [completeButton, submitAddButtonIso, Go_BackIso,clinicianDataBtn]:[submitButton,submitAddButton,Go_Back]
+            : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, Go_BackIso, clinicianDataBtn] : [completeButton, submitAddButtonIso, Go_BackIso,clinicianDataBtn]:isClinicianClicked?[Go_BackIso,clinicianDataBtn]:[submitButton,submitAddButton,Go_Back]
 
 
     const buttonsReadUsers = () =>
