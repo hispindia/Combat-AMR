@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { string, object } from 'prop-types'
-import { Padding } from '../Padding'
+import { Padding,MaxWidth } from '../Padding'
 import { SAMPLE_ID_ELEMENT, ORGANISM_DETECTED, SAMPLE_TESTING_PROGRAM} from 'constants/dhis2'
 import {
     TextInput,
@@ -10,7 +10,9 @@ import {
     SwitchInput,
     DateInput,
 } from '@hisp-amr/inputs'
-import { setEventValue,AddAndSubmit } from 'actions'
+import { setEventValue, AddAndSubmit } from 'actions'
+import TextField from '@material-ui/core/TextField';
+
 import * as DUPLICACY from 'constants/duplicacy'
 export const DataElement = ({ id }) => {
     const dispatch = useDispatch()
@@ -53,9 +55,14 @@ export const DataElement = ({ id }) => {
     const required = useSelector(
         state => state.data.event.programStage.dataElements[id].required
     )
-    const valueType = useSelector(
+    var valueType = useSelector(
         state => state.data.event.programStage.dataElements[id].valueType
     )
+    if (programStage.displayName == "Clinician Notes") {
+        if (valueType == "TEXT") {
+            valueType = "TEXTAREA"
+        }
+    }
     const numType = valueType.toUpperCase();
     const warning = useSelector(
         state => state.data.event.programStage.dataElements[id].warning
@@ -66,6 +73,7 @@ export const DataElement = ({ id }) => {
         useSelector(state => state.data.event.duplicate)
 
     const onChange = (key, value) => {
+        
         var results = ["Not available","Rejected","Sterile"]
         if((key == ORGANISM_DETECTED) && (value == 'Pathogen detected'))
         {
@@ -135,6 +143,20 @@ export const DataElement = ({ id }) => {
                     onChange={onChange}
                     disabled={disabled || completed}
                 />
+                            ) :
+                            valueType === "TEXTAREA" ? (
+
+                    <TextField
+                    id="outlined-multiline-static"
+                    label={displayFormName}
+                    multiline
+                    rows={5}
+                    variant="outlined"
+                    required={required}
+                    onChange={onChange}
+                    className="textArea"
+                                    />
+
                             ) :
                             (
                 <TextInput
