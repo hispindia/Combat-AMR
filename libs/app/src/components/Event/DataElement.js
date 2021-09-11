@@ -73,7 +73,7 @@ export const DataElement = ({ id }) => {
         useSelector(state => state.data.event.duplicate)
 
     const onChange = (key, value) => {
-        
+
         var results = ["Not available","Rejected","Sterile"]
         if((key == ORGANISM_DETECTED) && (value == 'Pathogen detected'))
         {
@@ -88,6 +88,11 @@ export const DataElement = ({ id }) => {
             dispatch(setEventValue(key, value,false))
         }
     }
+
+    const handleChange = (event) => {
+        onChange(id, event.target.value);
+    };
+
 
     if (hide) return null
 
@@ -153,9 +158,11 @@ export const DataElement = ({ id }) => {
                     rows={5}
                     variant="outlined"
                     required={required}
-                    onChange={onChange}
+                    name={id}
+                    onChange={handleChange}
                     className="textArea"
-                                    />
+                    value={value}
+                />
 
                             ) :
                             (
