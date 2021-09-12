@@ -43,7 +43,7 @@ import {
     AGGREGATION_ON_PROGRESS, //This is a reducer to disable buttons when aggregation is on progress.
     MARKED_FOLLOW,
     CLINICIAN_CLICKED,
-    SET_CLINICIAN,
+    SET_NOTES,
 } from '../actions/types'
 
 const INITIAL_EVENT = {
@@ -87,7 +87,8 @@ const INITIAL_STATE = {
     aggregationOnProgress: false,
     inCompleteClicked: false,
     followup: {},
-    clinicianClicked:false,
+    clinicianClicked: false,
+    notes:'',
 }
 
 export const data = (state = INITIAL_STATE, { type, payload }) => {
@@ -365,8 +366,11 @@ export const data = (state = INITIAL_STATE, { type, payload }) => {
                     ...state,
                     previousValues: payload.eventValues
                 }
-
-
+        case SET_NOTES:
+            return {
+                ...state,
+                notes:payload.noteValue
+            }
         case RESET_PANEL_EVENT:
             return {
                 ...state,

@@ -10,7 +10,7 @@ import {
     SwitchInput,
     DateInput,
 } from '@hisp-amr/inputs'
-import { setEventValue, AddAndSubmit } from 'actions'
+import { setEventValue, AddAndSubmit,addNotes } from 'actions'
 import TextField from '@material-ui/core/TextField';
 
 import * as DUPLICACY from 'constants/duplicacy'
@@ -23,7 +23,7 @@ export const DataElement = ({ id }) => {
     const preValues = useSelector(state => state.data.previousValues)
     const programStage = useSelector(state => state.data.event.programStage)
     const username = useSelector(state => state.metadata.user.username)
-    console.log(" hellloooos ", programStage)
+    var notes = useSelector(state => state.data.notes)
 
     if (Object.keys(preValues).length && (id in preValues)) {
         value = preValues[id];
@@ -90,7 +90,8 @@ export const DataElement = ({ id }) => {
     }
 
     const handleChange = (event) => {
-        onChange(id, event.target.value);
+        dispatch(addNotes(id,event.target.value))
+        // onChange(id, event.target.value);
     };
 
 
@@ -161,7 +162,8 @@ export const DataElement = ({ id }) => {
                     name={id}
                     onChange={handleChange}
                     className="textArea"
-                    value={value}
+                    disabled={disabled || completed}
+                    defaultValue={value}
                 />
 
                             ) :

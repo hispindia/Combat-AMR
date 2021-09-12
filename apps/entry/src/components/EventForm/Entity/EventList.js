@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { CardSection } from '@hisp-amr/app'
 import { useSelector, useDispatch } from 'react-redux'
 import {Table,TableBody,TableRow,TableCell,Button} from '@dhis2/ui-core'
-import {getEventObject, getExistingEvent,addPreviousEntity, setAggregationProgress} from '@hisp-amr/app'
+import {getEventObject, getExistingEvent,addPreviousEntity, setAggregationProgress,viewClinicianClick} from '@hisp-amr/app'
 import { withRouter } from 'react-router-dom'
 import './main.css'
 import $ from "jquery"
@@ -26,6 +26,7 @@ const Events = ({match, history }) => {
     var aggregationOnProgress = useSelector(state => state.data.aggregationOnProgress)
     var userAccess = false;
     const programStage = useSelector(state => state.data.event)
+    const username = useSelector(state => state.metadata.user.username)
 
     programs.forEach(p => {
         p.programStages.forEach(ps => {
@@ -97,7 +98,7 @@ const Events = ({match, history }) => {
         aggregationOnProgress = status
     }
 
-    const onEdit = (ou, eventId, dataValues) => {
+    const onEdit = (ou, eventId, dataValues,isClinicianView) => {
         localStorage.setItem('eventId', eventId)
         let btnStatus= false
         for (let dataValue of dataValues) {
@@ -108,6 +109,7 @@ const Events = ({match, history }) => {
         }
         let editStatus = true;
         dispatch(getExistingEvent(ou, teiId, eventId, editStatus, btnStatus))
+        dispatch(viewClinicianClick(isClinicianView))
     }
     if (events != undefined) {
         data = events
@@ -124,6 +126,26 @@ const Events = ({match, history }) => {
             const v = events.map((ele, index) => {
                 if (ele) {
                     var proId = ele.program;
+                    var pStage = ele.programStage;
+                    var isClin = false;
+                    var btnLabel = "Edit";
+                    if (username == "clinician") {
+                        if (pStage == "AZz2GLmJDka") {
+                            isClin = true;
+                            btnLabel = "View Notes"
+                        }
+                        else {
+                            btnLabel = "View Event"
+                        }
+                    }
+                    else {
+                        if (pStage == "AZz2GLmJDka") {
+                            btnLabel = "View Notes"
+                        }
+                        else {
+                            btnLabel = "Edit Event"
+                        }
+                    }
                     var name = [], dataValue = [], data = [], date = [];
                     var listorganisms = [];
                     var orgValue = [];
@@ -201,7 +223,7 @@ const Events = ({match, history }) => {
                                             {ele.value}
                                         </TableCell>
                                     ))}
-                            <Button primary={true} onClick={() => onEdit(ele.orgUnit, ele.event, ele.dataValues)}>{userAccess && "Edit"}{!userAccess && "View"}</Button>
+                                    <Button primary={true} onClick={() => onEdit(ele.orgUnit, ele.event, ele.dataValues, isClin)}>{ btnLabel }</Button>
                         </TableRow>
                         : ''}
                         </>)

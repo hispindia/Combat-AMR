@@ -29,6 +29,7 @@ import {
     INCOMPLETED_CLICKED,
     MARKED_FOLLOW,
     CLINICIAN_CLICKED,
+    SET_NOTES,
 } from '../types'
 import { deleteEvent } from '@hisp-amr/api'
 
@@ -445,8 +446,8 @@ export const saveEvent = () => async (dispatch, getState) => {
         )
     })
     const eventId = getState().data.event.id;
-    const eventValues = getState().data.event.values;
-    var eveStatus = getState().data.event.invalid == false ? true:false;
+    var eventValues = getState().data.event.values;
+    var eveStatus = getState().data.event.invalid == false ? true : false;
 
     try {
 
@@ -674,4 +675,26 @@ export const clinicianEvent = (next, addMoreSample, addMoreIso) => async (dispat
             dispatch(createAction(SET_BUTTON_LOADING, false))
         })
     }
+}
+
+export const viewClinicianClick = isClinicianView => async (dispatch, getState) => {
+        dispatch(createAction(CLINICIAN_CLICKED, isClinicianView))
+}
+
+export const saveClinician = () => async (dispatch, getState) => {
+
+    var cliNote = getState().data.notes;
+    dispatch(setEventValue(Object.keys(cliNote)[0], cliNote[Object.keys(cliNote)[0]], false))
+    dispatch(showAlert('Event Saved', { success: true }))
+}
+
+export const addNotes = (id, notes) => (dispatch, getState) => {
+    var noteValue = {}
+    if (noteValue.hasOwnProperty(id)) {
+        noteValue[id] = noteValue[id] + notes;
+    }
+    else {
+        noteValue[id] = notes;
+    }
+    dispatch(createAction(SET_NOTES, { noteValue }))
 }

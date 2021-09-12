@@ -12,6 +12,7 @@ import {
     nextEvent,
     setAggregationProgress,
     clinicianEvent,
+    saveClinician
     // viewClinicianEvent,
     // falseClinicianEvent,
     // getExistingEvent,
@@ -72,7 +73,7 @@ export const EventButtons = ({ history, existingEvent }) => {
     const onBack = () => {
         // dispatch(falseClinicianEvent())
         if (!prevValues && editable) {
-            $("#popup").hide();
+            // $("#popup").hide();
             window.location.reload()
          }
         else {
@@ -140,6 +141,7 @@ export const EventButtons = ({ history, existingEvent }) => {
     const onSave = async () => await dispatch(saveEvent())
     const onClinicianSubmit = async (next,addMoreSample,addMoreIso) => await dispatch(clinicianEvent(next,addMoreSample,addMoreIso))
     const addClinician = async () => await onClinicianSubmit(false, false, true)
+    const onSaveC = async () => await dispatch(saveClinician())
     // const onViewClinicianSubmit = async (next,addMoreSample,addMoreIso) => await dispatch(viewClinicianEvent(next,addMoreSample,addMoreIso))
     // const onViewClinician = async () => await onViewClinicianSubmit(false,false,true)
     // Next button ,Submit and Add New ISO, Submit and Add New Sample, Save end
@@ -323,6 +325,21 @@ export const EventButtons = ({ history, existingEvent }) => {
                 : 'Submit record and add new record for the same person',
         loading: buttonLoading === 'submitAdd',
     }
+
+    const Save_Notes = {
+        label: 'Save Notes',
+        onClick: onSaveC,
+        disabled: !entityValid || aggregationOnProgress,
+        icon: 'done',
+        primary: true,
+        tooltip:
+            duplicate === DUPLICATE_ERROR
+                ? DUPLICATE_ERROR
+                : invalid
+                ? invalid
+                : 'Submit record',
+        loading: buttonLoading === 'save',
+    }
     const clinicianDataBtn = username == "labtech" ? viewClinician : Clinician
 
     const buttonsLab = () =>
@@ -331,7 +348,7 @@ export const EventButtons = ({ history, existingEvent }) => {
 
     const buttonsWrite = () =>
         existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back] : programCheck ? [completeButton, Save, Go_Back,clinicianDataBtn] : [Save, Go_Back,clinicianDataBtn]
-            : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, Go_BackIso, clinicianDataBtn] : [completeButton, submitAddButtonIso, Go_BackIso,clinicianDataBtn]:isClinicianClicked?[Go_BackIso,clinicianDataBtn]:[submitButton,submitAddButton,Go_Back]
+            : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, Go_BackIso, clinicianDataBtn] : [completeButton, submitAddButtonIso, Go_BackIso,clinicianDataBtn]:isClinicianClicked?[Go_BackIso,clinicianDataBtn, Save_Notes]:[submitButton,submitAddButton,Go_Back]
 
 
     const buttonsReadUsers = () =>
