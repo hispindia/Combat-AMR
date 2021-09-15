@@ -44,6 +44,7 @@ import {
     MARKED_FOLLOW,
     CLINICIAN_CLICKED,
     SET_NOTES,
+    PREVIOUS_EVENT,
 } from '../actions/types'
 
 const INITIAL_EVENT = {
@@ -88,7 +89,8 @@ const INITIAL_STATE = {
     inCompleteClicked: false,
     followup: {},
     clinicianClicked: false,
-    notes:'',
+    notes: '',
+    previousEvent:'',
 }
 
 export const data = (state = INITIAL_STATE, { type, payload }) => {
@@ -355,6 +357,11 @@ export const data = (state = INITIAL_STATE, { type, payload }) => {
              return {
              ...state,
              clinicianClicked:payload,
+            }
+        case PREVIOUS_EVENT:
+             return {
+             ...state,
+            previousEvent:payload,
              }
         case SET_EVENT:
                     return {

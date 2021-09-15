@@ -24,7 +24,9 @@ export const DataElement = ({ id }) => {
     const programStage = useSelector(state => state.data.event.programStage)
     const username = useSelector(state => state.metadata.user.username)
     var notes = useSelector(state => state.data.notes)
-
+    if (id == "yMKFqLn9LBx") {
+        value = value.split("-")[0]
+    }
     if (Object.keys(preValues).length && (id in preValues)) {
         value = preValues[id];
     }
@@ -58,8 +60,9 @@ export const DataElement = ({ id }) => {
     var valueType = useSelector(
         state => state.data.event.programStage.dataElements[id].valueType
     )
-    if (programStage.displayName == "Clinician Notes") {
-        if (valueType == "TEXT") {
+    var noteslist = ["Clinician Notes","Clinician notes"]
+    if (noteslist.includes(programStage.displayName)) {
+        if (valueType == "LONG_TEXT") {
             valueType = "TEXTAREA"
         }
     }
