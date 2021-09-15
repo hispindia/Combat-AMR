@@ -12,7 +12,7 @@ export const getRecord = async (programs, eventId, isIsolate) => {
     } = await getEventValues(eventId)
     const pStage = programs
         .find(p => p.id === program)
-        .programStages.find(ps => (ps.id = programStageId))
+        .programStages.find(ps => (ps.id == programStageId))
     const { programStage, eventValues, status } = await getProgramStage(
         pStage,
         initialValues,
