@@ -1,3 +1,5 @@
+var _circle;
+
 import React from 'react';
 import styled, { css } from 'styled-components';
 const StyledSvg = styled.svg`
@@ -32,15 +34,6 @@ const StyledSvg = styled.svg`
         }
     }
 `;
-
-var _ref = /*#__PURE__*/React.createElement("circle", {
-  cx: "44",
-  cy: "44",
-  r: "20.2",
-  fill: "none",
-  strokeWidth: "3.6"
-});
-
 export const LoadingIcon = ({
   className
 }) => /*#__PURE__*/React.createElement(StyledSvg, {
@@ -49,4 +42,10 @@ export const LoadingIcon = ({
   height: "48",
   viewBox: "22 22 44 44",
   className: className
-}, _ref);
+}, _circle || (_circle = /*#__PURE__*/React.createElement("circle", {
+  cx: "44",
+  cy: "44",
+  r: "20.2",
+  fill: "none",
+  strokeWidth: "3.6"
+})));

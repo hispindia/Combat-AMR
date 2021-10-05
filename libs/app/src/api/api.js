@@ -154,7 +154,7 @@ export const existingRecord = async (programs, ou, teiId, evId) => {
         eventList,
         ...record,
         entityValues,
-    
+
     }
 }
 export const addPersonWithEvent = async (
@@ -299,7 +299,7 @@ export const addEvent = async (
         },
         eventValues,
         UpdatedEventPayload
-    
+
     )
     if (entityValues) await updatePerson(entityId, entityValues)
     // Enrolling if not already enrolled.
@@ -409,7 +409,7 @@ export const updateEnrollmentValue = async (followValues) => {
     var followVals = followValues[3];
     var enrollmentID = ""
     var enrollmentBody = ""
-    enrollmentsList = 
+    enrollmentsList =
         await get(
             request('enrollments.json', {
                 options: [`ou=${followValues[0]}&trackedEntityInstance=${followValues[1]}&program=${followValues[4]}&paging=false`],
@@ -417,7 +417,7 @@ export const updateEnrollmentValue = async (followValues) => {
         ).then(function (enrollresult) {
             enrollmentID = enrollresult.enrollments[0].enrollment
             enrollresult.enrollments[0]['followup'] = followVals
-            enrollmentBody = enrollresult.enrollments[0]            
+            enrollmentBody = enrollresult.enrollments[0]
             var dataBody = enrollmentBody
             let postResponse = syncRequest('PUT', `../../../api/enrollments/${enrollmentID}`, {
             json: dataBody
@@ -427,3 +427,19 @@ export const updateEnrollmentValue = async (followValues) => {
     return enrollmentsList
 }
 
+export const getClinician = async (teId, program, programStage, ou, deId, eveValue) => {
+    const cliEvent = (
+        await get(
+            request('events.json', {
+            filters: `${deId}:like:${eveValue}`,
+		    options: [`ou=${ou}`, `program=${program}`, `trackedEntityInstance=${teId}`,`programStage=${programStage}`],
+            })
+        )
+    ).events
+    if (cliEvent) {
+        return cliEvent
+    }
+    else {
+        return cliEvent
+    }
+}

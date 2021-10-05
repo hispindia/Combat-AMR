@@ -49,6 +49,7 @@ export const EventForm = ({ history, match }) => {
     var { sampleDate } = useSelector(state => state.data.panel)
 
 
+
     var orgUnit = match.params.orgUnit
     const teiId = match.params.teiId;
 

@@ -22,7 +22,6 @@ export const getRecord = async (programs, eventId, isIsolate) => {
             isIsolate,
         }
     )
-
     return {
         program,
         programStage,

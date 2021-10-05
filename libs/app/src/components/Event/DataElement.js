@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { string, object } from 'prop-types'
-import { Padding } from '../Padding'
+import { Padding,MaxWidth } from '../Padding'
 import { SAMPLE_ID_ELEMENT, ORGANISM_DETECTED, SAMPLE_TESTING_PROGRAM} from 'constants/dhis2'
 import {
     TextInput,
@@ -10,7 +10,9 @@ import {
     SwitchInput,
     DateInput,
 } from '@hisp-amr/inputs'
-import { setEventValue,AddAndSubmit } from 'actions'
+import { setEventValue, AddAndSubmit,addNotes } from 'actions'
+import TextField from '@material-ui/core/TextField';
+
 import * as DUPLICACY from 'constants/duplicacy'
 export const DataElement = ({ id }) => {
     const dispatch = useDispatch()
@@ -19,18 +21,32 @@ export const DataElement = ({ id }) => {
     var value = useSelector(state => state.data.event.values[id])
     const programId = useSelector(state => state.data.panel.program)
     const preValues = useSelector(state => state.data.previousValues)
+    const programStage = useSelector(state => state.data.event.programStage)
+    const username = useSelector(state => state.metadata.user.username)
+    var notes = useSelector(state => state.data.notes)
+    const userGroup = useSelector(state => state.metadata.userGroup)
+    // if (id == "yMKFqLn9LBx") {
+    //     value = value.split("-")[0]
+    // }
     if (Object.keys(preValues).length && (id in preValues)) {
         value = preValues[id];
     }
     const color = useSelector(
         state => state.data.event.programStage.dataElements[id].color
     )
-    const disabled = useSelector(
+    var disabled = useSelector(
         state => state.data.event.programStage.dataElements[id].disabled
     )
+    var noteslist = ["Clinician Notes","Clinician notes"]
+    if ((userGroup == "Lab technician") && (programStage.displayName.toLowerCase().includes("clinician")) && value) {
+        disabled = true
+    }
     const displayFormName = useSelector(
         state => state.data.event.programStage.dataElements[id].displayFormName
     )
+    if (displayFormName == "Notes") {
+        value = value.split("-")[0]
+    }
     const error = useSelector(
         state => state.data.event.programStage.dataElements[id].error
     )
@@ -46,9 +62,15 @@ export const DataElement = ({ id }) => {
     const required = useSelector(
         state => state.data.event.programStage.dataElements[id].required
     )
-    const valueType = useSelector(
+    var valueType = useSelector(
         state => state.data.event.programStage.dataElements[id].valueType
     )
+
+    if (programStage.displayName.toLowerCase().includes("clinician")) {
+        if (valueType == "LONG_TEXT") {
+            valueType = "TEXTAREA"
+        }
+    }
     const numType = valueType.toUpperCase();
     const warning = useSelector(
         state => state.data.event.programStage.dataElements[id].warning
@@ -59,6 +81,7 @@ export const DataElement = ({ id }) => {
         useSelector(state => state.data.event.duplicate)
 
     const onChange = (key, value) => {
+
         var results = ["Not available","Rejected","Sterile"]
         if((key == ORGANISM_DETECTED) && (value == 'Pathogen detected'))
         {
@@ -73,6 +96,12 @@ export const DataElement = ({ id }) => {
             dispatch(setEventValue(key, value,false))
         }
     }
+
+    const handleChange = (event) => {
+        dispatch(addNotes(id,event.target.value))
+        // onChange(id, event.target.value);
+    };
+
 
     if (hide) return null
 
@@ -128,6 +157,23 @@ export const DataElement = ({ id }) => {
                     onChange={onChange}
                     disabled={disabled || completed}
                 />
+                            ) :
+                            valueType == "TEXTAREA" || valueType == "LONG_TEXT" ? (
+
+                    <TextField
+                    id="outlined-multiline-static"
+                    label={displayFormName}
+                    multiline
+                    rows={5}
+                    variant="outlined"
+                    required={required}
+                    name={id}
+                    onChange={handleChange}
+                    className="textArea"
+                    disabled={disabled || completed}
+                    defaultValue={value}
+                />
+
                             ) :
                             (
                 <TextInput

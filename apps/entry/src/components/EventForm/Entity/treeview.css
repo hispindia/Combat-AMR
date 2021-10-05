@@ -19,12 +19,12 @@
 }
 
 /*!
- * 
+ *
  * antd v4.15.3-alpha.0
- * 
+ *
  * Copyright 2015-present, Alipay, Inc.
  * All rights reserved.
- *       
+ *
  */
 /* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */
 /* stylelint-disable no-duplicate-selectors */
@@ -27729,5 +27729,7 @@ div.ant-typography-edit-content.ant-typography-rtl {
   margin: 8px 0 0;
   padding: 0;
 }
-
+.textArea {
+  width: 100% !important;
+}
 /*# sourceMappingURL=antd.css.map*/

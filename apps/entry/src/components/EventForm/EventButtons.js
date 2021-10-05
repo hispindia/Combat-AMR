@@ -10,7 +10,12 @@ import {
     saveEvent,
     inCompleteEvent,
     nextEvent,
-    setAggregationProgress
+    setAggregationProgress,
+    clinicianEvent,
+    saveClinician
+    // viewClinicianEvent,
+    // falseClinicianEvent,
+    // getExistingEvent,
 } from '@hisp-amr/app'
 import {
     Aggregate
@@ -51,11 +56,16 @@ export const EventButtons = ({ history, existingEvent }) => {
     var { program } = useSelector(state => state.data.panel);
     var programCheck = program == "WhYipXYg2Nh" ? false : true;
     var userAccess = false;
+    const username = useSelector(state => state.metadata.user.username)
+    var isClinicianClicked = useSelector(state => state.data.clinicianClicked)
+    var record = useSelector(state => state.data.record)
+    const userGroup = useSelector(state => state.metadata.userGroup)
     programs.forEach(p => {
         p.programStages.forEach(ps => {
             userAccess = ps.access.data.write
         })
     })
+
 
     const changeAggregationStatus = (status)=>{
 
@@ -64,13 +74,29 @@ export const EventButtons = ({ history, existingEvent }) => {
     }
 
     const onBack = () => {
+        // dispatch(falseClinicianEvent())
         if (!prevValues && editable) {
-            $("#popup").hide();
+            // $("#popup").hide();
+            window.location.reload()
          }
         else {
             history.goBack();
             setTimeout(function(){window.location.reload();}, 100);
         }
+    }
+
+    const onViewClinician = (ou, eventId, dataValues) => {
+        localStorage.setItem('eventId', eventId)
+        var event = eventId;
+        let btnStatus= false
+        for (let dataValue of dataValues) {
+            let dataElement = dataValue.dataElement;
+            // if( dataElement == 'VbUbBX7G6Jf'){  // id of organism detected data element in sample testing
+            //     btnStatus = true;
+            // }
+        }
+        let editStatus = true;
+        // dispatch(getExistingEvent(ou, eventId, editStatus, btnStatus))
     }
 
     const onSubmit = async addMore => {
@@ -116,6 +142,11 @@ export const EventButtons = ({ history, existingEvent }) => {
     const submitAddSample = async () => await onNextSubmit(false, true, false)
     const submitAddIso = async () => await onNextSubmit(false,false,true)
     const onSave = async () => await dispatch(saveEvent())
+    const onClinicianSubmit = async (next,addMoreSample,addMoreIso) => await dispatch(clinicianEvent(next,addMoreSample,addMoreIso))
+    const addClinician = async () => await onClinicianSubmit(false, false, true)
+    const onSaveC = async () => await dispatch(saveClinician())
+    // const onViewClinicianSubmit = async (next,addMoreSample,addMoreIso) => await dispatch(viewClinicianEvent(next,addMoreSample,addMoreIso))
+    // const onViewClinician = async () => await onViewClinicianSubmit(false,false,true)
     // Next button ,Submit and Add New ISO, Submit and Add New Sample, Save end
 
     const onInComplete = async () => {
@@ -268,11 +299,48 @@ export const EventButtons = ({ history, existingEvent }) => {
         onClick: onBack,
         disabled: !valid || buttonsDisabled,
     }
-    const buttons = () =>
-        existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back] : programCheck ? [completeButton, Save, Go_Back] : [Save, Go_Back]
-            : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, Go_BackIso] : [completeButton, submitAddButtonIso, Go_BackIso]:[submitButton,submitAddButton,Go_Back]
+
+    const Clinician = {
+        label: 'Clinician Notes',
+        onClick: addClinician,
+        disabled: !valid || buttonsDisabled || aggregationOnProgress || isClinicianClicked,
+        primary: true,
+        tooltip:
+            duplicate === DUPLICATE_ERROR
+                ? DUPLICATE_ERROR
+                : invalid
+                ? invalid
+                : 'Submit record and add new record for the same person',
+        loading: buttonLoading === 'submitAdd',
+    }
+
+    const Save_Notes = {
+        label: 'Save Notes',
+        onClick: onSaveC,
+        disabled: !entityValid || aggregationOnProgress,
+        primary: true,
+        tooltip:
+            duplicate === DUPLICATE_ERROR
+                ? DUPLICATE_ERROR
+                : invalid
+                ? invalid
+                : 'Submit record',
+        loading: buttonLoading === 'save',
+    }
+
+    const buttonsLab = () =>
+        existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back,Clinician] : programCheck ? [completeButton, Save, Go_Back,Clinician] : [Save, Go_Back,Clinician]
+            : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, Go_BackIso,Clinician] : [completeButton, submitAddButtonIso, Go_BackIso,Clinician]:[submitButton,submitAddButton,Go_Back]
+
+    const buttonsWrite = () =>
+        existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back, Clinician] : programCheck ? [completeButton, Save, Go_Back,Clinician] : [Save, Go_Back,Clinician]
+            : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, Go_BackIso, Clinician] : [completeButton, submitAddButtonIso, Go_BackIso,Clinician]:isClinicianClicked?[Go_BackIso,Clinician, Save_Notes]:[submitButton,submitAddButton,Go_Back]
+
 
     const buttonsReadUsers = () =>
-        [Go_Back]
-    return <StyledButtonRow buttons={userAccess ? buttons() : buttonsReadUsers()} />
+        [Clinician, Go_Back]
+
+    const clinicinaButtons = () => [Save_Notes,Go_Back]
+
+    return <StyledButtonRow buttons={userGroup == "Lab technician" ? isClinicianClicked && !record ? clinicinaButtons() : buttonsLab() : userAccess ? isClinicianClicked ? clinicinaButtons() : buttonsWrite() : isClinicianClicked ? clinicinaButtons() : buttonsReadUsers()} />
 }

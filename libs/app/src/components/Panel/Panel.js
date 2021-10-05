@@ -31,7 +31,7 @@ export const Panel = ({ showEdit }) => {
         if (programs) {
             programs = programs.filter(function (element) {
                 return element.value != SAMPLE_TESTING_PROGRAM[0].value;
-        
+
             });
         }
     }
@@ -74,11 +74,11 @@ export const Panel = ({ showEdit }) => {
         }
         else {
             if (editable) {
-               datedisabled = true; 
+               datedisabled = true;
             }
         }
         switch (id) {
-            case `defaultProgram`: 
+            case `defaultProgram`:
             return getInput({
                 ...common,
                 id: 'program',
