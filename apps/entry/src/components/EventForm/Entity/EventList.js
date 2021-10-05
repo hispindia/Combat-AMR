@@ -25,6 +25,7 @@ const Events = ({match, history }) => {
     const dataSets = useSelector(state=>state.metadata.dataSets)
     var aggregationOnProgress = useSelector(state => state.data.aggregationOnProgress)
     var userAccess = false;
+    var clinicianPsList = useSelector(state => state.metadata.clinicianPsList)
 
     programs.forEach(p => {
         p.programStages.forEach(ps => {
@@ -121,8 +122,7 @@ const Events = ({match, history }) => {
     var val = () => {
         if (events != undefined) {
             const v = events.map((ele, index) => {
-                var plist = ["xDbTsc5SCiQ","AZz2GLmJDka","MD2afrdKbrj","oJYU31smxof"]
-                if (!plist.includes(ele.programStage)) {
+                if (!clinicianPsList.includes(ele.programStage)) {
                     var proId = ele.program;
                     var name = [], dataValue = [], data = [], date = [];
                     var listorganisms = [];

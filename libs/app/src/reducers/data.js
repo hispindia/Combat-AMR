@@ -45,6 +45,7 @@ import {
     CLINICIAN_CLICKED,
     SET_NOTES,
     PREVIOUS_EVENT,
+    NO_RECORD,
 } from '../actions/types'
 
 const INITIAL_EVENT = {
@@ -90,7 +91,8 @@ const INITIAL_STATE = {
     followup: {},
     clinicianClicked: false,
     notes: '',
-    previousEvent:'',
+    previousEvent: '',
+    record:false
 }
 
 export const data = (state = INITIAL_STATE, { type, payload }) => {
@@ -377,6 +379,11 @@ export const data = (state = INITIAL_STATE, { type, payload }) => {
             return {
                 ...state,
                 notes:payload.noteValue
+            }
+        case NO_RECORD:
+            return {
+                ...state,
+                record:payload
             }
         case RESET_PANEL_EVENT:
             return {

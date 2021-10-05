@@ -19,6 +19,7 @@ const getMetadata = async () =>
                 'code',
                 'dataElement',
                 'displayName',
+                'userGroups',
                 'formName',
                 'attributeValues[value,attribute[code]]',
                 'categoryOptionCombos[id,categoryOptions[code,id]]',
@@ -53,6 +54,7 @@ const getMetadata = async () =>
                 'organisationUnits=true',
                 'programRules=true',
                 'programRuleVariables=true',
+                'userGroups=true',
                 'programs=true',
                 'trackedEntityTypes=true',
                 'categoryCombos=true',
@@ -144,9 +146,23 @@ export const initMetadata = async isIsolate => {
     }
     const userOrgUnits = userData.organisationUnits.map(uo => uo.id)
 
-    const data = await getMetadata()
 
+    const data = await getMetadata()
+    var userGroup = "";
+    try {
+        for (var i = 0; i < userGroups.length; i++) {
+            for (var k = 0; k < data["userGroups"].length; k++) {
+                if (data["userGroups"][k]["id"] == userGroups[i]) {
+                    userGroup = data["userGroups"][k]["displayName"];
+                }
+            }
+        }
+    }
+    catch (e) {
+        console.log( " Error ",e)
+    }
     const orgUnits = []
+
     data.organisationUnits
         .filter(o => userOrgUnits.some(uo => o.path.includes(uo)))
         .forEach(o => {
@@ -219,6 +235,7 @@ export const initMetadata = async isIsolate => {
     const programList = []
     const stageLists = {}
     const programOrganisms = {}
+    var clinicianPsList = []
     programs.forEach(p => {
         programList.push({
             value: p.id,
@@ -237,6 +254,9 @@ export const initMetadata = async isIsolate => {
                     value: ps.id,
                     label: ps.displayName,
                 })
+                if (ps.displayName.toLowerCase().includes("clinician")) {
+                    clinicianPsList.push(ps.id)
+                }
                 ps.dataElements = {}
                 ps.programStageDataElements.forEach(
                     d =>
@@ -319,11 +339,13 @@ export const initMetadata = async isIsolate => {
     const dataElementObjects = {}
 
     //this is used to distinguish which data element contains which attribute value.
-    dataElementObjects.attributeGroups={}
+    dataElementObjects.attributeGroups = {}
+    var NotesDE = {}
 
     data.dataElements.forEach(
         de => {
             dataElements[de.id] = de.formName ? de.formName : de.displayName
+
 
             //remap the attributeOptionValue with code
             de.attributeValues.forEach(attributeValue=>{
@@ -335,7 +357,10 @@ export const initMetadata = async isIsolate => {
             })
 
             dataElementObjects[de.id]=de
-            dataElementObjects[de.code]=de
+            dataElementObjects[de.code] = de
+            if (de.displayName == "Notes") {
+                NotesDE[de.displayName] = de.id
+            }
         }
     )
 
@@ -388,6 +413,9 @@ export const initMetadata = async isIsolate => {
         orgUnits,
         user,
         eventRules,
-        calculatedVariables
+        calculatedVariables,
+        userGroup,
+        NotesDE,
+        clinicianPsList,
     }
 }

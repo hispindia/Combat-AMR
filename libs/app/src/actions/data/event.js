@@ -30,7 +30,8 @@ import {
     MARKED_FOLLOW,
     CLINICIAN_CLICKED,
     SET_NOTES,
-    PREVIOUS_EVENT
+    PREVIOUS_EVENT,
+    NO_RECORD,
 } from '../types'
 import { deleteEvent } from '@hisp-amr/api'
 
@@ -458,6 +459,7 @@ export const saveEvent = () => async (dispatch, getState) => {
     var eventValues = getState().data.event.values;
     var eveStatus = getState().data.event.invalid == false ? true : false;
 
+
     try {
 
         await setEventStatus(eventId, eveStatus)
@@ -544,7 +546,7 @@ export const onDeleteConfirmed = (confirmed, secondaryAction) => async (
 }
 
 export const setEventValue = (key, value, isPrev) => (dispatch, getState) => {
-    console.log(" Event Valueee ", value);
+
     const event = getState().data.event
     if (event.values[key] === value) return
     const optionSets = getState().metadata.optionSets
@@ -554,8 +556,9 @@ export const setEventValue = (key, value, isPrev) => (dispatch, getState) => {
     const tempProgramStage = getState().data.panel.programStage;
     const tempStatus = "ACTIVE";
     const previousEventId = getState().data.previousEvent
+    const userGroup = getState().metadata.NotesDE["Notes"]
 
-    if (key == "yMKFqLn9LBx") {
+    if (key == userGroup) {
         value = value + "-"+ previousEventId
     }
 
@@ -637,9 +640,10 @@ export const clinicianEvent = (next, addMoreSample, addMoreIso) => async (dispat
     const eventValues = getState().data.event.values;
     var eveStatus = getState().data.event.invalid == false ? true : false;
     const programs = getState().metadata.programs
-    var deId = "yMKFqLn9LBx"
+    var deId = getState().metadata.NotesDE["Notes"]
     var { program, programStage, organism, organisms, sampleDate } = getState().data.panel
     const { stageLists } = getState().metadata
+
     if (program) {
         programStage = stageLists[program][1].value
     }
@@ -649,6 +653,8 @@ export const clinicianEvent = (next, addMoreSample, addMoreIso) => async (dispat
 
     const trackerEntityID = getState().data.entity.id
     const ou = getState().data.orgUnit.id;
+    const username = getState().metadata.user.username
+    const userGroup = getState().metadata.userGroup
 
     dispatch(createAction(PREVIOUS_EVENT, eventId ))
 
@@ -658,50 +664,56 @@ export const clinicianEvent = (next, addMoreSample, addMoreIso) => async (dispat
         dispatch(getExistingEvent(ou, trackerEntityID, cliEveId[0].event))
     }
     else {
-
-        try {
-            await setEventStatus(eventId, eveStatus)
-            if (addMoreSample) { dispatch(createAction(RESET_SAMPLE_PANEL_EVENT)) }
-            if (addMoreIso) {
-                dispatch(createAction(RESET_PANEL_EVENT))
-                dispatch(
-                    createAction(SET_PANEL, {
-                        program,
-                        programStage,
-                        organism,
-                        sampleDate,
-                        organisms,
-                        valid: true,
-                    })
-                )
-                dispatch(createAction(PAGE_FIRST, true))
-            }
-            else {
-                if (eventValues[ORGANISM_DETECTED] == "Pathogen detected") {
-                    dispatch(createAction(SET_PREVIOUS_EVENT, { eventValues }))
-                    dispatch(AddAndSubmit(false))
-                    dispatch(createAction(PANEL_EDITABLE))
+        if (userGroup == "Lab technician") {
+            dispatch(showAlert('No Clinician Notes Found', { critical: true }))
+            dispatch(createAction(NO_RECORD, true))
+            dispatch(createAction(CLINICIAN_CLICKED, false))
+        }
+        else {
+            try {
+                await setEventStatus(eventId, false)
+                if (addMoreSample) { dispatch(createAction(RESET_SAMPLE_PANEL_EVENT)) }
+                if (addMoreIso) {
                     dispatch(createAction(RESET_PANEL_EVENT))
+                    dispatch(
+                        createAction(SET_PANEL, {
+                            program,
+                            programStage,
+                            organism,
+                            sampleDate,
+                            organisms,
+                            valid: true,
+                        })
+                    )
                     dispatch(createAction(PAGE_FIRST, true))
-                } else {
-                    dispatch(createAction(EXIT))
                 }
-            }
-            if (!eveStatus) {
-                dispatch(createAction(SET_COMPLETED))
-            }
-            // dispatch(createAction(SET_COMPLETED))
+                else {
+                    if (eventValues[ORGANISM_DETECTED] == "Pathogen detected") {
+                        dispatch(createAction(SET_PREVIOUS_EVENT, { eventValues }))
+                        dispatch(AddAndSubmit(false))
+                        dispatch(createAction(PANEL_EDITABLE))
+                        dispatch(createAction(RESET_PANEL_EVENT))
+                        dispatch(createAction(PAGE_FIRST, true))
+                    } else {
+                        dispatch(createAction(EXIT))
+                    }
+                }
+                if (!eveStatus) {
+                    dispatch(createAction(SET_COMPLETED))
+                }
+                // dispatch(createAction(SET_COMPLETED))
 
-            // dispatch(showAlert('Submitted successfully.', { success: true }))
-        } catch (error) {
-            console.error(error)
-            dispatch(showAlert('Failed to submit.', { critical: true }))
-            dispatch(createAction(ENABLE_BUTTONS))
-        } finally {
-            batch(() => {
-                dispatch(enableButtons())
-                dispatch(createAction(SET_BUTTON_LOADING, false))
-            })
+                // dispatch(showAlert('Submitted successfully.', { success: true }))
+            } catch (error) {
+                console.error(error)
+                dispatch(showAlert('Failed to submit.', { critical: true }))
+                dispatch(createAction(ENABLE_BUTTONS))
+            } finally {
+                batch(() => {
+                    dispatch(enableButtons())
+                    dispatch(createAction(SET_BUTTON_LOADING, false))
+                })
+            }
         }
     }
 }

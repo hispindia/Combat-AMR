@@ -24,9 +24,10 @@ export const DataElement = ({ id }) => {
     const programStage = useSelector(state => state.data.event.programStage)
     const username = useSelector(state => state.metadata.user.username)
     var notes = useSelector(state => state.data.notes)
-    if (id == "yMKFqLn9LBx") {
-        value = value.split("-")[0]
-    }
+    const userGroup = useSelector(state => state.metadata.userGroup)
+    // if (id == "yMKFqLn9LBx") {
+    //     value = value.split("-")[0]
+    // }
     if (Object.keys(preValues).length && (id in preValues)) {
         value = preValues[id];
     }
@@ -36,12 +37,16 @@ export const DataElement = ({ id }) => {
     var disabled = useSelector(
         state => state.data.event.programStage.dataElements[id].disabled
     )
-    if (username == "labtech" && programStage.displayName == "Clinician Notes" && value) {
+    var noteslist = ["Clinician Notes","Clinician notes"]
+    if ((userGroup == "Lab technician") && (programStage.displayName.toLowerCase().includes("clinician")) && value) {
         disabled = true
     }
     const displayFormName = useSelector(
         state => state.data.event.programStage.dataElements[id].displayFormName
     )
+    if (displayFormName == "Notes") {
+        value = value.split("-")[0]
+    }
     const error = useSelector(
         state => state.data.event.programStage.dataElements[id].error
     )
@@ -60,8 +65,8 @@ export const DataElement = ({ id }) => {
     var valueType = useSelector(
         state => state.data.event.programStage.dataElements[id].valueType
     )
-    var noteslist = ["Clinician Notes","Clinician notes"]
-    if (noteslist.includes(programStage.displayName)) {
+
+    if (programStage.displayName.toLowerCase().includes("clinician")) {
         if (valueType == "LONG_TEXT") {
             valueType = "TEXTAREA"
         }
@@ -153,7 +158,7 @@ export const DataElement = ({ id }) => {
                     disabled={disabled || completed}
                 />
                             ) :
-                            valueType === "TEXTAREA" ? (
+                            valueType == "TEXTAREA" || valueType == "LONG_TEXT" ? (
 
                     <TextField
                     id="outlined-multiline-static"

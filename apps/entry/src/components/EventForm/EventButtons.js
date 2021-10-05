@@ -58,11 +58,14 @@ export const EventButtons = ({ history, existingEvent }) => {
     var userAccess = false;
     const username = useSelector(state => state.metadata.user.username)
     var isClinicianClicked = useSelector(state => state.data.clinicianClicked)
+    var record = useSelector(state => state.data.record)
+    const userGroup = useSelector(state => state.metadata.userGroup)
     programs.forEach(p => {
         p.programStages.forEach(ps => {
             userAccess = ps.access.data.write
         })
     })
+
 
     const changeAggregationStatus = (status)=>{
 
@@ -339,5 +342,5 @@ export const EventButtons = ({ history, existingEvent }) => {
 
     const clinicinaButtons = () => [Save_Notes,Go_Back]
 
-    return <StyledButtonRow buttons={username == "labtech" ? isClinicianClicked ?  clinicinaButtons() : buttonsLab() : userAccess ? isClinicianClicked ? clinicinaButtons() : buttonsWrite() : isClinicianClicked ? clinicinaButtons() : buttonsReadUsers()} />
+    return <StyledButtonRow buttons={userGroup == "Lab technician" ? isClinicianClicked && !record ? clinicinaButtons() : buttonsLab() : userAccess ? isClinicianClicked ? clinicinaButtons() : buttonsWrite() : isClinicianClicked ? clinicinaButtons() : buttonsReadUsers()} />
 }
