@@ -32,6 +32,7 @@ import {
     SET_NOTES,
     PREVIOUS_EVENT,
     NO_RECORD,
+    SET_PRINT,
 } from '../types'
 import { deleteEvent } from '@hisp-amr/api'
 
@@ -545,7 +546,7 @@ export const onDeleteConfirmed = (confirmed, secondaryAction) => async (
     }
 }
 
-export const setEventValue = (key, value, isPrev) => (dispatch, getState) => {
+export const setEventValue = (key, value, isPrev,printValues) => (dispatch, getState) => {
 
     const event = getState().data.event
     if (event.values[key] === value) return
@@ -591,6 +592,10 @@ export const setEventValue = (key, value, isPrev) => (dispatch, getState) => {
             values,
             invalid,
         })
+    )
+
+    dispatch(
+        createAction(SET_PRINT, { printValues })
     )
 }
 

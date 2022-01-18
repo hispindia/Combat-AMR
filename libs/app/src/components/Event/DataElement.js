@@ -13,9 +13,15 @@ import {
 import { setEventValue, AddAndSubmit,addNotes } from 'actions'
 import TextField from '@material-ui/core/TextField';
 
+
 import * as DUPLICACY from 'constants/duplicacy'
+
 export const DataElement = ({ id }) => {
     const dispatch = useDispatch()
+    var {	program,
+        organism,
+        sampleDate,
+    } = useSelector(state => state.data.panel)
     const optionSets = useSelector(state => state.metadata.optionSets)
     const completed = useSelector(state => state.data.event.status.completed)
     var value = useSelector(state => state.data.event.values[id])
@@ -25,6 +31,9 @@ export const DataElement = ({ id }) => {
     const username = useSelector(state => state.metadata.user.username)
     var notes = useSelector(state => state.data.notes)
     const userGroup = useSelector(state => state.metadata.userGroup)
+    var printValues = useSelector(state => state.data.printValues)
+
+
     // if (id == "yMKFqLn9LBx") {
     //     value = value.split("-")[0]
     // }
@@ -80,7 +89,8 @@ export const DataElement = ({ id }) => {
         id === SAMPLE_ID_ELEMENT && SAMPLE_TESTING_PROGRAM["0"].value == programId &&
         useSelector(state => state.data.event.duplicate)
 
-    const onChange = (key, value) => {
+
+    const onChange = (key, value,unique,label) => {
 
         var results = ["Not available","Rejected","Sterile"]
         if((key == ORGANISM_DETECTED) && (value == 'Pathogen detected'))
@@ -93,7 +103,28 @@ export const DataElement = ({ id }) => {
          dispatch(setEventValue(key, value,false))
         }
         else {
-            dispatch(setEventValue(key, value,false))
+            var lB = label
+
+            if (!printValues) {
+                printValues = {
+                "program": program,
+                "organism": organism,
+                "sampleDate": sampleDate,
+                [lB]:value
+                }
+            }
+            else {
+                for (var prkey in printValues) {
+                    if (lB == prkey) {
+                        printValues={...printValues, [lB]: value }
+                    }
+                    else {
+                        printValues={...printValues, [lB]: value }
+
+                    }
+                }
+            }
+            dispatch(setEventValue(key, value, false,printValues))
         }
     }
 
@@ -101,7 +132,6 @@ export const DataElement = ({ id }) => {
         dispatch(addNotes(id,event.target.value))
         // onChange(id, event.target.value);
     };
-
 
     if (hide) return null
 

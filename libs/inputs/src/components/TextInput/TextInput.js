@@ -39,7 +39,7 @@ export const TextInput = props => {
      */
     const passValue = async value => {
         await validate(value)
-        props.onChange(props.name, value, props.unique)
+        props.onChange(props.name, value, props.unique,props.label)
     }
 
     /**
@@ -55,7 +55,7 @@ export const TextInput = props => {
             isValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(value);
         }
         if (isValid) error = texts.format
-        
+
         if (required && !value) error = texts.required
         if (unique && validateUnique && value) {
             dispatch({ type: types.SET_VALIDATING, validating: true })
@@ -99,7 +99,7 @@ export const TextInput = props => {
                 type={props.type}
                 dense
                 color={props.color}
-                
+
             />
             {(validating ||
                 props.uniqueInvalid ||

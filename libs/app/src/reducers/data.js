@@ -46,6 +46,7 @@ import {
     SET_NOTES,
     PREVIOUS_EVENT,
     NO_RECORD,
+    SET_PRINT
 } from '../actions/types'
 
 const INITIAL_EVENT = {
@@ -92,7 +93,8 @@ const INITIAL_STATE = {
     clinicianClicked: false,
     notes: '',
     previousEvent: '',
-    record:false
+    record: false,
+    printValues:{}
 }
 
 export const data = (state = INITIAL_STATE, { type, payload }) => {
@@ -374,6 +376,11 @@ export const data = (state = INITIAL_STATE, { type, payload }) => {
                 return {
                     ...state,
                     previousValues: payload.eventValues
+            }
+        case SET_PRINT:
+                return {
+                    ...state,
+                    printValues: payload.printValues
                 }
         case SET_NOTES:
             return {

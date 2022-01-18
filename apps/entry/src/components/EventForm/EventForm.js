@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+
 import { withRouter } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -29,8 +30,12 @@ import {
 } from '../../api/helpers/aggregate'
 import { deleteEvent } from '@hisp-amr/api'
 import SweetAlert from 'react-bootstrap-sweetalert';
+import EventPrint  from './EventPrint';
+
+
 export const EventForm = ({ history, match }) => {
     const [isFirstRender, setIsFirstRender] = useState(true)
+    var [dialog,setDialog] = useState(false)
     const dispatch = useDispatch()
     const error = useSelector(state => state.data.status) === ERROR
     const panelValid = useSelector(state => state.data.panel.valid)
@@ -46,9 +51,19 @@ export const EventForm = ({ history, match }) => {
     const previousValues = useSelector(state => state.data.previousValues)
     const prevValues = Object.keys(previousValues).length ? true : false;
     var aggregationOnProgress = useSelector(state => state.data.aggregationOnProgress)
+    var printValues = useSelector(state => state.data.printValues)
+    const isCompleteClicked = useSelector(state => state.data.completeClicked)
+    const status = useSelector(state => state.data.event.status)
     var { sampleDate } = useSelector(state => state.data.panel)
 
-
+    const onPrint = (check) => {
+        if (!check) {
+            setDialog(check)
+        }
+        else {
+            setDialog(true)
+        }
+    }
 
     var orgUnit = match.params.orgUnit
     const teiId = match.params.teiId;
@@ -201,10 +216,14 @@ export const EventForm = ({ history, match }) => {
                 closeAnim={{ name: 'hideSweetAlert', duration: 2000 }}
                 customButtons={
                     <React.Fragment>
-                         <EventButtons history={history} existingEvent={teiId} />&emsp;
+                        <EventButtons history={history} existingEvent={teiId} />&emsp;&emsp;
+                        <Button primary={true} onClick={onPrint} disabled={!status.completed}>Report</Button>
+                        &emsp;&emsp;
                         <div id="btn">
                             {userAccess &&
                                 <Button destructive={true} onClick={(e) => onDelete(e)}>Delete</Button>}&emsp;&emsp;&emsp;&emsp;&emsp;
+
+
 
                         </div>
                         {/* {!prevValues &&
@@ -215,12 +234,17 @@ export const EventForm = ({ history, match }) => {
                 >
                 <Panel />
                 <Event />
+
                </SweetAlert>
                 </div> :
                 <div id="panel">
                 <Panel showEdit={panelValid} />
-                <Event />
-                <EventButtons history={history} existingEvent={teiId} />
+                        <Event />
+                        <EventButtons history={history} existingEvent={teiId} />
+                    </div>}
+                {dialog &&
+                <div id="btn">
+                        <EventPrint onPrint = {onPrint}/>
                 </div>}
             </form>
             <div id="msg">

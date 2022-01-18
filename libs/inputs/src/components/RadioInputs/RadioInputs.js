@@ -20,7 +20,7 @@ export const RadioInputs = props => {
     const onChange = ({ target }) => {
         const value = target.value
         setValue(value)
-        props.onChange(props.name, value)
+        props.onChange(props.name, value,"",props.label)
     }
 
     return (
