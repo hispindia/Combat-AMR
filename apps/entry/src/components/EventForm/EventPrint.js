@@ -322,7 +322,7 @@ return (
               Object.keys(antiBioDict).map((key, index) => (
                 <StyledTableRow >
                   <TableCell>
-                    <Typography><Box>{ index + 1 }</Box>
+                    <Typography><Box sx={{ fontSize: 10, m: 1 }}>{ index + 1 }</Box>
                     </Typography>
                   </TableCell>
                   <TableCell>
@@ -364,7 +364,59 @@ return (
                 </Box>
                 </TableBody>
               </Table>
-              </Box>
+        </Box>
+
+        <Box sx={{ border:1,fontSize: 12, m: 2 }}>
+      <Table sx={{
+    [`& .${tableCellClasses.root}`]: {
+      borderBottom: "none"
+    }
+  }}>
+          <TableBody>
+            <StyledTableRow>
+              <TableCell>
+                <Typography>
+                      <Box sx={{ fontSize: 12, m: 1 }}>Antibiotic change after AST results</Box>
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" >
+                  <Box sx={{ fontSize: 12, m: 1 }}>Yes</Box>
+                  </Typography>
+              </TableCell>
+
+              <TableCell >
+                <Typography><Box sx={{ fontSize: 12, m: 1 }}>Patient's outcome</Box></Typography>
+              </TableCell>
+              <TableCell >
+                    <Box sx={{ fontSize: 12, m: 1 }}>Discharged</Box>
+              </TableCell>
+              </StyledTableRow>
+
+            <StyledTableRow>
+              <TableCell >
+                <Typography><Box sx={{ fontSize: 12, m: 1 }}>NOTES</Box></Typography>
+              </TableCell>
+              <TableCell >
+                    <Typography>
+                      <Box sx={{ fontSize: 12, m: 1 }}>New Notes</Box>
+                </Typography>
+              </TableCell>&emsp;&emsp;
+              <TableCell >
+                <Typography><Box sx={{ fontSize: 12, m: 1 }}></Box></Typography>
+              </TableCell>
+              <TableCell >
+                <Typography>
+                   <Box sx={{ fontSize: 12, m: 1 }}>
+
+                    </Box>
+                </Typography>
+              </TableCell>
+          </StyledTableRow>
+        </TableBody>
+      </Table>
+        </Box>
+
           </Box>
 
       </DialogContent>

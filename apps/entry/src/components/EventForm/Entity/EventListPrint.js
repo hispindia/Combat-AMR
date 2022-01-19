@@ -23,8 +23,7 @@ import TableRow,{ tableRowClasses } from '@mui/material/TableRow';
 import Grid from "@material-ui/core/Grid";
 import { makeStyles,withStyles } from '@mui/styles';
 import { SAMPLE_TYPEID, PATHOGEN_POSITIVE, PATHOGEN_NEGATIVE } from './constants';
-
-
+import './print.css'
 
 const commonStyles = {
   bgcolor: 'background.paper',
@@ -53,8 +52,21 @@ const StyledTableRow = withStyles((theme) => ({
 
 
 export default function EventListPrint(props) {
+
+  var eventVals2 = []
+  var eventCliniVals = []
+  var eventLDict = []
+  var eventClinical = []
+  var clini = ["EJNDTtsZhzJ", "MGC3ALjCjKQ", "uR5jTBChlVO"]
+  var entityDict = {}
+  var eventDict = {}
+  var programDict = {}
+  var antiBioDict = {}
+  var eventCliDict = {}
+
   const classes = useStyles();
   var eventIDs = props.eve;
+  var cliEvents = props.cliEve;
 
   var {	program,
         organism,
@@ -67,32 +79,36 @@ export default function EventListPrint(props) {
   var allEntity = useSelector(state => state.data.entity.attributes)
   var entityValues = useSelector(state => state.data.entity.values)
   var eventVals = useSelector(state => state.data.event.values)
-  var eventVals2 = []
-  var eventLDict = []
 
   var allEvent = useSelector(state => state.metadata.dataElements)
   const { programOrganisms, optionSets } = useSelector(state => state.metadata)
   var eventsList = useSelector(state => state.data.eventList);
   const [eventSpe, setEventSpe] = React.useState([]);
 
-
   eventsList.forEach((ev, index) => {
     var dVs = {}
+    var cliDvs = {}
     var isEve = eventIDs[0].includes(ev.event)
+    var isCliEves = cliEvents[0].includes(ev.event)
     if (isEve) {
       for (let value of ev.dataValues) {
         dVs[value.dataElement] = value.value
       }
       eventVals2.push(dVs)
     }
+    if (isCliEves) {
+      for (let valueCli of ev.dataValues) {
+        if (clini.includes(valueCli.dataElement)) {
+          cliDvs[valueCli.dataElement] = valueCli.value.split("-")[0]
+        }
+      }
+      eventCliniVals.push(cliDvs)
+    }
   })
 
-  console.log(" EVents Value 2 :", eventsList);
-
-  var entityDict = {}
-  var eventDict = {}
-  var programDict = {}
-  var antiBioDict = {}
+  // if (eventCliniVals.length != 0) {
+  //   eventCliniVals = eventCliniVals[0]
+  // }
 
 
     programs.forEach((pn, index) => {
@@ -121,38 +137,6 @@ export default function EventListPrint(props) {
     });
   }
 
-  for (const [key, value] of Object.entries(eventVals)) {
-    for (const [al, avalue] of Object.entries(allEvent)) {
-      var label = avalue
-      if (key == al) {
-        if (value) {
-          if (label.includes("Result")) {
-            antiBioDict = {
-              ...antiBioDict,
-              [label.split("_")[0]]:value
-            }
-          }
-        }
-      }
-    }
-  }
-
-  for (const [key, value] of Object.entries(eventVals)) {
-    for (const [al, avalue] of Object.entries(allEvent)) {
-      var label = avalue
-      if (key == al) {
-        if (value) {
-          if (!label.includes("Result") && !label.includes("_DD") && !label.includes("_MIC") && !label.includes("Test")) {
-            eventDict = {
-            ...eventDict,
-            [label]: value
-          }
-          }
-        }
-      }
-    }
-  }
-
   for (let ekey of eventVals2) {
     for (const [key, value] of Object.entries(ekey)) {
       for (const [al, avalue] of Object.entries(allEvent)) {
@@ -171,6 +155,29 @@ export default function EventListPrint(props) {
     }
     eventLDict.push(eventDict)
   }
+
+  if (eventCliniVals.length != 0) {
+    for (let ekeycli of eventCliniVals) {
+      for (const [key, value] of Object.entries(ekeycli)) {
+        for (const [al, avalue] of Object.entries(allEvent)) {
+          var label = avalue.replace(/['"]+/g, '').replace(/\s+$/, '');
+          if (key == al) {
+            if (value) {
+              if (!label.includes("_DD") && !label.includes("_MIC") && !label.includes("Test")) {
+                eventCliDict = {
+                  ...eventCliDict,
+                  [label]: value
+                }
+              }
+            }
+          }
+        }
+      }
+      eventClinical.push(eventCliDict)
+    }
+  }
+
+  console.log( " clinicalss ", eventClinical)
 
 
 
@@ -208,9 +215,150 @@ const handlePrint = useReactToPrint({
       }
   });
 
-  console.log(" Dipls y evenss : ",eventLDict)
 
-return (
+
+  function getPlayersByPosition(link, position){
+  return Object.keys(link).filter((key) => key.includes(position))
+}
+
+  const listItems =
+    eventLDict.map((link) =>
+      <Box sx={{ border:1,fontSize: 10, m: 2 }}>
+
+        <Table sx={{
+    [`& .${tableCellClasses.root}`]: {
+      borderBottom: "none"
+    }
+  }}>
+            <TableBody>
+              <TableRow style={{height: 10}}>
+                <TableCell >
+                <Typography><Box sx={{ fontSize: 12, m: 1 }}>LOCATION</Box></Typography>
+                </TableCell>
+                <TableCell>
+                <Box sx={{ fontSize: 12, m: 1 }}>{link["Patient Location"].toUpperCase()}</Box>
+                </TableCell>
+
+                <TableCell>
+                <Typography><Box sx={{ fontSize: 12, m: 1 }}>LAB ID</Box></Typography>
+                </TableCell>
+                <TableCell>
+                <Typography>
+                <Box sx={{ fontSize: 12, m: 1 }}>{ link["Lab ID"].toUpperCase() }</Box>
+                </Typography>
+                </TableCell>
+              </TableRow>
+
+              <TableRow style={{height: 10}}>
+                <TableCell>
+                <Typography><Box sx={{ fontSize: 12, m: 1 }}>PATHOGEN GROUP</Box></Typography>
+                </TableCell>
+                <TableCell>
+                <Typography>
+                <Box sx={{ fontSize: 12, m: 1 }}>GRAM POSITIVE</Box>
+                </Typography>
+                </TableCell>
+
+                <TableCell>
+                <Typography><Box sx={{ fontSize: 12, m: 1 }}>PATHOGEN</Box></Typography>
+                </TableCell>
+                <TableCell>
+                <Typography>
+                <Box sx={{ fontSize: 12, m: 1 }}>{ link["Pathogen"].toUpperCase() }</Box>
+                </Typography>
+                </TableCell>
+              </TableRow>
+
+              <TableRow>
+                <TableCell >
+                <Typography><Box sx={{ fontSize: 12, m: 1 }}>HOSPITAL DEPARTMENT</Box></Typography>
+                </TableCell>
+                <TableCell>
+                <Box sx={{ fontSize: 12, m: 1 }}>{link["Hospital department"].toUpperCase()}</Box>
+                </TableCell>
+                <TableCell >
+                <Typography><Box sx={{ fontSize: 12, m: 1 }}>SAMPLE TYPE</Box></Typography>
+                </TableCell>
+                <TableCell>
+                <Box sx={{ fontSize: 12, m: 1 }}>{link["Sample type"].toUpperCase()}</Box>
+                </TableCell>
+              </TableRow>
+
+              <TableRow>
+              <TableCell >
+              <Typography><Box sx={{ fontSize: 12, m: 1 }}>SAMPLE DATE</Box></Typography>
+              </TableCell>
+              <TableCell>
+              <Box sx={{ fontSize: 12, m: 1 }}>18/01/2022</Box>
+                </TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+
+          <Table sx={{
+    [`& .${tableCellClasses.root}`]: {
+      borderBottom: "none"
+              }
+            }}>
+            <TableBody>
+            <Box sx={{ border:1,fontSize: 10, ml: 15, mr: 15, borderBottom: 0 }}>
+              {getPlayersByPosition(link, "_Result").map((player,index) =>
+
+                <StyledTableRow >
+                  <TableCell>
+                    <Typography><Box sx={{ fontSize: 10, m: 1 }}>{ index + 1 }</Box>
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography><Box ></Box>
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography>
+                      <Box sx={{ fontSize: 10, m: 1 }}>{player.split("_")[0].toUpperCase()}</Box>
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography>
+                      <Box sx={{ fontSize: 10, m: 1 }}></Box>
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography>
+                      <Box sx={{ fontSize: 10, m: 1 }}></Box>
+                    </Typography>
+                  </TableCell>
+                  <TableCell >
+                    <Typography>
+                      <Box sx={{ fontSize: 10, m: 1 }}>{link[player].toUpperCase()}</Box>
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography><Box></Box>
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography><Box></Box>
+                    </Typography>
+                  </TableCell>
+
+                </StyledTableRow>
+
+              )}
+
+                </Box>
+                </TableBody>
+              </Table>
+</Box>
+
+    )
+
+
+
+  return (
+
 <Dialog
       fullWidth
       maxWidth="md"
@@ -224,15 +372,11 @@ return (
   <DialogContent dividers ref={ref}>
     <h2>Patient Report</h2>
     <Box sx={{ border:1,fontSize: 12, m: 1 }}>
-    <Box sx={{ border:1,fontSize: 12, m: 2 }}>
-      <Table sx={{
-    [`& .${tableCellClasses.root}`]: {
-      borderBottom: "none"
-    }
-  }}>
+    <Box sx={{ border:1,fontSize: 12, m: 2}}>
+      <Table sx={{[`& .${tableCellClasses.root}`]: {borderBottom: "none"}}}>
           <TableBody>
             <StyledTableRow>
-              <TableCell>
+              <TableCell className="cr">
                 <Typography>
                   <Box sx={{ fontSize: 12, m: 1 }}>CR NUMBER</Box>
                 </Typography>
@@ -241,7 +385,7 @@ return (
                 <Typography variant="h6" >
                   <Box sx={{ fontSize: 12, m: 1 }}>{ entityDict["Registration number"] }</Box>
                   </Typography>
-              </TableCell>&emsp;&emsp;
+              </TableCell>
 
               <TableCell >
                 <Typography><Box sx={{ fontSize: 12, m: 1 }}>GENDER</Box></Typography>
@@ -259,7 +403,7 @@ return (
                     <Typography>
                       <Box sx={{ fontSize: 12, m: 1 }}>{ entityDict["First name"].toUpperCase()}</Box>
                 </Typography>
-              </TableCell>&emsp;&emsp;
+              </TableCell>
               <TableCell >
                 <Typography><Box sx={{ fontSize: 12, m: 1 }}>AGE</Box></Typography>
               </TableCell>
@@ -273,7 +417,63 @@ return (
           </StyledTableRow>
         </TableBody>
       </Table>
-    </Box>
+        </Box>
+
+
+{listItems}
+
+ <Box sx={{ border:1,fontSize: 12, m: 2 }}>
+      <Table sx={{
+    [`& .${tableCellClasses.root}`]: {
+      borderBottom: "none"
+    }
+  }}>
+          <TableBody>
+            <StyledTableRow>
+              <TableCell>
+                <Typography>
+                      <Box sx={{ fontSize: 12, m: 1 }}>Antibiotic change after AST results</Box>
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant="h6" >
+                  <Box sx={{ fontSize: 12, m: 1 }}>{ eventClinical[0]["Antibiotic change after AST results"] }</Box>
+                  </Typography>
+              </TableCell>
+
+              <TableCell >
+                <Typography><Box sx={{ fontSize: 12, m: 1 }}>Patient's outcome</Box></Typography>
+              </TableCell>
+              <TableCell >
+                    <Box sx={{ fontSize: 12, m: 1 }}>{ eventClinical[0]["Patients outcome"] }</Box>
+              </TableCell>
+              </StyledTableRow>
+
+            <StyledTableRow>
+              <TableCell >
+                <Typography><Box sx={{ fontSize: 12, m: 1 }}>NOTES</Box></Typography>
+              </TableCell>
+              <TableCell >
+                    <Typography>
+                      <Box sx={{ fontSize: 12, m: 1 }}>{ eventClinical[0]["Notes"] }</Box>
+                </Typography>
+              </TableCell>&emsp;&emsp;
+              <TableCell >
+                <Typography><Box sx={{ fontSize: 12, m: 1 }}></Box></Typography>
+              </TableCell>
+              <TableCell >
+                <Typography>
+                   <Box sx={{ fontSize: 12, m: 1 }}>
+
+                    </Box>
+                </Typography>
+              </TableCell>
+          </StyledTableRow>
+        </TableBody>
+      </Table>
+        </Box>
+
+
       </Box>
 
       </DialogContent>
