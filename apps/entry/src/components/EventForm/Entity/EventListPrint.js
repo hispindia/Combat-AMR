@@ -22,16 +22,27 @@ import TableRow,{ tableRowClasses } from '@mui/material/TableRow';
 
 import Grid from "@material-ui/core/Grid";
 import { makeStyles,withStyles } from '@mui/styles';
-import { SAMPLE_TYPEID, PATHOGEN_POSITIVE, PATHOGEN_NEGATIVE } from './constants';
+import {
+  SAMPLE_TYPEID,
+  PATHOGEN_POSITIVE,
+  PATHOGEN_NEGATIVE,
+  CR_NUMBER,
+  LAB_ID,
+  LOCATION,
+  DEPARTMENT,
+  PATIENT_OUTCOME,
+  NAME,
+  SAMPLE_DATE,
+  REGISTRATION_DATE,
+  SAMPLE_TYPE,
+  GENDER,
+  AGE,
+  PATHOGEN_G,
+  PATHOGEN,
+  AST,
+  NOTES
+} from './constants';
 import './print.css'
-
-const commonStyles = {
-  bgcolor: 'background.paper',
-  m: 1,
-  borderColor: 'text.primary',
-  width: '5rem',
-  height: '5rem',
-};
 
 const useStyles = makeStyles({
   root: {},
@@ -40,16 +51,8 @@ const useStyles = makeStyles({
         borderRightWidth: 1,
         borderColor: 'black',
         borderStyle: 'solid',
-    },
+  },
 });
-
-const StyledTableRow = withStyles((theme) => ({
-  root: {
-    height: 10
-  }
-}))(TableRow);
-
-
 
 export default function EventListPrint(props) {
 
@@ -59,7 +62,6 @@ export default function EventListPrint(props) {
   var eventClinical = []
   var clini = ["EJNDTtsZhzJ", "MGC3ALjCjKQ", "uR5jTBChlVO"]
   var entityDict = {}
-  var eventDict = {}
   var programDict = {}
   var antiBioDict = {}
   var eventCliDict = {}
@@ -94,6 +96,9 @@ export default function EventListPrint(props) {
       for (let value of ev.dataValues) {
         dVs[value.dataElement] = value.value
       }
+      dVs[SAMPLE_DATE] = ev.eventDate
+      dVs[PATHOGEN_G] = ev.program
+      dVs[REGISTRATION_DATE] = ev.created
       eventVals2.push(dVs)
     }
     if (isCliEves) {
@@ -105,11 +110,6 @@ export default function EventListPrint(props) {
       eventCliniVals.push(cliDvs)
     }
   })
-
-  // if (eventCliniVals.length != 0) {
-  //   eventCliniVals = eventCliniVals[0]
-  // }
-
 
     programs.forEach((pn, index) => {
       var label = pn.label
@@ -137,8 +137,38 @@ export default function EventListPrint(props) {
     });
   }
 
+  function getProgram(proId) {
+    var name = ""
+    for (let program of programs) {
+      if (program.value == proId) {
+        name = program.label;
+      }
+    }
+return name
+  }
+
   for (let ekey of eventVals2) {
+    var eventDict = {}
     for (const [key, value] of Object.entries(ekey)) {
+      if (key == SAMPLE_DATE) {
+        eventDict = {
+            ...eventDict,
+          [key]: value
+        }
+      }
+      if (key == PATHOGEN_G) {
+        var pvalue = getProgram(value)
+        eventDict = {
+            ...eventDict,
+          [key]: pvalue
+        }
+      }
+      if (key == REGISTRATION_DATE) {
+        entityDict = {
+          ...entityDict,
+          [key]: value
+        }
+      }
       for (const [al, avalue] of Object.entries(allEvent)) {
         var label = avalue
         if (key == al) {
@@ -177,10 +207,6 @@ export default function EventListPrint(props) {
     }
   }
 
-  console.log( " clinicalss ", eventClinical)
-
-
-
 const handlePrint = useReactToPrint({
     content: () => ref.current,
     onAfterPrint: () => handleClose()
@@ -217,79 +243,52 @@ const handlePrint = useReactToPrint({
 
 
 
-  function getPlayersByPosition(link, position){
+  function getPlayersByPosition(link, position) {
   return Object.keys(link).filter((key) => key.includes(position))
 }
 
   const listItems =
     eventLDict.map((link) =>
-      <Box sx={{ border:1,fontSize: 10, m: 2 }}>
+      <Box sx={{ border:1,fontSize: 10,  ml: 6,mr:6,mt:1,mb:1 }}>
 
         <Table sx={{
     [`& .${tableCellClasses.root}`]: {
       borderBottom: "none"
     }
   }}>
-            <TableBody>
-              <TableRow style={{height: 10}}>
-                <TableCell >
-                <Typography><Box sx={{ fontSize: 12, m: 1 }}>LOCATION</Box></Typography>
-                </TableCell>
-                <TableCell>
-                <Box sx={{ fontSize: 12, m: 1 }}>{link["Patient Location"].toUpperCase()}</Box>
-                </TableCell>
+          <TableBody>
 
-                <TableCell>
-                <Typography><Box sx={{ fontSize: 12, m: 1 }}>LAB ID</Box></Typography>
+            <TableRow>
+                <TableCell style={{width:'40%'}}>
+                <Typography><Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{DEPARTMENT } :&nbsp;&nbsp;{link["Hospital department"]}</Box></Typography>
                 </TableCell>
-                <TableCell>
-                <Typography>
-                <Box sx={{ fontSize: 12, m: 1 }}>{ link["Lab ID"].toUpperCase() }</Box>
-                </Typography>
-                </TableCell>
-              </TableRow>
-
-              <TableRow style={{height: 10}}>
-                <TableCell>
-                <Typography><Box sx={{ fontSize: 12, m: 1 }}>PATHOGEN GROUP</Box></Typography>
-                </TableCell>
-                <TableCell>
-                <Typography>
-                <Box sx={{ fontSize: 12, m: 1 }}>GRAM POSITIVE</Box>
-                </Typography>
-                </TableCell>
-
-                <TableCell>
-                <Typography><Box sx={{ fontSize: 12, m: 1 }}>PATHOGEN</Box></Typography>
-                </TableCell>
-                <TableCell>
-                <Typography>
-                <Box sx={{ fontSize: 12, m: 1 }}>{ link["Pathogen"].toUpperCase() }</Box>
-                </Typography>
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-                <TableCell >
-                <Typography><Box sx={{ fontSize: 12, m: 1 }}>HOSPITAL DEPARTMENT</Box></Typography>
-                </TableCell>
-                <TableCell>
-                <Box sx={{ fontSize: 12, m: 1 }}>{link["Hospital department"].toUpperCase()}</Box>
-                </TableCell>
-                <TableCell >
-                <Typography><Box sx={{ fontSize: 12, m: 1 }}>SAMPLE TYPE</Box></Typography>
-                </TableCell>
-                <TableCell>
-                <Box sx={{ fontSize: 12, m: 1 }}>{link["Sample type"].toUpperCase()}</Box>
-                </TableCell>
-              </TableRow>
-
-              <TableRow>
-              <TableCell >
-              <Typography><Box sx={{ fontSize: 12, m: 1 }}>SAMPLE DATE</Box></Typography>
+                <TableCell style={{width:'30%'}}>
+                <Typography><Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{SAMPLE_TYPE} :&nbsp;&nbsp;{link["Sample type"]}</Box></Typography>
               </TableCell>
-              <TableCell>
-              <Box sx={{ fontSize: 12, m: 1 }}>18/01/2022</Box>
+              <TableCell style={{width:'30%',textAlign:'right'}}>
+                <Typography><Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{PATHOGEN_G} :&nbsp;&nbsp;{link[PATHOGEN_G]}</Box></Typography>
+              </TableCell>
+              </TableRow>
+
+              <TableRow>
+
+              <TableCell style={{width:'40%'}}>
+                <Typography><Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{LAB_ID} :&nbsp;&nbsp;{ link[LAB_ID]}</Box></Typography>
+              </TableCell>
+              <TableCell style={{width:'30%'}}>
+                <Typography>
+                  <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{LOCATION} :&nbsp;&nbsp;{link[LOCATION]}</Box>
+                </Typography>
+                </TableCell>
+              <TableCell style={{width:'30%',textAlign:'right'}}>
+                <Typography><Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{SAMPLE_DATE }: :&nbsp;&nbsp;{moment(link[SAMPLE_DATE]).format("DD/MM/yyyy")}</Box></Typography>
+              </TableCell>
+              </TableRow>
+
+
+              <TableRow>
+              <TableCell style={{ width: '40%' }}>
+                <Typography><Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{PATHOGEN} :&nbsp;&nbsp;&nbsp;&nbsp;{ link["Pathogen"]}</Box></Typography>
                 </TableCell>
                 <TableCell></TableCell>
                 <TableCell></TableCell>
@@ -297,54 +296,34 @@ const handlePrint = useReactToPrint({
             </TableBody>
           </Table>
 
-          <Table sx={{
-    [`& .${tableCellClasses.root}`]: {
-      borderBottom: "none"
-              }
-            }}>
+          <Table >
             <TableBody>
-            <Box sx={{ border:1,fontSize: 10, ml: 15, mr: 15, borderBottom: 0 }}>
+            <Box sx={{ border:1,fontSize: 10, ml: 20, mr: 20,mt:1,mb:1, borderBottom: 0,borderRight:0 }}>
               {getPlayersByPosition(link, "_Result").map((player,index) =>
 
-                <StyledTableRow >
-                  <TableCell>
-                    <Typography><Box sx={{ fontSize: 10, m: 1 }}>{ index + 1 }</Box>
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography><Box ></Box>
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography>
-                      <Box sx={{ fontSize: 10, m: 1 }}>{player.split("_")[0].toUpperCase()}</Box>
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography>
-                      <Box sx={{ fontSize: 10, m: 1 }}></Box>
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography>
-                      <Box sx={{ fontSize: 10, m: 1 }}></Box>
-                    </Typography>
-                  </TableCell>
-                  <TableCell >
-                    <Typography>
-                      <Box sx={{ fontSize: 10, m: 1 }}>{link[player].toUpperCase()}</Box>
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography><Box></Box>
-                    </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Typography><Box></Box>
+                <TableRow >
+                  <TableCell className={classes.tableRightBorder + ' ' + "antibio"} style={{width: '10%',borderBottom: '1px solid black'}}>
+                    <Typography><Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{ index + 1 }</Box>
                     </Typography>
                   </TableCell>
 
-                </StyledTableRow>
+                  <TableCell className={classes.tableRightBorder + ' ' + "antibio"} style={{width: '60%',textAlign:'center',borderBottom: '1px solid black'}}>
+                    <Typography>
+                      <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{player.split("_")[0]}</Box>
+                    </Typography>
+                  </TableCell>
+                  <TableCell className="antibio" style={{borderBottom: '1px solid black'}}>
+                    <Typography>
+                      <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}></Box>
+                    </Typography>
+                  </TableCell>
+
+                  <TableCell className={classes.tableRightBorder + ' ' + "antibio"} style={{width: '60%',textAlign:'left',borderBottom: '1px solid black'}}>
+                    <Typography>
+                      <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{link[player]}</Box>
+                    </Typography>
+                  </TableCell>
+                </TableRow>
 
               )}
 
@@ -371,50 +350,32 @@ const handlePrint = useReactToPrint({
 
   <DialogContent dividers ref={ref}>
     <h2>Patient Report</h2>
-    <Box sx={{ border:1,fontSize: 12, m: 1 }}>
-    <Box sx={{ border:1,fontSize: 12, m: 2}}>
+    <Box sx={{ border:'1px solid black',fontSize: 12, m: 1 }}>
+    <Box sx={{ border:1,fontSize: 12, ml: 6,mr:6,mt:1,mb:1}}>
       <Table sx={{[`& .${tableCellClasses.root}`]: {borderBottom: "none"}}}>
           <TableBody>
-            <StyledTableRow>
-              <TableCell className="cr">
+            <TableRow>
+              <TableCell style={{width: '30%'}}>
                 <Typography>
-                  <Box sx={{ fontSize: 12, m: 1 }}>CR NUMBER</Box>
+                      <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{ CR_NUMBER } :&nbsp;&nbsp;&nbsp;&nbsp; { entityDict["Registration number"] }</Box>
                 </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="h6" >
-                  <Box sx={{ fontSize: 12, m: 1 }}>{ entityDict["Registration number"] }</Box>
-                  </Typography>
               </TableCell>
 
-              <TableCell >
-                <Typography><Box sx={{ fontSize: 12, m: 1 }}>GENDER</Box></Typography>
+              <TableCell style={{width: '40%',textAlign:'center'}}>
+                    <Typography><Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{ NAME } :&nbsp;&nbsp;&nbsp;&nbsp; { entityDict["First name"]}</Box></Typography>
               </TableCell>
-              <TableCell >
-                    <Box sx={{ fontSize: 12, m: 1 }}>{ entityDict["Gender"].toUpperCase()}</Box>
+                  <TableCell style={{ width: '30%',textAlign:'right'}}>
+                    <Typography><Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{ REGISTRATION_DATE } :&nbsp;&nbsp;&nbsp;&nbsp; {moment(entityDict[REGISTRATION_DATE]).format('DD/MM/yyyy')}</Box></Typography>
               </TableCell>
-              </StyledTableRow>
-
-            <StyledTableRow>
-              <TableCell >
-                <Typography><Box sx={{ fontSize: 12, m: 1 }}>PATIENT NAME</Box></Typography>
+                </TableRow>
+                <TableRow>
+                  <TableCell style={{width: '30%'}}>
+                    <Typography><Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{ GENDER } :&nbsp;&nbsp;&nbsp;&nbsp; { entityDict[GENDER]}</Box></Typography>
+                  </TableCell>
+                  <TableCell style={{width: '30%',textAlign:'center'}}>
+                    <Typography><Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{ AGE } :&nbsp;&nbsp;&nbsp;&nbsp; {moment().diff(entityDict["Age / DOB"],'years')} y</Box></Typography>
               </TableCell>
-              <TableCell >
-                    <Typography>
-                      <Box sx={{ fontSize: 12, m: 1 }}>{ entityDict["First name"].toUpperCase()}</Box>
-                </Typography>
-              </TableCell>
-              <TableCell >
-                <Typography><Box sx={{ fontSize: 12, m: 1 }}>AGE</Box></Typography>
-              </TableCell>
-              <TableCell >
-                <Typography>
-                   <Box sx={{ fontSize: 12, m: 1 }}>
-                    {moment().diff(entityDict["Age / DOB"],'years')} y
-                    </Box>
-                </Typography>
-              </TableCell>
-          </StyledTableRow>
+                </TableRow>
         </TableBody>
       </Table>
         </Box>
@@ -422,53 +383,53 @@ const handlePrint = useReactToPrint({
 
 {listItems}
 
- <Box sx={{ border:1,fontSize: 12, m: 2 }}>
+ <Box sx={{ border:1,fontSize: 12,ml: 6,mr:6,mt:1,mb:1 }}>
       <Table sx={{
     [`& .${tableCellClasses.root}`]: {
       borderBottom: "none"
     }
   }}>
           <TableBody>
-            <StyledTableRow>
-              <TableCell>
+            <TableRow>
+              <TableCell style={{width: '30%'}}>
                 <Typography>
-                      <Box sx={{ fontSize: 12, m: 1 }}>Antibiotic change after AST results</Box>
+                      <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{ AST }</Box>
                 </Typography>
               </TableCell>
               <TableCell>
                 <Typography variant="h6" >
-                  <Box sx={{ fontSize: 12, m: 1 }}>{ eventClinical[0]["Antibiotic change after AST results"] }</Box>
+                  <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{ eventClinical[0][AST] }</Box>
                   </Typography>
               </TableCell>
 
-              <TableCell >
-                <Typography><Box sx={{ fontSize: 12, m: 1 }}>Patient's outcome</Box></Typography>
+              <TableCell style={{width: '50%'}}>
+                    <Typography><Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{ PATIENT_OUTCOME }</Box></Typography>
               </TableCell>
               <TableCell >
-                    <Box sx={{ fontSize: 12, m: 1 }}>{ eventClinical[0]["Patients outcome"] }</Box>
+                    <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{ eventClinical[0]["Patients outcome"] }</Box>
               </TableCell>
-              </StyledTableRow>
+              </TableRow>
 
-            <StyledTableRow>
+            <TableRow>
               <TableCell >
-                <Typography><Box sx={{ fontSize: 12, m: 1 }}>NOTES</Box></Typography>
+                    <Typography><Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{ NOTES }</Box></Typography>
               </TableCell>
-              <TableCell >
+              <TableCell style={{width: '50%'}}>
                     <Typography>
-                      <Box sx={{ fontSize: 12, m: 1 }}>{ eventClinical[0]["Notes"] }</Box>
+                      <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{ eventClinical[0][NOTES] }</Box>
                 </Typography>
               </TableCell>&emsp;&emsp;
               <TableCell >
-                <Typography><Box sx={{ fontSize: 12, m: 1 }}></Box></Typography>
+                <Typography><Box className="boxClass" sx={{ fontSize: 12, m: 1 }}></Box></Typography>
               </TableCell>
               <TableCell >
                 <Typography>
-                   <Box sx={{ fontSize: 12, m: 1 }}>
+                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
 
                     </Box>
                 </Typography>
               </TableCell>
-          </StyledTableRow>
+          </TableRow>
         </TableBody>
       </Table>
         </Box>

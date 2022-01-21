@@ -31,11 +31,12 @@ import {
 import { deleteEvent } from '@hisp-amr/api'
 import SweetAlert from 'react-bootstrap-sweetalert';
 import EventPrint  from './EventPrint';
+import { SAMPLE_TYPEID } from './Entity/constants';
 
 
 export const EventForm = ({ history, match }) => {
     const [isFirstRender, setIsFirstRender] = useState(true)
-    var [dialog,setDialog] = useState(false)
+    var [dialog, setDialog] = useState(false)
     const dispatch = useDispatch()
     const error = useSelector(state => state.data.status) === ERROR
     const panelValid = useSelector(state => state.data.panel.valid)
@@ -43,10 +44,10 @@ export const EventForm = ({ history, match }) => {
     var eventEditable = useSelector(state => state.data.eventEditable)
     var editable = useSelector(state => state.data.editable)
     const event = useSelector(state => state.data.event)
-    const dataElementObjects = useSelector(state=> state.metadata.dataElementObjects)
-    const programs = useSelector(state=>state.metadata.programs)
-    const categoryCombos = useSelector(state=> state.metadata.categoryCombos)
-    const dataSets = useSelector(state=>state.metadata.dataSets)
+    const dataElementObjects = useSelector(state => state.metadata.dataElementObjects)
+    const programs = useSelector(state => state.metadata.programs)
+    const categoryCombos = useSelector(state => state.metadata.categoryCombos)
+    const dataSets = useSelector(state => state.metadata.dataSets)
     const eventIDs = useSelector(state => state.data.event.id)
     const previousValues = useSelector(state => state.data.previousValues)
     const prevValues = Object.keys(previousValues).length ? true : false;
@@ -55,6 +56,11 @@ export const EventForm = ({ history, match }) => {
     const isCompleteClicked = useSelector(state => state.data.completeClicked)
     const status = useSelector(state => state.data.event.status)
     var { sampleDate } = useSelector(state => state.data.panel)
+    var [eventCliShow, setEventCliShow] = useState([])
+    var clinicianPsList = useSelector(state => state.metadata.clinicianPsList)
+    var events = useSelector(state => state.data.eventList);
+    const { programOrganisms, optionSets } = useSelector(state => state.metadata)
+
 
     const onPrint = (check) => {
         if (!check) {
@@ -75,25 +81,120 @@ export const EventForm = ({ history, match }) => {
         })
     })
     useEffect(() => {
-        if( pageFirst ){
+        if (pageFirst) {
             $("#a").hide();
         } else {
             $("#a").show();
             $("#panel").hide();
         }
         $("#btn").hide();
-      if(eventEditable === true){
-        $("#btn").show();
-        $("#popup").show();
+        if (eventEditable === true) {
+            $("#btn").show();
+            $("#popup").show();
         }
         $("#msg").hide();
         $('#success').hide();
-      });
+    });
+    useEffect(() => {
+        const  eveCliValue = () => {
+        var eventClini = []
+        if (events != undefined) {
+            const v = events.map((ele, index) => {
+                if (clinicianPsList.includes(ele.programStage)) {
+                    var proId = ele.program;
+                    var name = [], dataValue = [], data = [], date = [];
+                    var listorganisms = [];
+                    var orgValue = [];
+                    var orgn = ""
+                    var sampleVal = [];
+                     //date['value'] =  JSON.stringify(new Date(ele.eventDate)).slice(1,11);
+                     date['value'] =  ele.eventDate.substring(0, 10);
+                    for (let program of programs) {
+                        if (program.id == proId) {
+                            name['value'] = program.name;
+                            optionSets[programOrganisms[program.id]].forEach(o => {
+                            if (!listorganisms.find(org => org.value === o.value)) listorganisms.push(o);
+                            });
+                        }
+                    }
+
+                    for( let value of ele.dataValues){
+                            dataValue['0']=name
+                        if(value.dataElement == 'q7U3sRRnFg5'){
+                            dataValue['1'] =value;
+                        }
+                        if(value.dataElement == 'si9RY754UNU'){
+                            dataValue['2'] =value;
+                        }
+                        if (value.dataElement == 'GqP6sLQ1Wt3') {
+
+                            optionSets[SAMPLE_TYPEID].forEach(o => {
+                                if (o.value == value.value) {
+                                    value.value = o.label
+                                }
+                           });
+                            sampleVal['value'] = value.value;
+                            dataValue['3'] = sampleVal;
+
+                        }
+                        if((value.dataElement == 'VsNSbOlwed9') || (value.dataElement  =='VbUbBX7G6Jf')){  // id of organism detected data element in sample testing
+
+                            if (listorganisms.length > 0) {
+                            orgn = listorganisms.find(element => {
+                            return element.value ==  value.value;
+                            });
+                            if (orgn) {
+                                value.value = orgn.label
+                            }
+                            }
+                            orgValue['value'] = value.value;
+                            dataValue['4'] = orgValue;
+                        }
+                        dataValue['5']=date
+                     }
+                            if (!dataValue['1']){
+                              let data = [ {value: ''}]
+                              dataValue['1']=data
+                            }
+                            if (!dataValue['2']){
+                                let data = [ {value: ''}]
+                                dataValue['2']=data
+                              }
+                            if (!dataValue['3']){
+                                let data = [ {value: ''}]
+                                dataValue['3']=data
+                              }
+                              if (!dataValue['4']){
+                                let data = [ {value: ''}]
+                                dataValue['4']=data
+                              }
+                           if(dataValue['4'].value !== 'Pathogen detected'){
+                               data = dataValue;
+                               eventClini.push(ele.event)
+                    }
+
+                    }
+            })
+
+            if (eventClini.length != 0) {
+                setEventCliShow([...eventCliShow,eventClini])
+            }
+            return v
+
+        }
+
+  }
+          eveCliValue();
+
+
+
+    }, [events])
     useEffect(() => {
         // let previousEvent = ""
         // if(!pageFirst) {
         //     previousEvent = "";
         // }
+
         dispatch(resetData())
         if (teiId) {
             dispatch(getExistingEvent(orgUnit, teiId))
@@ -244,7 +345,7 @@ export const EventForm = ({ history, match }) => {
                     </div>}
                 {dialog &&
                 <div id="btn">
-                        <EventPrint onPrint = {onPrint}/>
+                        <EventPrint onPrint = {onPrint} cliEve={eventCliShow}/>
                 </div>}
             </form>
             <div id="msg">

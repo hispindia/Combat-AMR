@@ -1,3 +1,19 @@
 .MuiTableCell-root {
-  padding: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+}
+.antibio {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  background-color: whitesmoke;
+}
+.tinline {
+  display: inline-table !important;
+}
+.boxClass{
+  margin: 2px !important;
 }
