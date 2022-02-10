@@ -85,12 +85,23 @@ export default function EventPrint(props) {
   const { programOrganisms, optionSets } = useSelector(state => state.metadata)
   var eventsList = useSelector(state => state.data.eventList);
 
-  var clini = ["EJNDTtsZhzJ", "MGC3ALjCjKQ", "uR5jTBChlVO"]
+  var clini = []
+
+for (const [alkey, akeyvalue] of Object.entries(allEvent)) {
+   if (akeyvalue.toLowerCase().includes("outcome".toLowerCase())|| akeyvalue.toLowerCase().includes("notes".toLowerCase())|| akeyvalue.toLowerCase().includes("ast".toLowerCase())) {
+     clini.push(alkey)
+   }
+}
+
+
   var eventCliniVals = []
 
   eventsList.forEach((ev, index) => {
     var cliDvs = {}
-    var isCliEves = cliEvents[0].includes(ev.event)
+    var isCliEves = false
+    if (cliEvents.length != 0) {
+          isCliEves = cliEvents[0].includes(ev.event)
+    }
     if (isCliEves) {
       for (let valueCli of ev.dataValues) {
         if (clini.includes(valueCli.dataElement)) {
@@ -100,8 +111,6 @@ export default function EventPrint(props) {
       eventCliniVals.push(cliDvs)
     }
   })
-
-  console.log(" OPTIONS SETSS ", optionSets);
 
   var entityDict = {}
   var eventDict = {}
@@ -150,7 +159,7 @@ export default function EventPrint(props) {
       }
     }
   }
-      console.log(" All Eventsss VALSSS :>>>>> ", eventVals);
+
 
   for (const [key, value] of Object.entries(eventVals)) {
     for (const [al, avalue] of Object.entries(allEvent)) {
@@ -168,8 +177,6 @@ export default function EventPrint(props) {
       }
     }
   }
-
-  console.log(" Eventssss Dict : ",eventDict)
 
 
   var eventCliDict = {}
@@ -214,7 +221,6 @@ const handlePrint = useReactToPrint({
 
   optionSets[SAMPLE_TYPEID].forEach(o => {
     if (o.value == sample) {
-        console.log(" O VALIE ",o.value, " : ", sample)
           sample = o.label
       }
   });
@@ -246,7 +252,7 @@ return (
   <DialogContent dividers ref={ref}>
     <h2>Patient Report</h2>
     <Box sx={{ border:'1px solid black',fontSize: 12, m: 1 }}>
-    <Box sx={{ border:1,fontSize: 12, ml: 6,mr:6,mt:1,mb:1}}>
+    <Box sx={{ border:2,fontSize: 12, ml: 6,mr:6,mt:1,mb:1}}>
       <Table sx={{[`& .${tableCellClasses.root}`]: {borderBottom: "none"}}}>
           <TableBody>
             <TableRow>
@@ -363,57 +369,58 @@ return (
               </Table>
         </Box>
 
- <Box sx={{ border:1,fontSize: 12,ml: 6,mr:6,mt:1,mb:1 }}>
-      <Table sx={{
-    [`& .${tableCellClasses.root}`]: {
-      borderBottom: "none"
-    }
-  }}>
-          <TableBody>
-             <TableRow>
-              <TableCell style={{width: '30%'}}>
-                <Typography>
-                      <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{ AST }</Box>
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="h6" >
-                  <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{ eventClinical[0][AST] }</Box>
-                  </Typography>
-              </TableCell>
-
-              <TableCell style={{width: '50%'}}>
-                    <Typography><Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{ PATIENT_OUTCOME }</Box></Typography>
-              </TableCell>
-              <TableCell >
-                    <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{ eventClinical[0]["Patients outcome"] }</Box>
-              </TableCell>
-              </TableRow>
-
-            <TableRow>
-              <TableCell >
-                    <Typography><Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{ NOTES }</Box></Typography>
-              </TableCell>
-              <TableCell style={{width: '50%'}}>
+        {eventClinical.length !=0 ?
+          <Box sx={{ border: 2, fontSize: 12, ml: 6, mr: 6, mt: 1, mb: 1 }}>
+            <Table sx={{
+              [`& .${tableCellClasses.root}`]: {
+                borderBottom: "none"
+              }
+            }}>
+              <TableBody>
+                <TableRow>
+                  <TableCell style={{ width: '30%' }}>
                     <Typography>
-                      <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{ eventClinical[0][NOTES] }</Box>
-                </Typography>
-              </TableCell>&emsp;&emsp;
-              <TableCell >
-                <Typography><Box className="boxClass" sx={{ fontSize: 12, m: 1 }}></Box></Typography>
-              </TableCell>
-              <TableCell >
-                <Typography>
-                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+                      <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{AST}</Box>
+                    </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography variant="h6" >
+                      <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{eventClinical[0][AST]}</Box>
+                    </Typography>
+                  </TableCell>
 
-                    </Box>
-                </Typography>
-              </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-        </Box>
+                  <TableCell style={{ width: '50%' }}>
+                    <Typography><Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{PATIENT_OUTCOME}</Box></Typography>
+                  </TableCell>
+                  <TableCell >
+                    <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{eventClinical[0]["Patients outcome"]}</Box>
+                  </TableCell>
+                </TableRow>
 
+                <TableRow>
+                  <TableCell >
+                    <Typography><Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{NOTES}</Box></Typography>
+                  </TableCell>
+                  <TableCell style={{ width: '50%' }}>
+                    <Typography>
+                      <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>{eventClinical[0][NOTES]}</Box>
+                    </Typography>
+                  </TableCell>&emsp;&emsp;
+                  <TableCell >
+                    <Typography><Box className="boxClass" sx={{ fontSize: 12, m: 1 }}></Box></Typography>
+                  </TableCell>
+                  <TableCell >
+                    <Typography>
+                      <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+
+                      </Box>
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </Box>
+: ""}
           </Box>
 
       </DialogContent>

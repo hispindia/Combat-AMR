@@ -33,8 +33,8 @@
         "eject": "react-scripts eject",
         "prebuild:icmr": "rimraf build ../../amr-entry-icmr.zip && d2-manifest package.json public/manifest.webapp",
         "postbuild:icmr": "cd build && bestzip ../../../amr-entry-icmr.zip *",
-        "prebuild:tanda": "rimraf build ../../amr-entry-tanda.zip && d2-manifest package.json public/manifest.webapp",
-        "postbuild:tanda": "cd build && bestzip ../../../amr-entry-tanda.zip *",
+        "prebuild:tanda": "rimraf build ../../amr-entry.zip && d2-manifest package.json public/manifest.webapp",
+        "postbuild:tanda": "cd build && bestzip ../../../amr-entry.zip *",
         "analyze": "source-map-explorer build/static/js/*.js'"
     },
     "dependencies": {

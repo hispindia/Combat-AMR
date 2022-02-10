@@ -119,24 +119,7 @@ export const EventForm = ({ history, match }) => {
                     }
 
                     for( let value of ele.dataValues){
-                            dataValue['0']=name
-                        if(value.dataElement == 'q7U3sRRnFg5'){
-                            dataValue['1'] =value;
-                        }
-                        if(value.dataElement == 'si9RY754UNU'){
-                            dataValue['2'] =value;
-                        }
-                        if (value.dataElement == 'GqP6sLQ1Wt3') {
 
-                            optionSets[SAMPLE_TYPEID].forEach(o => {
-                                if (o.value == value.value) {
-                                    value.value = o.label
-                                }
-                           });
-                            sampleVal['value'] = value.value;
-                            dataValue['3'] = sampleVal;
-
-                        }
                         if((value.dataElement == 'VsNSbOlwed9') || (value.dataElement  =='VbUbBX7G6Jf')){  // id of organism detected data element in sample testing
 
                             if (listorganisms.length > 0) {
@@ -152,22 +135,7 @@ export const EventForm = ({ history, match }) => {
                         }
                         dataValue['5']=date
                      }
-                            if (!dataValue['1']){
-                              let data = [ {value: ''}]
-                              dataValue['1']=data
-                            }
-                            if (!dataValue['2']){
-                                let data = [ {value: ''}]
-                                dataValue['2']=data
-                              }
-                            if (!dataValue['3']){
-                                let data = [ {value: ''}]
-                                dataValue['3']=data
-                              }
-                              if (!dataValue['4']){
-                                let data = [ {value: ''}]
-                                dataValue['4']=data
-                              }
+                            
                            if(dataValue['4'].value !== 'Pathogen detected'){
                                data = dataValue;
                                eventClini.push(ele.event)
