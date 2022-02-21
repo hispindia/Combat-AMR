@@ -652,9 +652,6 @@ export const clinicianEvent = (next, addMoreSample, addMoreIso) => async (dispat
     if (program) {
         programStage = stageLists[program][1].value
     }
-    var programStageId = programStage
-    const prStage = programs.find(p => p.id === program)
-        .programStages.find(ps => (ps.id == programStageId))
 
     const trackerEntityID = getState().data.entity.id
     const ou = getState().data.orgUnit.id;
@@ -706,9 +703,6 @@ export const clinicianEvent = (next, addMoreSample, addMoreIso) => async (dispat
                 if (!eveStatus) {
                     dispatch(createAction(SET_COMPLETED))
                 }
-                // dispatch(createAction(SET_COMPLETED))
-
-                // dispatch(showAlert('Submitted successfully.', { success: true }))
             } catch (error) {
                 console.error(error)
                 dispatch(showAlert('Failed to submit.', { critical: true }))

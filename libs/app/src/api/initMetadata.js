@@ -5,7 +5,7 @@ import { HIDE, IGNORE, EDITABLE } from 'constants'
 const getUserData = async () =>
     await get(
         request('me', {
-            fields: 'organisationUnits,userGroups,userCredentials[username]',
+            fields: 'organisationUnits,userGroups,userCredentials[username],dataViewOrganisationUnits',
         })
     )
 
@@ -145,6 +145,7 @@ export const initMetadata = async isIsolate => {
         deoMember: userGroups.includes(DEO_GROUP),
     }
     const userOrgUnits = userData.organisationUnits.map(uo => uo.id)
+    const userDataView = userData.dataViewOrganisationUnits.map(ou => ou.id)
 
 
     const data = await getMetadata()
@@ -162,11 +163,12 @@ export const initMetadata = async isIsolate => {
         console.log( " Error ",e)
     }
     const orgUnits = []
-
-    data.organisationUnits
+    let allOrg = []
+    let dOrg = data.organisationUnits
+        dOrg
         .filter(o => userOrgUnits.some(uo => o.path.includes(uo)))
         .forEach(o => {
-            if (userOrgUnits.includes(o.id)) orgUnits.push(o)
+            if (userOrgUnits.includes(o.id)) { orgUnits.push(o) }
             else {
                 const ancestors = o.path.split('/').slice(1, -1)
                 let ancestor = ancestors.shift()
@@ -186,7 +188,32 @@ export const initMetadata = async isIsolate => {
             }
         })
 
+        dOrg
+        .filter(o => userDataView.some(uo => o.path.includes(uo)))
+        .forEach(o => {
+            if (userDataView.includes(o.id)) { allOrg.push(o) }
+            else {
+                const ancestors = o.path.split('/').slice(1, -1)
+                let ancestor = ancestors.shift()
+                let parent = allOrg.find(o => o.path.endsWith(ancestor))
+                while (!parent) {
+                    ancestor = ancestors.shift()
+                    parent = allOrg.find(o => o.path.endsWith(ancestor))
+                }
+                while (ancestors.length > 0) {
+                    ancestor = ancestors.shift()
+                    parent = parent.children.find(o => ancestor === o.id)
+                }
+                if (parent) {
+                    const children = parent.children
+                    children[children.findIndex(s => s.id === o.id)] = o
+                }
+            }
+        })
+
+
     // Sorting descendants of each of the user's OU's.
+    allOrg.forEach(ou => sortChildren(ou))
     orgUnits.forEach(ou => sortChildren(ou))
 
     const options = {}
@@ -411,6 +438,7 @@ export const initMetadata = async isIsolate => {
         categoryCombos,
         dataSets,
         orgUnits,
+        allOrg,
         user,
         eventRules,
         calculatedVariables,

@@ -13,9 +13,6 @@ import {
     setAggregationProgress,
     clinicianEvent,
     saveClinician
-    // viewClinicianEvent,
-    // falseClinicianEvent,
-    // getExistingEvent,
 } from '@hisp-amr/app'
 import {
     Aggregate

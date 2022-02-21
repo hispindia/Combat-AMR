@@ -24,6 +24,7 @@ export const EntityInput = ({ attribute,userAccess }) => {
     const valueType = attribute.trackedEntityAttribute.valueType;
     const displayLabel = attribute.trackedEntityAttribute.formName ? attribute.trackedEntityAttribute.formName : attribute.trackedEntityAttribute.displayName
     var { orgUnits } = useSelector(state => state.metadata)
+    let { allOrg } = useSelector(state => state.metadata)
     var valueToFind = "";
 
     function newOrgInsert(testorgs)
@@ -58,7 +59,7 @@ export const EntityInput = ({ attribute,userAccess }) => {
     }
     var orgUnitsLabels = {}
     if (valueType === "ORGANISATION_UNIT") {
-        orgUnitsLabels = newOrgInsert(orgUnits)
+        orgUnitsLabels = newOrgInsert(allOrg)
     }
     /**
      * Called on every input field change.
