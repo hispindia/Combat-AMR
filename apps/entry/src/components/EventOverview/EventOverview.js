@@ -13,7 +13,7 @@ import "./styles.css";
 import Tabs from "./Tabs";
 import TabPane from "./Tab-Pane";
 import { TableList } from './TableList'
-import { TABVALUES } from './constants'
+import { TABVALUES,SAMPLE_PROGRAM_CODE,PROGRAM_CODE } from './constants'
 
 if (!process.env.REACT_APP_DHIS2_TABLE_CONFIG)
     throw new Error(
@@ -35,15 +35,15 @@ const title = {
 export const EventOverview = ({ match, history }) => {
     const dispatch = useDispatch()
     var status = match.params.status
-    var SAMPLEPROGRAMCODE = "ST";
-    var PROGRAMCODE = "GP";
+    let SAMPLEPROGRAMCODE = SAMPLE_PROGRAM_CODE;
+    let PROGRAMCODE = PROGRAM_CODE;
     const selected = useSelector(state => state.selectedOrgUnit)
     var isFollowUp = useSelector(state => state.data.followup)
     var [eventstatus, setEventstatus] = useState('ALL')
     var [code, setCode] = useState("ALL")
     const tabValue = TABVALUES
     const { rows, loading, addButtonDisabled, error } = useEvents(status, eventstatus, code, isFollowUp)
-    
+
     const handleChange = (returnValue) => {
         var programCode = returnValue[2];
         var programStatus = returnValue[1]
@@ -108,18 +108,18 @@ export const EventOverview = ({ match, history }) => {
                         >
                         </TabPane>
                     ))}
-                </Tabs> 
+                </Tabs>
             {!error &&
                 (loading ? (
                     <LoadingSection />
                 ) : (
-                        <TableList 
+                        <TableList
                             rows={rows}
                             onEventClick={onEventClick}
                             title={selected.displayName}
                             eventStatus={eventstatus}
                             code={code}
-                        />                        
+                        />
                     ))}
             </CardSection>
         </MainSection>

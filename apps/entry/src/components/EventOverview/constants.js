@@ -5,5 +5,7 @@ export const TABVALUES = [
     { "name": "Pending antibiotics result", "key": "pending", "code": "GP" },
     { "name": "Antibiotics result received", "key": "complete", "code": "GP" },
     { "name": "Sterile/NA samples", "key": "complete", "code": "ST" },
-                                    
+
 ]
+export const SAMPLE_PROGRAM_CODE = "ST";
+export const PROGRAM_CODE = "GP";

@@ -8,7 +8,7 @@ import './main.css'
 import $ from "jquery"
 import SweetAlert from 'react-bootstrap-sweetalert';
 import { deleteTEI, deleteEvent } from '@hisp-amr/api'
-import { SAMPLE_TYPEID } from './constants';
+import { SAMPLE_TYPEID, COMPLETED, PATHOGEN_ID, SAMPLE_RESULT_ID, PATHOGEN_DETECTED, LOCATION_ID,LAB,SAMPLE } from './constants';
 
 import { Aggregate } from '../../../api/helpers/aggregate'
 import EventListPrint from './EventListPrint';
@@ -59,7 +59,7 @@ const Events = ({match, history }) => {
         if (events != undefined) {
             const v = events.map((ele, index) => {
                 if (!clinicianPsList.includes(ele.programStage)) {
-                    if (ele.status == "COMPLETED") {
+                    if (ele.status == COMPLETED) {
                         var proId = ele.program;
                         var name = [], dataValue = [], data = [], date = [];
                         var listorganisms = [];
@@ -78,7 +78,7 @@ const Events = ({match, history }) => {
                         }
 
                         for (let value of ele.dataValues) {
-                            if ((value.dataElement == 'VsNSbOlwed9') || (value.dataElement == 'VbUbBX7G6Jf')) {  // id of organism detected data element in sample testing
+                            if ((value.dataElement == PATHOGEN_ID) || (value.dataElement == SAMPLE_RESULT_ID)) {  // id of organism detected data element in sample testing
 
                                 if (listorganisms.length > 0) {
                                     orgn = listorganisms.find(element => {
@@ -94,7 +94,7 @@ const Events = ({match, history }) => {
                             dataValue['5'] = date
                         }
 
-                        if (dataValue['4'].value !== 'Pathogen detected') {
+                        if (dataValue['4'].value !== PATHOGEN_DETECTED) {
                             data = dataValue;
                             eventL.push(ele.event)
                             setShowReport(true)
@@ -136,7 +136,7 @@ const Events = ({match, history }) => {
 
                     for( let value of ele.dataValues){
 
-                        if((value.dataElement == 'VsNSbOlwed9') || (value.dataElement  =='VbUbBX7G6Jf')){  // id of organism detected data element in sample testing
+                        if((value.dataElement == PATHOGEN_ID) || (value.dataElement  ==SAMPLE_RESULT_ID)){  // id of organism detected data element in sample testing
 
                             if (listorganisms.length > 0) {
                             orgn = listorganisms.find(element => {
@@ -152,7 +152,7 @@ const Events = ({match, history }) => {
                         dataValue['5']=date
                      }
 
-                    if(dataValue['4'].value !== 'Pathogen detected'){
+                    if(dataValue['4'].value !== PATHOGEN_DETECTED){
                                data = dataValue;
                                eventClini.push(ele.event)
                     }
@@ -281,13 +281,13 @@ const Events = ({match, history }) => {
 
                     for( let value of ele.dataValues){
                             dataValue['0']=name
-                        if(value.dataElement == 'q7U3sRRnFg5'){
+                        if(value.dataElement == LOCATION_ID){
                             dataValue['1'] =value;
                         }
-                        if(value.dataElement == 'si9RY754UNU'){
+                        if(value.dataElement == LAB){
                             dataValue['2'] =value;
                         }
-                        if (value.dataElement == 'GqP6sLQ1Wt3') {
+                        if (value.dataElement == SAMPLE) {
 
                             optionSets[SAMPLE_TYPEID].forEach(o => {
                                 if (o.value == value.value) {
@@ -298,7 +298,7 @@ const Events = ({match, history }) => {
                             dataValue['3'] = sampleVal;
 
                         }
-                        if((value.dataElement == 'VsNSbOlwed9') || (value.dataElement  =='VbUbBX7G6Jf')){  // id of organism detected data element in sample testing
+                        if((value.dataElement == PATHOGEN_ID) || (value.dataElement  ==SAMPLE_RESULT_ID)){  // id of organism detected data element in sample testing
 
                             if (listorganisms.length > 0) {
                             orgn = listorganisms.find(element => {
@@ -329,7 +329,7 @@ const Events = ({match, history }) => {
                                 let data = [ {value: ''}]
                                 dataValue['4']=data
                               }
-                           if(dataValue['4'].value !== 'Pathogen detected'){
+                           if(dataValue['4'].value !== PATHOGEN_DETECTED){
                                data = dataValue;
                     }
 

@@ -673,7 +673,7 @@ export const clinicianEvent = (next, addMoreSample, addMoreIso) => async (dispat
         }
         else {
             try {
-                await setEventStatus(eventId, false)
+                // await setEventStatus(eventId, false)
                 if (addMoreSample) { dispatch(createAction(RESET_SAMPLE_PANEL_EVENT)) }
                 if (addMoreIso) {
                     dispatch(createAction(RESET_PANEL_EVENT))

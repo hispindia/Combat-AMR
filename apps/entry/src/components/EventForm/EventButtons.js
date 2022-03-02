@@ -18,6 +18,7 @@ import {
     Aggregate
 } from '../../api/helpers/aggregate'
 import $ from "jquery"
+import { LABTECH } from './Entity/constants';
 
 
 const StyledButtonRow = styled(ButtonRow)`
@@ -339,5 +340,5 @@ export const EventButtons = ({ history, existingEvent }) => {
 
     const clinicinaButtons = () => [Save_Notes,Go_Back]
 
-    return <StyledButtonRow buttons={userGroup == "Lab technician" ? isClinicianClicked && !record ? clinicinaButtons() : buttonsLab() : userAccess ? isClinicianClicked ? clinicinaButtons() : buttonsWrite() : isClinicianClicked ? clinicinaButtons() : buttonsReadUsers()} />
+    return <StyledButtonRow buttons={userGroup == LABTECH ? isClinicianClicked && !record ? clinicinaButtons() : buttonsLab() : userAccess ? isClinicianClicked ? clinicinaButtons() : buttonsWrite() : isClinicianClicked ? clinicinaButtons() : buttonsReadUsers()} />
 }

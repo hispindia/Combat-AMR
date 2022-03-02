@@ -31,7 +31,7 @@ import {
 import { deleteEvent } from '@hisp-amr/api'
 import SweetAlert from 'react-bootstrap-sweetalert';
 import EventPrint  from './EventPrint';
-import { SAMPLE_TYPEID } from './Entity/constants';
+import { PATHOGEN_DETECTED, SAMPLE_RESULT_ID,PATHOGEN_ID } from './Entity/constants';
 
 
 export const EventForm = ({ history, match }) => {
@@ -106,9 +106,7 @@ export const EventForm = ({ history, match }) => {
                     var listorganisms = [];
                     var orgValue = [];
                     var orgn = ""
-                    var sampleVal = [];
-                     //date['value'] =  JSON.stringify(new Date(ele.eventDate)).slice(1,11);
-                     date['value'] =  ele.eventDate.substring(0, 10);
+                    date['value'] =  ele.eventDate.substring(0, 10);
                     for (let program of programs) {
                         if (program.id == proId) {
                             name['value'] = program.name;
@@ -117,11 +115,8 @@ export const EventForm = ({ history, match }) => {
                             });
                         }
                     }
-
                     for( let value of ele.dataValues){
-
-                        if((value.dataElement == 'VsNSbOlwed9') || (value.dataElement  =='VbUbBX7G6Jf')){  // id of organism detected data element in sample testing
-
+                        if((value.dataElement == PATHOGEN_ID) || (value.dataElement  ==SAMPLE_RESULT_ID)){  // id of organism detected data element in sample testing
                             if (listorganisms.length > 0) {
                             orgn = listorganisms.find(element => {
                             return element.value ==  value.value;
@@ -135,12 +130,10 @@ export const EventForm = ({ history, match }) => {
                         }
                         dataValue['5']=date
                      }
-                            
-                           if(dataValue['4'].value !== 'Pathogen detected'){
+                    if(dataValue['4'].value !== PATHOGEN_DETECTED){
                                data = dataValue;
                                eventClini.push(ele.event)
                     }
-
                     }
             })
 
@@ -148,14 +141,9 @@ export const EventForm = ({ history, match }) => {
                 setEventCliShow([...eventCliShow,eventClini])
             }
             return v
-
+            }
         }
-
-  }
           eveCliValue();
-
-
-
     }, [events])
     useEffect(() => {
         // let previousEvent = ""
@@ -179,7 +167,7 @@ export const EventForm = ({ history, match }) => {
         if (eventIDs && editable) {
             var isPrev = true
             for (let eventValues in previousValues) {
-                if (eventValues != "VbUbBX7G6Jf") {
+                if (eventValues != SAMPLE_RESULT_ID) {
                     if (event["values"][eventValues] == "") {
                         dispatch(setEventValue(eventValues, previousValues[eventValues], isPrev))
                         // event["values"][eventValues] = previousValues[eventValues]

@@ -13,8 +13,8 @@ import {
 import { setEventValue, AddAndSubmit,addNotes } from 'actions'
 import TextField from '@material-ui/core/TextField';
 
-
 import * as DUPLICACY from 'constants/duplicacy'
+import { LABTECH, CLINICIAN, PATHOGEN_DETECTED, RESULTS, NOTES, CLINICIAN_G } from './../../../../../apps/entry/src/components/EventForm/Entity/constants';
 
 export const DataElement = ({ id }) => {
     const dispatch = useDispatch()
@@ -46,14 +46,16 @@ export const DataElement = ({ id }) => {
     var disabled = useSelector(
         state => state.data.event.programStage.dataElements[id].disabled
     )
-    var noteslist = ["Clinician Notes","Clinician notes"]
-    if ((userGroup == "Lab technician") && (programStage.displayName.toLowerCase().includes("clinician")) && value) {
+    if ((userGroup == LABTECH) && (programStage.displayName.toLowerCase().includes(CLINICIAN))) {
+        disabled = true
+    }
+    if ((userGroup == CLINICIAN_G) && (!programStage.displayName.toLowerCase().includes(CLINICIAN))) {
         disabled = true
     }
     const displayFormName = useSelector(
         state => state.data.event.programStage.dataElements[id].displayFormName
     )
-    if (displayFormName == "Notes") {
+    if (displayFormName == NOTES) {
         value = value.split("-")[0]
     }
     const error = useSelector(
@@ -75,7 +77,7 @@ export const DataElement = ({ id }) => {
         state => state.data.event.programStage.dataElements[id].valueType
     )
 
-    if (programStage.displayName.toLowerCase().includes("clinician")) {
+    if (programStage.displayName.toLowerCase().includes(CLINICIAN)) {
         if (valueType == "LONG_TEXT") {
             valueType = "TEXTAREA"
         }
@@ -92,8 +94,8 @@ export const DataElement = ({ id }) => {
 
     const onChange = (key, value,unique,label) => {
 
-        var results = ["Not available","Rejected","Sterile"]
-        if((key == ORGANISM_DETECTED) && (value == 'Pathogen detected'))
+        var results = RESULTS
+        if((key == ORGANISM_DETECTED) && (value == PATHOGEN_DETECTED))
         {
          dispatch(AddAndSubmit(true))
          dispatch(setEventValue(key, value,false))
