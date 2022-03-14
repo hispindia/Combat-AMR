@@ -32,7 +32,6 @@ dist
 node_modules
 **/rebel.xml
 *.zip
-*.lock
 build
 node_modules/
 lib/
