@@ -33,8 +33,6 @@ node_modules
 **/rebel.xml
 *.zip
 *.lock
-package-lock.json
-yarn.lock
 build
 node_modules/
 lib/
