@@ -36,3 +36,10 @@ node_modules
 package-lock.json
 yarn.lock
 build
+node_modules/
+lib/
+npm-debug.log
+*.gzip
+build/
+target/
+nbproject/*
