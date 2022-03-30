@@ -431,11 +431,12 @@ export const getClinician = async (teId, program, programStage, ou, deId, eveVal
     const cliEvent = (
         await get(
             request('events.json', {
-            filters: `${deId}:like:${eveValue}`,
+            //filters: `${deId}:like:${eveValue}`,
 		    options: [`ou=${ou}`, `program=${program}`, `trackedEntityInstance=${teId}`,`programStage=${programStage}`],
             })
         )
     ).events
+
     if (cliEvent) {
         return cliEvent
     }
