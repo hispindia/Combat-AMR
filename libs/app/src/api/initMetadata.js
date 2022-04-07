@@ -154,7 +154,8 @@ export const initMetadata = async isIsolate => {
         for (var i = 0; i < userGroups.length; i++) {
             for (var k = 0; k < data["userGroups"].length; k++) {
                 if (data["userGroups"][k]["id"] == userGroups[i]) {
-                    userGroup = data["userGroups"][k]["displayName"];
+                    //userGroup = data["userGroups"][k]["displayName"];
+                    userGroup = data["userGroups"][k]["code"];
                 }
             }
         }

@@ -653,10 +653,11 @@ export const clinicianEvent = (next, addMoreSample, addMoreIso) => async (dispat
         programStage = stageLists[program][1].value
     }
 
-    const trackerEntityID = getState().data.entity.id
+    const trackerEntityID = getState().data.entity.id;
     const ou = getState().data.orgUnit.id;
-    const username = getState().metadata.user.username
-    const userGroup = getState().metadata.userGroup
+    const username = getState().metadata.user.username;
+    //const userGroup = getState().metadata.userGroup;
+    const userGroupCode = getState().metadata.userGroup
 
     dispatch(createAction(PREVIOUS_EVENT, eventId ))
 
@@ -666,7 +667,9 @@ export const clinicianEvent = (next, addMoreSample, addMoreIso) => async (dispat
         dispatch(getExistingEvent(ou, trackerEntityID, cliEveId[0].event))
     }
     else {
-        if (userGroup == "Lab technician") {
+        //Laboratory scientists
+        //if (userGroup == "Lab technician") {
+        if (userGroupCode === "lab_technician") {
             dispatch(showAlert('No Clinician Notes Found', { critical: true }))
             dispatch(createAction(NO_RECORD, true))
             dispatch(createAction(CLINICIAN_CLICKED, false))
