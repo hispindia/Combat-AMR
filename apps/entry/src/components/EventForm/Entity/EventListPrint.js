@@ -360,12 +360,9 @@ const handlePrint = useReactToPrint({
     >
 
   <DialogContent dividers ref={ref}>
-    <h2 style={{textAlign:"center"}}>Jimma Medical Center</h2>
-    <Grid container >
-        <Grid >
-          <span style={{ padding:"15px", marginLeft:"100px", marginRight:"150px", fontWeight:"bold"}} >Microbiology Laboratory Report Form </span>  <span style={{marginRight:"100px", fontWeight:"bold"}}>Doc No: JUMCL/MIC/F 5.5-04</span>
-        </Grid>
-      </Grid>
+
+    <h2>Patient Report</h2>
+
     <Box sx={{ border:'1px solid black',fontSize: 12, m: 1 }}>
     <Box sx={{ border:2,fontSize: 12, ml: 6,mr:6,mt:1,mb:1}}>
       <Table sx={{[`& .${tableCellClasses.root}`]: {borderBottom: "none"}}}>
