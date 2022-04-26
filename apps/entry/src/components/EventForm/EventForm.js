@@ -123,14 +123,12 @@ export const EventForm = ({ history, match }) => {
               }
             }
             for (let value of ele.dataValues) {
-              if (
-                value.dataElement == PATHOGEN_ID ||
-                value.dataElement == SAMPLE_RESULT_ID
-              ) {
+              //if (value.dataElement === PATHOGEN_ID ||  value.dataElement === SAMPLE_RESULT_ID) {
                 // id of organism detected data element in sample testing
+
                 if (listorganisms.length > 0) {
                   orgn = listorganisms.find((element) => {
-                    return element.value == value.value;
+                    return element.value === value.value;
                   });
                   if (orgn) {
                     value.value = orgn.label;
@@ -138,7 +136,7 @@ export const EventForm = ({ history, match }) => {
                 }
                 orgValue["value"] = value.value;
                 dataValue["4"] = orgValue;
-              }
+              //}
               dataValue["5"] = date;
             }
             if (dataValue["4"]) {
@@ -150,7 +148,7 @@ export const EventForm = ({ history, match }) => {
           }
         });
 
-        if (eventClini.length != 0) {
+        if (eventClini.length !== 0) {
           setEventCliShow([...eventCliShow, eventClini]);
         }
         return v;
@@ -179,8 +177,8 @@ export const EventForm = ({ history, match }) => {
     if (eventIDs && editable) {
       var isPrev = true;
       for (let eventValues in previousValues) {
-        if (eventValues != SAMPLE_RESULT_ID) {
-          if (event["values"][eventValues] == "") {
+        if (eventValues !== SAMPLE_RESULT_ID) {
+          if (event["values"][eventValues] === "") {
             dispatch(
               setEventValue(eventValues, previousValues[eventValues], isPrev)
             );

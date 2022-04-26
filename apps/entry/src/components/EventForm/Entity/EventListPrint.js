@@ -97,7 +97,7 @@ export default function EventListPrint(props) {
     var cliDvs = {}
     var isEve = eventIDs[0].includes(ev.event)
     var isCliEves = false
-    if (cliEvents.length != 0) {
+    if (cliEvents.length !== 0) {
       isCliEves = cliEvents[0].includes(ev.event)
     }
     if (isEve) {
@@ -194,7 +194,7 @@ return name
     eventLDict.push(eventDict)
   }
 
-  if (eventCliniVals.length != 0) {
+  if (eventCliniVals.length !== 0) {
     for (let ekeycli of eventCliniVals) {
       for (const [key, value] of Object.entries(ekeycli)) {
         for (const [al, avalue] of Object.entries(allEvent)) {
@@ -211,7 +211,7 @@ return name
           }
         }
       }
-      if (Object.keys(eventCliDict).length != 0) {
+      if (Object.keys(eventCliDict).length !== 0) {
         eventClinical.push(eventCliDict)
       }
 
@@ -399,7 +399,7 @@ const handlePrint = useReactToPrint({
 
 {listItems}
 
-          {eventClinical.length!=0 ?
+          {eventClinical.length!==0 ?
  <Box sx={{ border:2,fontSize: 12,ml: 6,mr:6,mt:1,mb:1 }}>
       <Table sx={{
     [`& .${tableCellClasses.root}`]: {
