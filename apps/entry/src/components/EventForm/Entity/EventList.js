@@ -160,10 +160,7 @@ const Events = ({ match, history }) => {
             }
 
             for (let value of ele.dataValues) {
-              if (
-                value.dataElement == PATHOGEN_ID ||
-                value.dataElement == SAMPLE_RESULT_ID
-              ) {
+              //if (value.dataElement === PATHOGEN_ID || value.dataElement === SAMPLE_RESULT_ID ) {
                 // id of organism detected data element in sample testing
 
                 if (listorganisms.length > 0) {
@@ -176,7 +173,7 @@ const Events = ({ match, history }) => {
                 }
                 orgValue["value"] = value.value;
                 dataValue["4"] = orgValue;
-              }
+              //}
               dataValue["5"] = date;
             }
             if (dataValue["4"]) {
@@ -189,7 +186,7 @@ const Events = ({ match, history }) => {
           }
         });
 
-        if (eventClini.length != 0) {
+        if (eventClini.length !== 0) {
           setEventCliShow([...eventCliShow, eventClini]);
         }
         return v;

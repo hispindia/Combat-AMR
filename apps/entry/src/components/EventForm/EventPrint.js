@@ -99,7 +99,7 @@ for (const [alkey, akeyvalue] of Object.entries(allEvent)) {
   eventsList.forEach((ev, index) => {
     var cliDvs = {}
     var isCliEves = false
-    if (cliEvents.length != 0) {
+    if (cliEvents.length !== 0) {
           isCliEves = cliEvents[0].includes(ev.event)
     }
     if (isCliEves) {
@@ -182,7 +182,7 @@ for (const [alkey, akeyvalue] of Object.entries(allEvent)) {
   var eventCliDict = {}
   var eventClinical = []
 
-  if (eventCliniVals.length != 0) {
+  if (eventCliniVals.length !== 0) {
     for (let ekeycli of eventCliniVals) {
       for (const [key, value] of Object.entries(ekeycli)) {
         for (const [al, avalue] of Object.entries(allEvent)) {
@@ -369,7 +369,7 @@ return (
               </Table>
         </Box>
 
-        {eventClinical.length !=0 ?
+        {eventClinical.length !==0 ?
           <Box sx={{ border: 2, fontSize: 12, ml: 6, mr: 6, mt: 1, mb: 1 }}>
             <Table sx={{
               [`& .${tableCellClasses.root}`]: {
