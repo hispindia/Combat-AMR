@@ -111,19 +111,19 @@ export const getAntibioticFollowTEI = async (orgUnit,sampleTestingProgram,eventS
           })
 
             rowList.forEach((teis, index) => {
-            const trackedEntityInstance = teis[0]
-            const orgUnit = teis[3]
+            let trackedEntityInstance = teis[0]
+            let orgUnit = teis[3]
             teiRows[index] = ['', '', '', '', '', '', '', '', '', '', '']
-            teiRows[index]['0'] = teis[7] //CR Number
-            teiRows[index]['1'] = teis[8] //Name
-            teiRows[index]['3'] = teis[11] //Age
-            teiRows[index]['4'] = teis[12] //Sex
-            teiRows[index]['5'] = teis[14] //Address
-            teiRows[index]['6'] = orgUnit
-            teiRows[index]['7'] = trackedEntityInstance
-            teiRows[index]['8'] = teis[5]
-            teiRows[index]['9'] = teis[17]
-            isFollowUp[teis[7].toString()] = teis[18]
+            teiRows[index]['0'] = teis[8]; //CR Number
+            teiRows[index]['1'] = teis[9]; //Name
+            teiRows[index]['3'] = teis[12]; //Age
+            teiRows[index]['4'] = teis[13]; //Sex
+            teiRows[index]['5'] = teis[15]; //Address
+            teiRows[index]['6'] = orgUnit;
+            teiRows[index]['7'] = trackedEntityInstance;
+            teiRows[index]['8'] = teis[5];
+            teiRows[index]['9'] = teis[17];
+            isFollowUp[teis[7].toString()] = teis[18];
         })
         }
       return { teiRows, isFollowUp }
@@ -200,17 +200,17 @@ export const getPendingAntiResult = async (orgUnit,sampleTestingProgram,eventSta
           })
 
           rowList.forEach((teis, index) => {
-            const trackedEntityInstance = teis[0]
-            const orgUnit = teis[3]
+            let trackedEntityInstance = teis[0]
+            let orgUnit = teis[3]
             teiRows[index] = ['', '', '', '', '', '', '', '', '', '', '']
-            teiRows[index]['0'] = teis[7] //CR Number
-            teiRows[index]['1'] = teis[8] //Name
-            teiRows[index]['3'] = teis[11] //Age
-            teiRows[index]['4'] = teis[12] //Sex
-            teiRows[index]['5'] = teis[14] //Address
-            teiRows[index]['6'] = orgUnit
-            teiRows[index]['7'] = trackedEntityInstance
-            teiRows[index]['8'] = teis[5]
+            teiRows[index]['0'] = teis[8];//CR Number
+            teiRows[index]['1'] = teis[9]; //Name
+            teiRows[index]['3'] = teis[12]; //Age
+            teiRows[index]['4'] = teis[13]; //Sex
+            teiRows[index]['5'] = teis[15]; //Address
+            teiRows[index]['6'] = orgUnit;
+            teiRows[index]['7'] = trackedEntityInstance;
+            teiRows[index]['8'] = teis[5];
         })
         }
       return teiRows
@@ -272,18 +272,18 @@ export const getSterileTEI = async (orgUnit,sampleTestingProgram,eventStatus) =>
             let eventDeCode = event.dataValues.deCode;
             if ((eventDeCode == "Sterile") || (eventDeCode == "Not available") || (eventDeCode == "Rejected")) {
               responseOne.data.rows.forEach((teis) => {
-                const trackedEntityInstance = teis[0]
+                let trackedEntityInstance = teis[0];
                 if (eventTei == trackedEntityInstance) {
-                  const orgUnit = teis[3]
+                  let orgUnit = teis[3];
                     teiSterileRows[index] = ['', '', '', '', '', '', '', '', '', '', '']
-                    teiSterileRows[index]['0'] = teis[7] //CR Number
-                    teiSterileRows[index]['1'] = teis[8] //Name
-                    teiSterileRows[index]['3'] = teis[11] //Age
-                    teiSterileRows[index]['4'] = teis[12] //Sex
-                    teiSterileRows[index]['5'] = teis[14] //Address
-                    teiSterileRows[index]['6'] = orgUnit
-                    teiSterileRows[index]['7'] = trackedEntityInstance
-                  index = index + 1;
+                    teiSterileRows[index]['0'] = teis[8]; //CR Number
+                    teiSterileRows[index]['1'] = teis[9]; //Name
+                    teiSterileRows[index]['3'] = teis[12]; //Age
+                    teiSterileRows[index]['4'] = teis[13]; //Sex
+                    teiSterileRows[index]['5'] = teis[15]; //Address
+                    teiSterileRows[index]['6'] = orgUnit;
+                    teiSterileRows[index]['7'] = trackedEntityInstance;
+                    index = index + 1;
                 }
                 else {
                   return
@@ -340,16 +340,17 @@ export const getPendingSampleResult = async (orgUnit,sampleTestingProgram,eventS
             })
 
           trackedEntityData.forEach((teis, index) => {
-            const trackedEntityInstance = teis[0]
-            const orgUnit = teis[3]
+            let trackedEntityInstance = teis[0];
+            let orgUnit = teis[3];
             teiRows[index] = ['', '', '', '', '', '', '', '', '', '', '']
-              teiRows[index]['0'] = teis[7] //CR Number
-              teiRows[index]['1'] = teis[8] //Name
-              teiRows[index]['3'] = teis[11] //Age
-              teiRows[index]['4'] = teis[12] //Sex
-              teiRows[index]['5'] = teis[14] //Address
-              teiRows[index]['6'] = orgUnit
-              teiRows[index]['7'] = trackedEntityInstance
+            teiRows[index]['0'] = teis[8]; //CR Number //Registration number
+            teiRows[index]['1'] = teis[9]; //Name/First Name
+            teiRows[index]['3'] = teis[12]; //Age
+            teiRows[index]['4'] = teis[13]; //Sex
+            teiRows[index]['5'] = teis[15]; //Address
+            teiRows[index]['6'] = orgUnit;
+            teiRows[index]['7'] = trackedEntityInstance;
+            teiRows[index]['8'] = teis[5];
 
         })
         }
@@ -410,17 +411,17 @@ export const getAllTei = async (orgUnit,sampleTestingProgram,eventStatus) => {
 
             let rowUnique = Array.from(new Set(rowList.map(JSON.stringify)), JSON.parse);
             rowUnique.forEach((teis, index) => {
-            const trackedEntityInstance = teis[0]
-            const orgUnit = teis[3]
+            let trackedEntityInstance = teis[0]
+            let orgUnit = teis[3]
             teiRows[index] = ['', '', '', '', '', '', '', '', '', '', '']
-            teiRows[index]['0'] = teis[7] //CR Number
-            teiRows[index]['1'] = teis[8] //Name
-            teiRows[index]['3'] = teis[11] //Age
-            teiRows[index]['4'] = teis[12] //Sex
-            teiRows[index]['5'] = teis[14] //Address
-            teiRows[index]['6'] = orgUnit
-            teiRows[index]['7'] = trackedEntityInstance
-            teiRows[index]['8'] = teis[5]
+            teiRows[index]['0'] = teis[8]; //CR Number //Registration number
+            teiRows[index]['1'] = teis[9]; //Name/First Name
+            teiRows[index]['3'] = teis[12]; //Age
+            teiRows[index]['4'] = teis[13]; //Sex
+            teiRows[index]['5'] = teis[15]; //Address
+            teiRows[index]['6'] = orgUnit;
+            teiRows[index]['7'] = trackedEntityInstance;
+            teiRows[index]['8'] = teis[5];
         })
         }
       return teiRows
