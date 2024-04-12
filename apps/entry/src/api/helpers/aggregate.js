@@ -10,6 +10,7 @@ import {
 const CONSTANTS = {
     customAttributeMetadataTypeIdentifier: 'metadata_type',
     locationCode: "location",
+    departmentCode: "Department",
     pathogenCode: "pathogen",
     sampleTypeCode: "sample_type",
     sampleAndLocationCC_Code: "sampleAndLocation",
@@ -113,8 +114,10 @@ export const Aggregate = async ({
     let sampleTypeDataElement = dataElements.attributeGroups[CONSTANTS.sampleTypeCode][0]
     let sampleTypeData = event.values[sampleTypeDataElement]
 
+    let departmentDataElement = dataElements.attributeGroups[CONSTANTS.departmentCode][0]
+    let departmentData = event.values[departmentDataElement]
 
-    if(!(locationData && pathogenData && sampleTypeData)){
+    if(!(locationData && pathogenData && sampleTypeData && departmentData) ){
         //if there is any missing data don't process the aggregation
         if(operation === "COMPLETE"){
             return {
@@ -150,22 +153,24 @@ export const Aggregate = async ({
     }
 
     let cc = categoryCombos[CONSTANTS.sampleAndLocationCC_Code].id
-    let cp = categoryCombos[CONSTANTS.sampleAndLocationCC_Code].categoryOptions[locationData]
-    cp = cp + ";" + categoryCombos[CONSTANTS.sampleAndLocationCC_Code].categoryOptions[sampleTypeData]
+    let cp = categoryCombos[CONSTANTS.sampleAndLocationCC_Code].categoryOptions[locationData];
+    cp = cp + ";" + categoryCombos[CONSTANTS.sampleAndLocationCC_Code].categoryOptions[sampleTypeData];
+    cp = cp + ";" + categoryCombos[CONSTANTS.sampleAndLocationCC_Code].categoryOptions[departmentData];
 
     let importantValues = []
     Object.keys(event.values).forEach(value => {
         //loop through the values and look for result data elements if found one save that.
         if (event.values[value] !== "") {
+            if (dataElements[value]) {
+                if (dataElements[value][CONSTANTS.customAttributeMetadataTypeIdentifier] === CONSTANTS.antibioticAttributeCode) {
+                    //This means that this data elemnt is an antibiotic result therefore add it to important values.
 
-            if (dataElements[value][CONSTANTS.customAttributeMetadataTypeIdentifier] === CONSTANTS.antibioticAttributeCode) {
-                //This means that this data elemnt is an antibiotic result therefore add it to important values.
-                
-                let tempArray = [dataElements[value].code, event.values[value]]
-                tempArray = tempArray.sort();
-                let categoryOptionCombo = tempArray.join("");
-                categoryOptionCombo = categoryCombos[CONSTANTS.antibioticCC_Code].categoryOptionCombos[categoryOptionCombo]
-                importantValues.push(categoryOptionCombo)
+                    let tempArray = [dataElements[value].code, event.values[value]]
+                    tempArray = tempArray.sort();
+                    let categoryOptionCombo = tempArray.join("");
+                    categoryOptionCombo = categoryCombos[CONSTANTS.antibioticCC_Code].categoryOptionCombos[categoryOptionCombo]
+                    importantValues.push(categoryOptionCombo)
+                }
             }
         }
     })
