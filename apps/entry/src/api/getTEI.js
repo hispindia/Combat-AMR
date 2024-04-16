@@ -367,15 +367,17 @@ export const getAllTei = async (orgUnit,sampleTestingProgram,eventStatus) => {
   var api_GP1 = ``
   var api_GP2 = ``
   var api_GP3 = ''
+  var api_GP4 = ''
   var requestOne = ''
   var requestTwo = ''
   var requestThree = ''
+  var requestFour = ''
 
 
     api_GP1 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&paging=false`
     api_GP2 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&paging=false`
-    api_GP3 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[2]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&paging=false`
-
+    api_GP3 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[2]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=bwJT1BnH3qE&paging=false`
+    api_GP4 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[3]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&paging=false`
 
   //api_GP1 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
   //api_GP2 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
@@ -385,19 +387,21 @@ export const getAllTei = async (orgUnit,sampleTestingProgram,eventStatus) => {
   requestOne = axios.get(api_GP1);
   requestTwo = axios.get(api_GP2);
   requestThree = axios.get(api_GP3);
+  requestFour = axios.get(api_GP4);
 
 
 
    return axios
-  .all([requestOne,requestTwo,requestThree])
+  .all([requestOne,requestTwo,requestThree, requestFour])
   .then(
     axios.spread((...responses) => {
       var rowList = [];
       const responseOne = responses[0];
       const responseTwo = responses[1];
       const responseThree = responses[2];
+      const responseFour = responses[3];
 
-      if (responseTwo.data || responseThree.data || responseOne.data) {
+      if (responseTwo.data || responseThree.data || responseOne.data || responseFour.data ) {
 
             responseOne.data.rows.forEach((responseOneTei) => {
               rowList.push(responseOneTei)
@@ -408,6 +412,10 @@ export const getAllTei = async (orgUnit,sampleTestingProgram,eventStatus) => {
             responseThree.data.rows.forEach((responseThreeteis) => {
               rowList.push(responseThreeteis)
             })
+
+           responseThree.data.rows.forEach((responseFourteis) => {
+              rowList.push(responseFourteis)
+           })
 
             let rowUnique = Array.from(new Set(rowList.map(JSON.stringify)), JSON.parse);
             rowUnique.forEach((teis, index) => {
