@@ -1,19 +1,25 @@
-import axios from 'axios'
+import axios from "axios";
 
-export const getAntibioticFollowTEI = async (orgUnit,sampleTestingProgram,eventStatus,isFollowUp) => {
-  var teiRows = []
-  var api_GP1 = ``
-  var api_GP2 = ``
-  var requestOne = ''
-  var requestTwo = ''
-  var requestTwoFollow = ''
-  var requestThree = ''
-  var requestThreeFollow = ''
+export const getAntibioticFollowTEI = async (
+  orgUnit,
+  sampleTestingProgram,
+  eventStatus,
+  isFollowUp
+) => {
+  var teiRows = [];
+  var api_GP1 = ``;
+  var api_GP2 = ``;
+  var requestOne = "";
+  var requestTwo = "";
+  var requestTwoFollow = "";
+  var requestThree = "";
+  var requestThreeFollow = "";
 
-  var requestFour = ''
-  var requestFourFollow = ''
-  var requestFive = ''
-  var requestFiveFollow = ''
+  var requestFour = "";
+  var requestFourFollow = "";
+  var requestFive = "";
+  var requestFiveFollow = "";
+  var SampleDict = {};
 
   //var api_GP1_follow = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&followUp=true&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
   //var api_GP2_follow = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&followUp=true&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
@@ -21,16 +27,16 @@ export const getAntibioticFollowTEI = async (orgUnit,sampleTestingProgram,eventS
   //var api_GP1 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&followUp=false&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
   //var api_GP2 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&followUp=false&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
 
-  var api_GP1_follow = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&followUp=true&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&paging=false`
-  var api_GP2_follow = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&followUp=true&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&paging=false`
+  var api_GP1_follow = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&followUp=true&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&paging=false`;
+  var api_GP2_follow = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&followUp=true&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&paging=false`;
 
-  var api_GP1 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&followUp=false&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&paging=false`
-  var api_GP2 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&followUp=false&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&paging=false`
+  var api_GP1 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&followUp=false&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&paging=false`;
+  var api_GP2 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&followUp=false&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&paging=false`;
 
-  var eventApi_GP1_follow = `../../../api/events.json?fields=*&orgUnit=${orgUnit}&status=${eventStatus}&program=${sampleTestingProgram[0]}&followUp=true&programStatus=ACTIVE&programStage=LEaC0JtgaRF&paging=false`
-  var eventApi_GP2_follow = `../../../api/events.json?fields=*&orgUnit=${orgUnit}&status=${eventStatus}&program=${sampleTestingProgram[1]}&followUp=true&programStatus=ACTIVE&programStage=ZH528YQyn18&paging=false`
-  var eventApi_GP1 = `../../../api/events.json?fields=*&orgUnit=${orgUnit}&status=${eventStatus}&program=${sampleTestingProgram[0]}&followUp=false&programStatus=ACTIVE&programStage=LEaC0JtgaRF&paging=false`
-  var eventApi_GP2 = `../../../api/events.json?fields=*&orgUnit=${orgUnit}&status=${eventStatus}&program=${sampleTestingProgram[1]}&followUp=false&programStatus=ACTIVE&programStage=ZH528YQyn18&paging=false`
+  var eventApi_GP1_follow = `../../../api/events.json?fields=*&orgUnit=${orgUnit}&status=${eventStatus}&program=${sampleTestingProgram[0]}&followUp=true&programStatus=ACTIVE&programStage=LEaC0JtgaRF&paging=false`;
+  var eventApi_GP2_follow = `../../../api/events.json?fields=*&orgUnit=${orgUnit}&status=${eventStatus}&program=${sampleTestingProgram[1]}&followUp=true&programStatus=ACTIVE&programStage=ZH528YQyn18&paging=false`;
+  var eventApi_GP1 = `../../../api/events.json?fields=*&orgUnit=${orgUnit}&status=${eventStatus}&program=${sampleTestingProgram[0]}&followUp=false&programStatus=ACTIVE&programStage=LEaC0JtgaRF&paging=false`;
+  var eventApi_GP2 = `../../../api/events.json?fields=*&orgUnit=${orgUnit}&status=${eventStatus}&program=${sampleTestingProgram[1]}&followUp=false&programStatus=ACTIVE&programStage=ZH528YQyn18&paging=false`;
 
   requestTwoFollow = axios.get(api_GP1_follow);
   requestThreeFollow = axios.get(api_GP2_follow);
@@ -42,119 +48,223 @@ export const getAntibioticFollowTEI = async (orgUnit,sampleTestingProgram,eventS
   requestFour = axios.get(eventApi_GP1);
   requestFive = axios.get(eventApi_GP2);
 
-   return axios
-  .all([requestTwoFollow,requestThreeFollow,requestTwo,requestThree,requestFourFollow,requestFiveFollow,requestFour,requestFive])
-  .then(
-    axios.spread((...responses) => {
+  return axios
+    .all([
+      requestTwoFollow,
+      requestThreeFollow,
+      requestTwo,
+      requestThree,
+      requestFourFollow,
+      requestFiveFollow,
+      requestFour,
+      requestFive,
+    ])
+    .then(
+      axios.spread((...responses) => {
+        var rowList = [];
+        const responseTwoFollow = responses[0];
+        const responseThreeFollow = responses[1];
+        const responseTwo = responses[2];
+        const responseThree = responses[3];
 
-      var rowList = [];
-      const responseTwoFollow = responses[0];
-      const responseThreeFollow = responses[1];
-      const responseTwo = responses[2];
-      const responseThree = responses[3];
+        const responseFourFollow = responses[4];
+        const responseFiveFollow = responses[5];
+        const responseFour = responses[6];
+        const responseFive = responses[7];
+        var trackedEntityInstanceEvent = [];
 
-      const responseFourFollow = responses[4];
-      const responseFiveFollow = responses[5];
-      const responseFour = responses[6];
-      const responseFive = responses[7];
-      var trackedEntityInstanceEvent = [];
-
-      if (responseFourFollow.data || responseFiveFollow.data || responseFour.data || responseFive.data) {
+        if (
+          responseFourFollow.data ||
+          responseFiveFollow.data ||
+          responseFour.data ||
+          responseFive.data
+        ) {
           responseFourFollow.data.events.forEach((event, index) => {
-            trackedEntityInstanceEvent.push(event.trackedEntityInstance)
-          })
+            trackedEntityInstanceEvent.push(event.trackedEntityInstance);
+            var trackerid = event?.trackedEntityInstance;
+            var labSampleID = "";
+            var locationValue = "";
+
+            if (!SampleDict.hasOwnProperty(trackerid)) {
+              event.dataValues.forEach((labEvent, index) => {
+                if (labEvent.dataElement == "si9RY754UNU") {
+                  labSampleID = labEvent.value; // Update the outer variable
+                }
+
+                if (labEvent.dataElement == "q7U3sRRnFg5") {
+                  locationValue = labEvent.value; // Update the outer variable
+                }
+              });
+
+              SampleDict[trackerid] = [labSampleID, locationValue]; // Assign updated values after the loop
+            }
+          });
           responseFiveFollow.data.events.forEach((event, index) => {
-            trackedEntityInstanceEvent.push(event.trackedEntityInstance)
-          })
+            trackedEntityInstanceEvent.push(event.trackedEntityInstance);
+            var trackerid = event?.trackedEntityInstance;
+            var labSampleID = "";
+            var locationValue = "";
+
+            if (!SampleDict.hasOwnProperty(trackerid)) {
+              event.dataValues.forEach((labEvent, index) => {
+                if (labEvent.dataElement == "si9RY754UNU") {
+                  labSampleID = labEvent.value; // Update the outer variable
+                }
+
+                if (labEvent.dataElement == "q7U3sRRnFg5") {
+                  locationValue = labEvent.value; // Update the outer variable
+                }
+              });
+
+              SampleDict[trackerid] = [labSampleID, locationValue]; // Assign updated values after the loop
+            }
+          });
           responseFour.data.events.forEach((event, index) => {
-            trackedEntityInstanceEvent.push(event.trackedEntityInstance)
-          })
+            trackedEntityInstanceEvent.push(event.trackedEntityInstance);
+            var trackerid = event?.trackedEntityInstance;
+            var labSampleID = "";
+            var locationValue = "";
+
+            if (!SampleDict.hasOwnProperty(trackerid)) {
+              event.dataValues.forEach((labEvent, index) => {
+                if (labEvent.dataElement == "si9RY754UNU") {
+                  labSampleID = labEvent.value; // Update the outer variable
+                }
+
+                if (labEvent.dataElement == "q7U3sRRnFg5") {
+                  locationValue = labEvent.value; // Update the outer variable
+                }
+              });
+
+              SampleDict[trackerid] = [labSampleID, locationValue]; // Assign updated values after the loop
+            }
+          });
           responseFive.data.events.forEach((event, index) => {
-            trackedEntityInstanceEvent.push(event.trackedEntityInstance)
-          })
-      }
+            trackedEntityInstanceEvent.push(event.trackedEntityInstance);
+            var trackerid = event?.trackedEntityInstance;
+            var labSampleID = "";
+            var locationValue = "";
 
-      if (responseTwo.data || responseThree.data || responseTwoFollow.data || responseThreeFollow.data) {
-        responseTwoFollow.data.rows.forEach((responseTwoFollowteis) => {
-            const trackedEntityInstanceTwoFollow = responseTwoFollowteis[0]
+            if (!SampleDict.hasOwnProperty(trackerid)) {
+              event.dataValues.forEach((labEvent, index) => {
+                if (labEvent.dataElement == "si9RY754UNU") {
+                  labSampleID = labEvent.value; // Update the outer variable
+                }
 
-          if (trackedEntityInstanceEvent.includes(trackedEntityInstanceTwoFollow)) {
-              responseTwoFollowteis.push(sampleTestingProgram[0])
-              responseTwoFollowteis.push(true)
-            rowList.push(responseTwoFollowteis)
-          }
-          })
-        responseThreeFollow.data.rows.forEach((responseThreeFollowteis) => {
-            const trackedEntityInstanceThreeFollow = responseThreeFollowteis[0]
-          if (trackedEntityInstanceEvent.includes(trackedEntityInstanceThreeFollow)) {
-                responseThreeFollowteis.push(sampleTestingProgram[1])
-                responseThreeFollowteis.push(true)
-                rowList.push(responseThreeFollowteis)
-          }
-          })
-        responseTwo.data.rows.forEach((responseTwoteis) => {
-          const trackedEntityInstanceTwo = responseTwoteis[0]
-          if (trackedEntityInstanceEvent.includes(trackedEntityInstanceTwo)) {
-            responseTwoteis.push(sampleTestingProgram[0])
-            responseTwoteis.push(false)
-            rowList.push(responseTwoteis)
-          }
-          })
-
-        responseThree.data.rows.forEach((responseThreeteis) => {
-          const trackedEntityInstanceThree = responseThreeteis[0]
-          if (trackedEntityInstanceEvent.includes(trackedEntityInstanceThree)) {
-            responseThreeteis.push(sampleTestingProgram[1])
-            responseThreeteis.push(false)
-            rowList.push(responseThreeteis)
-          }
-          })
-
-            rowList.forEach((teis, index) => {
-            let trackedEntityInstance = teis[0]
-            let orgUnit = teis[3]
-            teiRows[index] = ['', '', '', '', '', '', '', '', '', '', '']
-            teiRows[index]['0'] = teis[8]; //CR Number
-            teiRows[index]['1'] = teis[9]; //Name
-            teiRows[index]['3'] = teis[12]; //Age
-            teiRows[index]['4'] = teis[13]; //Sex
-            teiRows[index]['5'] = teis[15]; //Address
-            teiRows[index]['6'] = orgUnit;
-            teiRows[index]['7'] = trackedEntityInstance;
-            teiRows[index]['8'] = teis[5];
-            teiRows[index]['9'] = teis[17];
-            isFollowUp[teis[7].toString()] = teis[18];
-        })
+                if (labEvent.dataElement == "q7U3sRRnFg5") {
+                  locationValue = labEvent.value; // Update the outer variable
+                }
+                SampleDict[trackerid] = [labSampleID, locationValue]; // Assign updated values after the loop
+              });
+            }
+          });
         }
-      return { teiRows, isFollowUp }
+
+        if (
+          responseTwo.data ||
+          responseThree.data ||
+          responseTwoFollow.data ||
+          responseThreeFollow.data
+        ) {
+          responseTwoFollow.data.rows.forEach((responseTwoFollowteis) => {
+            const trackedEntityInstanceTwoFollow = responseTwoFollowteis[0];
+
+            if (
+              trackedEntityInstanceEvent.includes(
+                trackedEntityInstanceTwoFollow
+              )
+            ) {
+              responseTwoFollowteis.push(sampleTestingProgram[0]);
+              responseTwoFollowteis.push(true);
+              rowList.push(responseTwoFollowteis);
+            }
+          });
+          responseThreeFollow.data.rows.forEach((responseThreeFollowteis) => {
+            const trackedEntityInstanceThreeFollow = responseThreeFollowteis[0];
+            if (
+              trackedEntityInstanceEvent.includes(
+                trackedEntityInstanceThreeFollow
+              )
+            ) {
+              responseThreeFollowteis.push(sampleTestingProgram[1]);
+              responseThreeFollowteis.push(true);
+              rowList.push(responseThreeFollowteis);
+            }
+          });
+          responseTwo.data.rows.forEach((responseTwoteis) => {
+            const trackedEntityInstanceTwo = responseTwoteis[0];
+            if (trackedEntityInstanceEvent.includes(trackedEntityInstanceTwo)) {
+              responseTwoteis.push(sampleTestingProgram[0]);
+              responseTwoteis.push(false);
+              rowList.push(responseTwoteis);
+            }
+          });
+
+          responseThree.data.rows.forEach((responseThreeteis) => {
+            const trackedEntityInstanceThree = responseThreeteis[0];
+            if (
+              trackedEntityInstanceEvent.includes(trackedEntityInstanceThree)
+            ) {
+              responseThreeteis.push(sampleTestingProgram[1]);
+              responseThreeteis.push(false);
+              rowList.push(responseThreeteis);
+            }
+          });
+
+          rowList.forEach((teis, index) => {
+            let trackedEntityInstance = teis[0];
+
+            let orgUnit = teis[3];
+            teiRows[index] = ["", "", "", "", "", "", "", "", "", "", ""];
+            teiRows[index]["0"] = teis[8]; //CR Number
+            teiRows[index]["1"] = teis[9]; //Name
+            teiRows[index]["3"] = teis[12]; //Age
+            teiRows[index]["4"] = teis[13]; //Sex
+            // teiRows[index]['5'] = teis[15]; //Address
+            teiRows[index]["9"] = orgUnit;
+            teiRows[index]["7"] = trackedEntityInstance;
+            teiRows[index]["8"] = teis[5];
+            // teiRows[index]['9'] = teis[17];
+            // isFollowUp[teis[7].toString()] = teis[18];
+            if (trackedEntityInstance in SampleDict) {
+              teiRows[index]["6"] = SampleDict[trackedEntityInstance][0];
+              teiRows[index]["5"] = SampleDict[trackedEntityInstance][1];
+            }
+          });
+        }
+        return { teiRows, isFollowUp };
+      })
+    )
+    .then(({ teiRows, isFollowUp }) => {
+      return { teiRows, isFollowUp };
     })
-   ).then(({ teiRows, isFollowUp }) => {
-     return { teiRows, isFollowUp }
-   })
-  .catch(errors => {
-    console.error(errors);
-  });
+    .catch((errors) => {
+      console.error(errors);
+    });
+};
 
-}
+export const getPendingAntiResult = async (
+  orgUnit,
+  sampleTestingProgram,
+  eventStatus
+) => {
+  var teiRows = [];
+  var api_GP1 = ``;
+  var api_GP2 = ``;
+  var requestTwo = "";
+  var requestThree = "";
+  var requestFour = ``;
+  var requestFive = ``;
+  var SampleDict = {};
 
-export const getPendingAntiResult = async (orgUnit,sampleTestingProgram,eventStatus) => {
-  var teiRows = []
-  var api_GP1 = ``
-  var api_GP2 = ``
-  var requestTwo = ''
-  var requestThree = ''
-  var requestFour = ``
-  var requestFive = ``
-
-
-  var api_GP1 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&paging=false`
-  var api_GP2 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&paging=false`
+  var api_GP1 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&paging=false`;
+  var api_GP2 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&paging=false`;
 
   //var api_GP1 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
   //var api_GP2 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
 
-  var eventApi_GP1 = `../../../api/events.json?fields=*&orgUnit=${orgUnit}&program=${sampleTestingProgram[0]}&programStage=LEaC0JtgaRF&status=ACTIVE&programStatus=ACTIVE&paging=false`
-  var eventApi_GP2 = `../../../api/events.json?fields=*&orgUnit=${orgUnit}&program=${sampleTestingProgram[1]}&programStage=ZH528YQyn18&status=ACTIVE&programStatus=ACTIVE&paging=false`
+  var eventApi_GP1 = `../../../api/events.json?fields=*&orgUnit=${orgUnit}&program=${sampleTestingProgram[0]}&programStage=LEaC0JtgaRF&status=ACTIVE&programStatus=ACTIVE&paging=false`;
+  var eventApi_GP2 = `../../../api/events.json?fields=*&orgUnit=${orgUnit}&program=${sampleTestingProgram[1]}&programStage=ZH528YQyn18&status=ACTIVE&programStatus=ACTIVE&paging=false`;
 
   requestTwo = axios.get(api_GP1);
   requestThree = axios.get(api_GP2);
@@ -162,82 +272,121 @@ export const getPendingAntiResult = async (orgUnit,sampleTestingProgram,eventSta
   requestFour = axios.get(eventApi_GP1);
   requestFive = axios.get(eventApi_GP2);
 
-   return axios
-  .all([requestTwo,requestThree,requestFour,requestFive])
-  .then(
-    axios.spread((...responses) => {
+  return axios
+    .all([requestTwo, requestThree, requestFour, requestFive])
+    .then(
+      axios.spread((...responses) => {
+        var rowList = [];
+        var trackedEntityInstanceEvent = [];
+        const responseTwo = responses[0];
+        const responseThree = responses[1];
+        const responseFour = responses[2];
+        const responseFive = responses[3];
 
-      var rowList = [];
-      var trackedEntityInstanceEvent = [];
-      const responseTwo = responses[0];
-      const responseThree = responses[1];
-      const responseFour = responses[2];
-      const responseFive = responses[3];
+        if (responseFour.data || responseFive.data) {
+          responseFour.data.events.forEach((event, index) => {
+            trackedEntityInstanceEvent.push(event.trackedEntityInstance);
+            var trackerid = event?.trackedEntityInstance;
+            var labSampleID = "";
+            var locationValue = "";
 
-      if (responseFour.data || responseFive.data) {
-        responseFour.data.events.forEach((event, index) => {
-            trackedEntityInstanceEvent.push(event.trackedEntityInstance)
-          })
+            if (!SampleDict.hasOwnProperty(trackerid)) {
+              event.dataValues.forEach((labEvent, index) => {
+                if (labEvent.dataElement == "si9RY754UNU") {
+                  labSampleID = labEvent.value; // Update the outer variable
+                }
+
+                if (labEvent.dataElement == "q7U3sRRnFg5") {
+                  locationValue = labEvent.value; // Update the outer variable
+                }
+                SampleDict[trackerid] = [labSampleID, locationValue]; // Assign updated values after the loop
+              });
+            }
+          });
           responseFive.data.events.forEach((event, index) => {
-            trackedEntityInstanceEvent.push(event.trackedEntityInstance)
-          })
-      }
+            trackedEntityInstanceEvent.push(event.trackedEntityInstance);
+            var trackerid = event?.trackedEntityInstance;
+            var labSampleID = "";
+            var locationValue = "";
 
-      if (responseTwo.data || responseThree.data) {
+            if (!SampleDict.hasOwnProperty(trackerid)) {
+              event.dataValues.forEach((labEvent, index) => {
+                if (labEvent.dataElement == "si9RY754UNU") {
+                  labSampleID = labEvent.value; // Update the outer variable
+                }
 
-        responseTwo.data.rows.forEach((responseTwoteis, index) => {
-              const trackedEntityInstance = responseTwoteis[0]
-              if (trackedEntityInstanceEvent.includes(trackedEntityInstance)) {
-                rowList.push(responseTwoteis);
-              }
+                if (labEvent.dataElement == "q7U3sRRnFg5") {
+                  locationValue = labEvent.value; // Update the outer variable
+                }
+                SampleDict[trackerid] = [labSampleID, locationValue]; // Assign updated values after the loop
+              });
+            }
+          });
+        }
 
-            })
-        responseThree.data.rows.forEach((responseThreeteis, index) => {
-              const trackedEntityInstanceId = responseThreeteis[0]
-              if (trackedEntityInstanceEvent.includes(trackedEntityInstanceId)) {
-                rowList.push(responseThreeteis)
-              }
-          })
+        if (responseTwo.data || responseThree.data) {
+          responseTwo.data.rows.forEach((responseTwoteis, index) => {
+            const trackedEntityInstance = responseTwoteis[0];
+            if (trackedEntityInstanceEvent.includes(trackedEntityInstance)) {
+              rowList.push(responseTwoteis);
+            }
+          });
+          responseThree.data.rows.forEach((responseThreeteis, index) => {
+            const trackedEntityInstanceId = responseThreeteis[0];
+            if (trackedEntityInstanceEvent.includes(trackedEntityInstanceId)) {
+              rowList.push(responseThreeteis);
+            }
+          });
 
           rowList.forEach((teis, index) => {
-            let trackedEntityInstance = teis[0]
-            let orgUnit = teis[3]
-            teiRows[index] = ['', '', '', '', '', '', '', '', '', '', '']
-            teiRows[index]['0'] = teis[8];//CR Number
-            teiRows[index]['1'] = teis[9]; //Name
-            teiRows[index]['3'] = teis[12]; //Age
-            teiRows[index]['4'] = teis[13]; //Sex
-            teiRows[index]['5'] = teis[15]; //Address
-            teiRows[index]['6'] = orgUnit;
-            teiRows[index]['7'] = trackedEntityInstance;
-            teiRows[index]['8'] = teis[5];
-        })
+            let trackedEntityInstance = teis[0];
+            let orgUnit = teis[3];
+            teiRows[index] = ["", "", "", "", "", "", "", "", "", "", ""];
+            teiRows[index]["0"] = teis[8]; //CR Number
+            teiRows[index]["1"] = teis[9]; //Name
+            teiRows[index]["3"] = teis[12]; //Age
+            teiRows[index]["4"] = teis[13]; //Sex
+            // teiRows[index]['5'] = teis[15]; //Address
+            teiRows[index]["9"] = orgUnit;
+            teiRows[index]["7"] = trackedEntityInstance;
+            teiRows[index]["8"] = teis[5];
+            if (trackedEntityInstance in SampleDict) {
+              teiRows[index]["6"] = SampleDict[trackedEntityInstance][0]; //Sample ID
+              teiRows[index]["5"] = SampleDict[trackedEntityInstance][1]; // Location
+            }
+          });
         }
-      return teiRows
+        return teiRows;
+      })
+    )
+    .then((teiRows) => {
+      return teiRows;
     })
-   ).then((teiRows) => {
-     return teiRows
-   })
-  .catch(errors => {
-    console.error(errors);
-  });
+    .catch((errors) => {
+      console.error(errors);
+    });
+};
 
-}
-
-export const getSterileTEI = async (orgUnit,sampleTestingProgram,eventStatus) => {
-    var teiSterileRows = []
-    var api_sample = ``
-  var requestOne = ''
-  var requestTwo = '';
+export const getSterileTEI = async (
+  orgUnit,
+  sampleTestingProgram,
+  eventStatus
+) => {
+  var teiSterileRows = [];
+  var api_sample = ``;
+  var requestOne = "";
+  var requestTwo = "";
   var events = [];
+  var SampleDict = {};
 
-    if (sampleTestingProgram.length < 2) {
-        //var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
-        var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&paging=false`
-      requestOne = axios.get(api_sample);
-      var sterileUrl = `../../../api/events.json?skipPaging=true&fields=event,trackedEntityInstance,dataValues[dataElement,value]&order=created:asc&program=WhYipXYg2Nh&orgUnit=${orgUnit}&status=COMPLETED`
-      requestTwo = axios.get(sterileUrl)
-    }
+  if (sampleTestingProgram.length < 2) {
+    //var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
+    var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&paging=false`;
+    requestOne = axios.get(api_sample);
+    var sterileUrl = `../../../api/events.json?skipPaging=true&fields=event,trackedEntityInstance,dataValues[dataElement,value]&order=created:asc&program=WhYipXYg2Nh&orgUnit=${orgUnit}&status=COMPLETED`;
+
+    requestTwo = axios.get(sterileUrl);
+  }
 
   return axios
     .all([requestOne, requestTwo])
@@ -251,76 +400,261 @@ export const getSterileTEI = async (orgUnit,sampleTestingProgram,eventStatus) =>
           var dataElement = {};
           var dataValue = {};
           eventData.tei = event["trackedEntityInstance"];
-            event.dataValues.forEach(
-              (dataValue) =>
-                (dataElement[dataValue.dataElement] = dataValue.value)
-            );
+          event.dataValues.forEach(
+            (dataValue) =>
+              (dataElement[dataValue.dataElement] = dataValue.value)
+          );
 
-          if ((dataElement["VbUbBX7G6Jf"] == "Sterile") ||
-            (dataElement["VbUbBX7G6Jf"] == "Not available") ||
-            (dataElement["VbUbBX7G6Jf"] == "Rejected"))
-              dataValue["deCode"] = dataElement["VbUbBX7G6Jf"];
-            eventData.dataValues = dataValue;
-            events.push(eventData);
+          if (
+            dataElement["VbUbBX7G6Jf"] == "Sterile" ||
+            dataElement["VbUbBX7G6Jf"] == "Not available" ||
+            dataElement["VbUbBX7G6Jf"] == "Rejected"
+          )
+            dataValue["deCode"] = dataElement["VbUbBX7G6Jf"];
+          eventData.dataValues = dataValue;
+          events.push(eventData);
+          var trackerid = event?.trackedEntityInstance;
+          var labSampleID = "";
+          var locationValue = "";
+
+          if (!SampleDict.hasOwnProperty(trackerid)) {
+            event.dataValues.forEach((labEvent, index) => {
+              if (labEvent.dataElement == "si9RY754UNU") {
+                labSampleID = labEvent.value; // Update the outer variable
+              }
+
+              if (labEvent.dataElement == "q7U3sRRnFg5") {
+                locationValue = labEvent.value; // Update the outer variable
+              }
+              SampleDict[trackerid] = [labSampleID, locationValue]; // Assign updated values after the loop
+            });
+          }
         });
 
-
         if (responseOne.data) {
-          var index = 0
+          var index = 0;
           events.forEach((event) => {
             let eventTei = event.tei;
             let eventDeCode = event.dataValues.deCode;
-            if ((eventDeCode == "Sterile") || (eventDeCode == "Not available") || (eventDeCode == "Rejected")) {
+            if (
+              eventDeCode == "Sterile" ||
+              eventDeCode == "Not available" ||
+              eventDeCode == "Rejected"
+            ) {
               responseOne.data.rows.forEach((teis) => {
                 let trackedEntityInstance = teis[0];
-                if (eventTei == trackedEntityInstance) {
+                if (
+                  eventTei == trackedEntityInstance &&
+                  trackedEntityInstance in SampleDict
+                ) {
                   let orgUnit = teis[3];
-                    teiSterileRows[index] = ['', '', '', '', '', '', '', '', '', '', '']
-                    teiSterileRows[index]['0'] = teis[8]; //CR Number
-                    teiSterileRows[index]['1'] = teis[9]; //Name
-                    teiSterileRows[index]['3'] = teis[12]; //Age
-                    teiSterileRows[index]['4'] = teis[13]; //Sex
-                    teiSterileRows[index]['5'] = teis[15]; //Address
-                    teiSterileRows[index]['6'] = orgUnit;
-                    teiSterileRows[index]['7'] = trackedEntityInstance;
-                    index = index + 1;
+                  teiSterileRows[index] = [
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                  ];
+                  teiSterileRows[index]["0"] = teis[8]; //CR Number
+                  teiSterileRows[index]["1"] = teis[9]; //Name
+                  teiSterileRows[index]["3"] = teis[12]; //Age
+                  teiSterileRows[index]["4"] = teis[13]; //Sex
+                  // teiSterileRows[index]['5'] = teis[15]; //Address
+                  teiSterileRows[index]["9"] = orgUnit;
+                  teiSterileRows[index]["7"] = trackedEntityInstance;
+                  teiSterileRows[index]["6"] =
+                    SampleDict[trackedEntityInstance][0];
+                  teiSterileRows[index]["5"] =
+                    SampleDict[trackedEntityInstance][1]; //Location
+                  index = index + 1;
+                } else {
+                  return;
                 }
-                else {
-                  return
-                }
-              })
+              });
+            } else {
+              return;
             }
-            else {
-              return
-            }
-          })
-          return teiSterileRows
+          });
+          return teiSterileRows;
         }
-        return teiSterileRows
+        return teiSterileRows;
       })
-    ).then((teiSterileRows) => { return teiSterileRows })
-  .catch(errors => {
-    console.error(errors);
-  });
-}
+    )
+    .then((teiSterileRows) => {
+      return teiSterileRows;
+    })
+    .catch((errors) => {
+      console.error(errors);
+    });
+};
 
+// export const getSterileTEI = async (orgUnit,sampleTestingProgram,eventStatus) => {
+//   var teiRows = []
+//   var api_GP1 = ``
+//   var api_GP2 = ``
+//   var requestTwo = ''
+//   var requestThree = ''
+//   var requestFour = ``
+//   var requestFive = ``
+//   var events = [];
 
+//   if (sampleTestingProgram.length <= 2) {
+//       //var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
+//       var api_GP1 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&paging=false`
+//       var api_GP2 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&paging=false`
 
-export const getPendingSampleResult = async (orgUnit,sampleTestingProgram,eventStatus) => {
-  var teiRows = []
-  var api_sample = ``
-  var requestOne = ''
-  var requestTwo = ``
-  var trackedEntityData = []
+//     var eventApi_GP1 = `../../../api/events.json?skipPaging=true&fields=event,trackedEntityInstance,dataValues[dataElement,value]&order=created:asc&program=${sampleTestingProgram[0]}&orgUnit=${orgUnit}&status=COMPLETED`
+//     var eventApi_GP2 = `../../../api/events.json?skipPaging=true&fields=event,trackedEntityInstance,dataValues[dataElement,value]&order=created:asc&program=${sampleTestingProgram[1]}&orgUnit=${orgUnit}&status=COMPLETED`
+
+//     requestTwo = axios.get(api_GP1);
+//     requestThree = axios.get(api_GP2);
+
+//     requestFour = axios.get(eventApi_GP1);
+//     requestFive = axios.get(eventApi_GP2);
+//   }
+
+// return axios
+// .all([requestTwo,requestThree,requestFour,requestFive])
+//   .then(
+//     axios.spread((...responses) => {
+//       var teiSterileRows = [];
+//       var trackedEntityInstanceEvent = [];
+//       const responseTwo = responses[0];
+//       const responseThree = responses[1];
+//       const responseFour = responses[2];
+//       const responseFive = responses[3];
+
+//       responseFour.data.events.forEach((event) => {
+//         var eventData = {};
+//         var dataElement = {};
+//         var dataValue = {};
+//         eventData.tei = event["trackedEntityInstance"];
+//           event.dataValues.forEach(
+//             (dataValue) =>
+//               (dataElement[dataValue.dataElement] = dataValue.value)
+//           );
+
+//         if ((dataElement["VbUbBX7G6Jf"] == "Sterile") ||
+//           (dataElement["VbUbBX7G6Jf"] == "Not available") ||
+//           (dataElement["VbUbBX7G6Jf"] == "Rejected"))
+//             dataValue["deCode"] = dataElement["VbUbBX7G6Jf"];
+//           eventData.dataValues = dataValue;
+//           events.push(eventData);
+//       });
+//       responseFive.data.events.forEach((event) => {
+//         var eventData = {};
+//         var dataElement = {};
+//         var dataValue = {};
+//         eventData.tei = event["trackedEntityInstance"];
+//           event.dataValues.forEach(
+//             (dataValue) =>
+//               (dataElement[dataValue.dataElement] = dataValue.value)
+//           );
+
+//         if ((dataElement["VbUbBX7G6Jf"] == "Sterile") ||
+//           (dataElement["VbUbBX7G6Jf"] == "Not available") ||
+//           (dataElement["VbUbBX7G6Jf"] == "Rejected"))
+//             dataValue["deCode"] = dataElement["VbUbBX7G6Jf"];
+//           eventData.dataValues = dataValue;
+//           events.push(eventData);
+//       });
+
+//       if (responseTwo.data) {
+//         var index = 0
+//         events.forEach((event) => {
+//           let eventTei = event.tei;
+//           let eventDeCode = event.dataValues.deCode;
+//           if ((eventDeCode == "Sterile") || (eventDeCode == "Not available") || (eventDeCode == "Rejected")) {
+//             responseTwo.data.rows.forEach((teis) => {
+//               let trackedEntityInstance = teis[0];
+//               if (eventTei == trackedEntityInstance) {
+//                 let orgUnit = teis[3];
+//                   teiSterileRows[index] = ['', '', '', '', '', '', '', '', '', '', '']
+//                   teiSterileRows[index]['0'] = teis[8]; //CR Number
+//                   teiSterileRows[index]['1'] = teis[9]; //Name
+//                   teiSterileRows[index]['3'] = teis[12]; //Age
+//                   teiSterileRows[index]['4'] = teis[13]; //Sex
+//                   teiSterileRows[index]['5'] = teis[15]; //Address
+//                   teiSterileRows[index]['6'] = orgUnit;
+//                   teiSterileRows[index]['7'] = trackedEntityInstance;
+//                   index = index + 1;
+//               }
+//               else {
+//                 return
+//               }
+//             })
+//           }
+//           else {
+//             return
+//           }
+//         })
+//         return teiSterileRows
+//       }
+//       if (responseThree.data) {
+//         var index = 0
+//         events.forEach((event) => {
+//           let eventTei = event.tei;
+//           let eventDeCode = event.dataValues.deCode;
+//           if ((eventDeCode == "Sterile") || (eventDeCode == "Not available") || (eventDeCode == "Rejected")) {
+//             responseTwo.data.rows.forEach((teis) => {
+//               let trackedEntityInstance = teis[0];
+//               if (eventTei == trackedEntityInstance) {
+//                 let orgUnit = teis[3];
+//                   teiSterileRows[index] = ['', '', '', '', '', '', '', '', '', '', '']
+//                   teiSterileRows[index]['0'] = teis[8]; //CR Number
+//                   teiSterileRows[index]['1'] = teis[9]; //Name
+//                   teiSterileRows[index]['3'] = teis[12]; //Age
+//                   teiSterileRows[index]['4'] = teis[13]; //Sex
+//                   teiSterileRows[index]['5'] = teis[15]; //Address
+//                   teiSterileRows[index]['6'] = orgUnit;
+//                   teiSterileRows[index]['7'] = trackedEntityInstance;
+//                   index = index + 1;
+//               }
+//               else {
+//                 return
+//               }
+//             })
+//           }
+//           else {
+//             return
+//           }
+//         })
+//         return teiSterileRows
+//       }
+//       return teiSterileRows
+//     })
+//   ).then((teiSterileRows) => { return teiSterileRows })
+// .catch(errors => {
+//   console.error(errors);
+// });
+// }
+
+export const getPendingSampleResult = async (
+  orgUnit,
+  sampleTestingProgram,
+  eventStatus
+) => {
+  var teiRows = [];
+  var api_sample = ``;
+  var requestOne = "";
+  var requestTwo = ``;
+  var trackedEntityData = [];
+  var SampleDict = {};
 
   //var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
-  var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&paging=false`
-  var eventApi = `../../../api/events.json?fields=*&orgUnit=${orgUnit}&status=ACTIVE&program=${sampleTestingProgram}&programStatus=ACTIVE&paging=false`
+  var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&paging=false`;
+  var eventApi = `../../../api/events.json?fields=*&orgUnit=${orgUnit}&status=ACTIVE&program=${sampleTestingProgram}&programStatus=ACTIVE&paging=false`;
   requestOne = axios.get(api_sample);
   requestTwo = axios.get(eventApi);
 
   return axios
-    .all([requestOne,requestTwo])
+    .all([requestOne, requestTwo])
     .then(
       axios.spread((...responses) => {
         const responseOne = responses[0];
@@ -328,117 +662,172 @@ export const getPendingSampleResult = async (orgUnit,sampleTestingProgram,eventS
         var trackedEntityInstanceEvent = [];
         if (responseTwo.data) {
           responseTwo.data.events.forEach((event, index) => {
-            trackedEntityInstanceEvent.push(event.trackedEntityInstance)
-          })
+            trackedEntityInstanceEvent.push(event.trackedEntityInstance);
+            var trackerid = event?.trackedEntityInstance;
+            var labSampleID = "";
+            var locationValue = "";
+
+            if (!SampleDict.hasOwnProperty(trackerid)) {
+              event.dataValues.forEach((labEvent, index) => {
+                if (labEvent.dataElement == "si9RY754UNU") {
+                  labSampleID = labEvent.value; // Update the outer variable
+                }
+
+                if (labEvent.dataElement == "q7U3sRRnFg5") {
+                  locationValue = labEvent.value; // Update the outer variable
+                }
+                SampleDict[trackerid] = [labSampleID, locationValue];
+              });
+
+              // Assign updated values after the loop
+            }
+          });
         }
-          if (responseOne.data) {
-            responseOne.data.rows.forEach((teisRow, index) => {
-              const trackedEntityInstance = teisRow[0]
-              if (trackedEntityInstanceEvent.includes(trackedEntityInstance)) {
-                trackedEntityData.push(teisRow);
-              }
-            })
+        if (responseOne.data) {
+          responseOne.data.rows.forEach((teisRow, index) => {
+            const trackedEntityInstance = teisRow[0];
+            if (trackedEntityInstanceEvent.includes(trackedEntityInstance)) {
+              trackedEntityData.push(teisRow);
+            }
+          });
 
           trackedEntityData.forEach((teis, index) => {
             let trackedEntityInstance = teis[0];
             let orgUnit = teis[3];
-            teiRows[index] = ['', '', '', '', '', '', '', '', '', '', '']
-            teiRows[index]['0'] = teis[8]; //CR Number //Registration number
-            teiRows[index]['1'] = teis[9]; //Name/First Name
-            teiRows[index]['3'] = teis[12]; //Age
-            teiRows[index]['4'] = teis[13]; //Sex
-            teiRows[index]['5'] = teis[15]; //Address
-            teiRows[index]['6'] = orgUnit;
-            teiRows[index]['7'] = trackedEntityInstance;
-            teiRows[index]['8'] = teis[5];
-
-        })
+            teiRows[index] = ["", "", "", "", "", "", "", "", "", "", ""];
+            teiRows[index]["0"] = teis[8]; //CR Number //Registration number
+            teiRows[index]["1"] = teis[9]; //Name/First Name
+            teiRows[index]["3"] = teis[12]; //Age
+            teiRows[index]["4"] = teis[13]; //Sex
+            // teiRows[index]['5'] = teis[15]; //Address
+            teiRows[index]["9"] = orgUnit;
+            teiRows[index]["7"] = trackedEntityInstance;
+            teiRows[index]["8"] = teis[5];
+            if (trackedEntityInstance in SampleDict) {
+              teiRows[index]["6"] = SampleDict[trackedEntityInstance][0];
+              teiRows[index]["5"] = SampleDict[trackedEntityInstance][1];
+            }
+          });
         }
-        return teiRows
+        return teiRows;
       })
-    ).then((teiRows) => { return teiRows })
-  .catch(errors => {
-    console.error(errors);
-  });
-}
+    )
+    .then((teiRows) => {
+      return teiRows;
+    })
+    .catch((errors) => {
+      console.error(errors);
+    });
+};
 
-export const getAllTei = async (orgUnit,sampleTestingProgram,eventStatus) => {
-  var teiRows = []
-  var api_GP1 = ``
-  var api_GP2 = ``
-  var api_GP3 = ''
-  var api_GP4 = ''
-  var requestOne = ''
-  var requestTwo = ''
-  var requestThree = ''
-  var requestFour = ''
+export const getAllTei = async (orgUnit, sampleTestingProgram, eventStatus) => {
+  var teiRows = [];
+  var api_GP1 = ``;
+  var api_GP2 = ``;
+  var api_GP3 = "";
+  var api_GP4 = "";
 
+  var requestOne = "";
+  var requestTwo = "";
+  var requestThree = "";
+  var requestFour = "";
+  var SampleDict = {};
 
-    api_GP1 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&paging=false`
-    api_GP2 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&paging=false`
-    api_GP3 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[2]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=bwJT1BnH3qE&paging=false`
-    api_GP4 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[3]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&paging=false`
+  api_GP1 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&paging=false`;
+  api_GP2 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&paging=false`;
+  api_GP3 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[2]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=bwJT1BnH3qE&paging=false`;
+  api_GP4 = `../../../api/29/sqlViews/aqByEsDNZMv/data.json?paging=false`;
 
   //api_GP1 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
   //api_GP2 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
   //api_GP3 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[2]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
-
 
   requestOne = axios.get(api_GP1);
   requestTwo = axios.get(api_GP2);
   requestThree = axios.get(api_GP3);
   requestFour = axios.get(api_GP4);
 
+  return axios
+    .all([requestOne, requestTwo, requestThree, requestFour])
+    .then(
+      axios.spread((...responses) => {
+        var rowList = [];
 
+        const responseOne = responses[0];
 
-   return axios
-  .all([requestOne,requestTwo,requestThree, requestFour])
-  .then(
-    axios.spread((...responses) => {
-      var rowList = [];
-      const responseOne = responses[0];
-      const responseTwo = responses[1];
-      const responseThree = responses[2];
-      const responseFour = responses[3];
+        const responseTwo = responses[1];
+        const responseThree = responses[2];
+        const responseFour = responses[3];
+        var trackedEntityInstanceEvent = [];
 
-      if (responseTwo.data || responseThree.data || responseOne.data || responseFour.data ) {
+        if (responseTwo.data || responseThree.data || responseOne.data) {
+          responseOne.data.rows.forEach((responseOneTei) => {
+            rowList.push(responseOneTei);
+          });
+          responseTwo.data.rows.forEach((responseTwoteis) => {
+            rowList.push(responseTwoteis);
+          });
+          responseThree.data.rows.forEach((responseThreeteis) => {
+            rowList.push(responseThreeteis);
+          });
+          if (responseFour.data.listGrid.rows) {
+            responseFour.data.listGrid.rows.forEach((events) => {
+              var dataElement = {};
+              var orgunits = events[0];
+              var trackerid = events[1];
+              var labSampleID = "";
 
-            responseOne.data.rows.forEach((responseOneTei) => {
-              rowList.push(responseOneTei)
-            })
-            responseTwo.data.rows.forEach((responseTwoteis) => {
-              rowList.push(responseTwoteis)
-            })
-            responseThree.data.rows.forEach((responseThreeteis) => {
-              rowList.push(responseThreeteis)
-            })
+              var locationValue = "";
+              if (!SampleDict.hasOwnProperty(trackerid)) {
+                var eventDataValuesOutputArray = JSON.parse(events[3]);
+                for (const [key, value] of Object.entries(
+                  eventDataValuesOutputArray
+                )) {
+                  if (!dataElement.hasOwnProperty(key)) {
+                    dataElement[key] = [value.value, value.created];
+                  }
+                }
+                if (dataElement["si9RY754UNU"]) {
+                  labSampleID = dataElement["si9RY754UNU"][0];
+                }
+                if (dataElement["q7U3sRRnFg5"]) {
+                  locationValue = dataElement["q7U3sRRnFg5"][0]; // Update the outer variable
+                }
+                SampleDict[trackerid] = [labSampleID, locationValue];
+              }
+            });
+          }
 
-           responseThree.data.rows.forEach((responseFourteis) => {
-              rowList.push(responseFourteis)
-           })
+          let rowUnique = Array.from(
+            new Set(rowList.map(JSON.stringify)),
+            JSON.parse
+          );
+          rowUnique.forEach((teis, index) => {
+            let trackedEntityInstance = teis[0];
+            let orgUnit = teis[3];
 
-            let rowUnique = Array.from(new Set(rowList.map(JSON.stringify)), JSON.parse);
-            rowUnique.forEach((teis, index) => {
-            let trackedEntityInstance = teis[0]
-            let orgUnit = teis[3]
-            teiRows[index] = ['', '', '', '', '', '', '', '', '', '', '']
-            teiRows[index]['0'] = teis[8]; //CR Number //Registration number
-            teiRows[index]['1'] = teis[9]; //Name/First Name
-            teiRows[index]['3'] = teis[12]; //Age
-            teiRows[index]['4'] = teis[13]; //Sex
-            teiRows[index]['5'] = teis[15]; //Address
-            teiRows[index]['6'] = orgUnit;
-            teiRows[index]['7'] = trackedEntityInstance;
-            teiRows[index]['8'] = teis[5];
-        })
+            teiRows[index] = ["", "", "", "", "", "", "", "", "", "", ""];
+            teiRows[index]["0"] = teis[8]; //CR Number //Registration number
+            teiRows[index]["1"] = teis[9]; //Name/First Name
+            teiRows[index]["3"] = teis[12]; //Age
+            teiRows[index]["4"] = teis[13]; //Sex
+            // teiRows[index]['5'] = teis[15]; //Address
+            teiRows[index]["9"] = orgUnit;
+            teiRows[index]["7"] = trackedEntityInstance;
+            teiRows[index]["8"] = teis[5];
+            if (trackedEntityInstance in SampleDict) {
+              teiRows[index]["6"] = SampleDict[trackedEntityInstance][0];
+              teiRows[index]["5"] = SampleDict[trackedEntityInstance][1];
+            }
+          });
         }
-      return teiRows
+        return teiRows;
+      })
+    )
+    .then((teiRows) => {
+      return teiRows;
     })
-   ).then((teiRows) => {
-     return teiRows
-   })
-  .catch(errors => {
-    console.error(errors);
-  });
-
-}
+    .catch((errors) => {
+      console.error(errors);
+    });
+};

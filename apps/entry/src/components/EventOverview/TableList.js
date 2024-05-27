@@ -38,7 +38,7 @@ export const TableList = (props) => {
     if (eventStatus == "COMPLETED" && code == "GP") {
         headers = [
             {
-                name: 'Registration Number',
+                name: 'Medical Record number',
                 options: {
                     customBodyRender: (value, tableMeta, updateValue) => {
                         return (
@@ -118,7 +118,7 @@ export const TableList = (props) => {
                 }
             },
             {
-                name: 'Address',
+                name: 'Location',
                                 options: {
                     customBodyRender: (value, tableMeta, updateValue) => {
                         return (
@@ -131,6 +131,25 @@ export const TableList = (props) => {
                                 }}
                             >
                                 {tableMeta.rowData[5]}
+                            </Link>
+                        );
+                    }
+                }
+            },
+            {
+                name: 'Lab ID',
+                                options: {
+                    customBodyRender: (value, tableMeta, updateValue) => {
+                        return (
+                            <Link
+                                component="button"
+                                variant="body2"
+                                color = "inherit"
+                                onClick={() => {
+                                    onEventClick(tableMeta.rowData,tableMeta.rowData[6], tableMeta.rowData[7])
+                                }}
+                            >
+                                {tableMeta.rowData[6]}
                             </Link>
                         );
                     }
@@ -189,7 +208,7 @@ export const TableList = (props) => {
     else {
                 headers = [
             {
-                name: 'Registration Number',
+                name: 'Medical Record number',
             },
             {
                 name: 'Name of the Patient',
@@ -205,7 +224,10 @@ export const TableList = (props) => {
                 name: 'Sex',
             },
             {
-                name: 'Address',
+                name: 'Location',
+            },
+            {
+                name: 'Lab ID',
             },
             {
                 name: 'Organisation unit ID',

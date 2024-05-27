@@ -2,7 +2,7 @@ import { useEffect, useReducer } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { showAlert,followEvent } from '@hisp-amr/app'
 import { getPendingAntiResult, getSterileTEI, getAntibioticFollowTEI, getPendingSampleResult,getAllTei } from 'api'
-import { GP_PROGRAM_ID } from './constants'
+import { GP_PROGRAM_ID ,STERILE_OTHERPROGRAM} from './constants'
 import { createAction } from '@hisp-amr/app/dist/actions/createAction'
 import { MARKED_FOLLOW } from '@hisp-amr/app/dist/actions/types'
 
@@ -54,6 +54,7 @@ const reducer = (state, action) => {
 
 export const useEvents = (status, eventstatus, code,isFollowUp) => {
     var programApi = [];
+   
     const dispatch = useDispatch()
     const categories = useSelector(state => state.appConfig.categories)
     const programList = useSelector(state => state.metadata.programList)
@@ -72,9 +73,21 @@ export const useEvents = (status, eventstatus, code,isFollowUp) => {
         var sampleLable = "Sample testing"
         return element.label ===  sampleLable;
     }).value;
+    var programApiforStrile = programList.find(element => {
+        console.log("programApiforStrile====",element)
+        var sampleLable = "Other pathogens"
+        return element.label ===  sampleLable;
+    }).value;
 
     if (code == "ST") {
         programApi = [sampleTestingProgram]
+    }
+    else if(code == "STT"){
+        programApi.push([sampleTestingProgram])
+        // programApi.push([programApiforStrile])
+        // programApi = ([sampleTestingProgram] || [programApiforStrile] )
+            //  programApiforStrile = STERILE_OTHERPROGRAM;
+      console.log("STTTTTT",programApi)
     }
     else if (code == "GP") {
         programApi = GP_PROGRAM_ID

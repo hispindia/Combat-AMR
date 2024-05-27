@@ -13,7 +13,7 @@ import "./styles.css";
 import Tabs from "./Tabs";
 import TabPane from "./Tab-Pane";
 import { TableList } from './TableList'
-import { TABVALUES,SAMPLE_PROGRAM_CODE,PROGRAM_CODE } from './constants'
+import { TABVALUES,SAMPLE_PROGRAM_CODE,PROGRAM_CODE ,STERILE_PROGRAM_CODE} from './constants'
 
 if (!process.env.REACT_APP_DHIS2_TABLE_CONFIG)
     throw new Error(
@@ -37,6 +37,7 @@ export const EventOverview = ({ match, history }) => {
     var status = match.params.status
     let SAMPLEPROGRAMCODE = SAMPLE_PROGRAM_CODE;
     let PROGRAMCODE = PROGRAM_CODE;
+    let OTHERPROGRAM = STERILE_PROGRAM_CODE;
     const selected = useSelector(state => state.selectedOrgUnit)
     var isFollowUp = useSelector(state => state.data.followup)
     var [eventstatus, setEventstatus] = useState('ALL')
@@ -51,9 +52,9 @@ export const EventOverview = ({ match, history }) => {
             setEventstatus('ACTIVE');
             setCode(SAMPLEPROGRAMCODE);
         }
-        else if (programCode == SAMPLEPROGRAMCODE && programStatus == "complete") {
+        else if (programCode == OTHERPROGRAM && programStatus == "complete") {
             setEventstatus('COMPLETED');
-            setCode(SAMPLEPROGRAMCODE);
+            setCode(OTHERPROGRAM);
         }
         else if (programCode == PROGRAMCODE && programStatus == "pending") {
             setEventstatus('ACTIVE');
@@ -73,7 +74,7 @@ export const EventOverview = ({ match, history }) => {
      * Called when table row is clicked.
      */
     const onEventClick = (row, org, tei) => {
-            history.push(`/orgUnit/${row[6]}/trackedEntityInstances/${row[7]}`)
+            history.push(`/orgUnit/${row[9]}/trackedEntityInstances/${row[7]}`)
     }
 
     /**

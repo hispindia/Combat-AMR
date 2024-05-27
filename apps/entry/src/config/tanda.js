@@ -5,7 +5,7 @@ export var tanda = {
     // },
     headers: [
         {
-            name: 'Registration Number',
+            name: 'Medical Record number',
         },
         {
             name: 'Name of the Patient',
@@ -21,7 +21,10 @@ export var tanda = {
             name: 'Sex',
         },
         {
-            name: 'Address',
+            name: 'Location',
+        },
+        {
+            name:'Lab ID',
         },
         {
             name: 'Organisation unit ID',

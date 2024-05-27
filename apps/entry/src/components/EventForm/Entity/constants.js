@@ -1,7 +1,7 @@
 export const SAMPLE_TYPEID = "o4ujbXNx7d6"
 export const PATHOGEN_POSITIVE = "ccRDJjuDUIz"
 export const PATHOGEN_NEGATIVE = "vgsDulFU8B0"
-export const CR_NUMBER = "Registration Number"
+export const CR_NUMBER = "Medical Record number"
 export const NAME = "Patient Name"
 export const GENDER = "Gender"
 export const AGE = "Age"

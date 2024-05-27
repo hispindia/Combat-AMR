@@ -74,7 +74,7 @@ const Events = ({ match, history }) => {
       if (events != undefined) {
         const v = events.map((ele, index) => {
           if (!clinicianPsList.includes(ele.programStage)) {
-            if (ele.status == COMPLETED) {
+            // if (ele.status == COMPLETED) {
               var proId = ele.program;
               var name = [],
                 dataValue = [],
@@ -123,7 +123,7 @@ const Events = ({ match, history }) => {
                   setShowReport(true);
                 }
               }
-            }
+            // }
           }
         });
         if (eventL.length != 0) {
