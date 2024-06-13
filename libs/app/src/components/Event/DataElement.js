@@ -6,6 +6,7 @@ import {
   SAMPLE_ID_ELEMENT,
   ORGANISM_DETECTED,
   SAMPLE_TESTING_PROGRAM,
+  ADDITIONAL,
 } from "constants/dhis2";
 import {
   TextInput,
@@ -43,7 +44,6 @@ export const DataElement = ({ id }) => {
   const userGroup = useSelector((state) => state.metadata.userGroup);
   var printValues = useSelector((state) => state.data.printValues);
 
- 
   // if (id == "yMKFqLn9LBx") {
   //     value = value.split("-")[0]
   // }
@@ -203,7 +203,10 @@ export const DataElement = ({ id }) => {
       updateDaysDifference(receivedDate, collectedDate);
     }
     var results = RESULTS;
-    if (key == ORGANISM_DETECTED && value == PATHOGEN_DETECTED) {
+    if (
+      (key == ORGANISM_DETECTED && value == PATHOGEN_DETECTED) ||
+      key == ADDITIONAL
+    ) {
       dispatch(AddAndSubmit(true));
       dispatch(setEventValue(key, value, false));
     } else if (key == ORGANISM_DETECTED && results.indexOf(value) > -1) {
@@ -233,7 +236,11 @@ export const DataElement = ({ id }) => {
   };
 
   const handleChange = (event) => {
-    dispatch(addNotes(id, event.target.value));
+    if (id == "TcThq7OLuKf") {
+     
+      dispatch(setEventValue(id, event.target.value, false, printValues));//add code for Additonal comment
+    } else dispatch(addNotes(id, event.target.value));
+    // dispatch(addNotes(id, event.target.value));
     // onChange(id, event.target.value);
   };
 

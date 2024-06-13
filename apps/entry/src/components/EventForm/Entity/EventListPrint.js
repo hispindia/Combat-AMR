@@ -135,9 +135,8 @@ export default function EventListPrint(props) {
       eventCliniVals.push(cliDvs);
     }
   });
-
+  console.log("eventCliniVals============", eventCliniVals);
   programs.forEach((pn, index) => {
-    console.log("pn=============", pn);
     var label = pn.label;
     if (program == pn.value) {
       programDict = {
@@ -150,7 +149,6 @@ export default function EventListPrint(props) {
   for (const [key, value] of Object.entries(entityValues)) {
     allEntity.forEach((n, index) => {
       var label = n.trackedEntityAttribute.displayName;
-      console.log("label=========", label);
       if (key == n.trackedEntityAttribute.id) {
         if (value) {
           entityDict = {
@@ -196,7 +194,7 @@ export default function EventListPrint(props) {
         };
       }
       for (const [al, avalue] of Object.entries(allEvent)) {
-        console.log("al, avalue=====", [al, avalue]);
+        // console.log("al, avalue=====", [al, avalue]);
         var label = avalue;
         if (key == al) {
           if (value) {
@@ -417,31 +415,38 @@ export default function EventListPrint(props) {
                   </Box>
                 </Typography>
               </TableCell>
-              <TableCell style={{ width: "30%", textAlign: "right" }}>
+              {/* <TableCell style={{ width: "30%", textAlign: "right" }}>
                 <Typography>
                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
                     {PATHOGEN_G} :&nbsp;&nbsp;{link[PATHOGEN_G]}
                   </Box>
                 </Typography>
-              </TableCell>
-            </TableRow>
-
-            <TableRow>
-              <TableCell style={{ width: "40%" }}>
+              </TableCell> */}
+              <TableCell style={{ width: "30%" }}>
                 <Typography>
                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
                     {LAB_ID} :&nbsp;&nbsp;{link[LAB_ID]}
                   </Box>
                 </Typography>
               </TableCell>
-              <TableCell style={{ width: "30%" }}>
+            </TableRow>
+
+            <TableRow>
+              {/* <TableCell style={{ width: "40%" }}>
+                <Typography>
+                  <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+                    {LAB_ID} :&nbsp;&nbsp;{link[LAB_ID]}
+                  </Box>
+                </Typography>
+              </TableCell> */}
+              <TableCell style={{ width: "40%" }}>
                 <Typography>
                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
                     {LOCATION} :&nbsp;&nbsp;{link[LOCATION]}
                   </Box>
                 </Typography>
               </TableCell>
-              <TableCell style={{ width: "30%", textAlign: "right" }}>
+              <TableCell style={{ width: "30%" }}>
                 <Typography>
                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
                     {SAMPLE_DATE}: :&nbsp;&nbsp;
@@ -451,7 +456,7 @@ export default function EventListPrint(props) {
               </TableCell>
             </TableRow>
 
-            <TableRow>
+            {/* <TableRow>
               <TableCell style={{ width: "40%" }}>
                 <Typography>
                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
@@ -461,7 +466,7 @@ export default function EventListPrint(props) {
               </TableCell>
               <TableCell></TableCell>
               <TableCell></TableCell>
-            </TableRow>
+            </TableRow> */}
           </TableBody>
         </Table>
 
@@ -478,14 +483,14 @@ export default function EventListPrint(props) {
             Object.keys(link).includes("Others") ||
             Object.keys(link).some((key) => key.includes("staining")) ? (
               <Table
-                // sx={{
-                //   width: "40%",
-                //   minWidth: 150,
-                //   // width: { xs: "100%", md: "40%" },
-                //   "@media screen and (max-width: 600px)": {
-                //     width: "100%",
-                //   },
-                // }}
+              // sx={{
+              //   width: "40%",
+              //   minWidth: 150,
+              //   // width: { xs: "100%", md: "40%" },
+              //   "@media screen and (max-width: 600px)": {
+              //     width: "100%",
+              //   },
+              // }}
               >
                 <TableBody>
                   <Box
@@ -526,11 +531,11 @@ export default function EventListPrint(props) {
 
                     {[
                       ...getPlayersByPosition(link, "").filter(
-                        (player) =>
-                          (link[player] == "true" || player == "Others")
+                        (player) => link[player] == "true" || player == "Others"
                       ),
                       ...getPlayersByPosition(link, "").filter(
-                        (player) => !(link[player] == "true" || player == "Others")
+                        (player) =>
+                          !(link[player] == "true" || player == "Others")
                       ),
                     ].map((player, index) => {
                       console.log(
@@ -600,6 +605,32 @@ export default function EventListPrint(props) {
             )}
           </>
         </Box>
+        <Table
+          sx={{
+            [`& .${tableCellClasses.root}`]: {
+              borderBottom: "none",
+            },
+          }}
+        >
+          <TableBody>
+            <TableRow>
+              <TableCell style={{ width: "40%" }}>
+                <Typography>
+                  <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+                    {PATHOGEN_G} :&nbsp;&nbsp;{link[PATHOGEN_G]}
+                  </Box>
+                </Typography>
+              </TableCell>
+              <TableCell style={{ width: "40%" }}>
+                <Typography>
+                  <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+                    {PATHOGEN} :&nbsp;&nbsp;&nbsp;&nbsp;{link["Pathogen"]}
+                  </Box>
+                </Typography>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
 
         {Object.keys(link).some((key) => key.includes("_Result")) ? (
           <Table>
@@ -681,259 +712,31 @@ export default function EventListPrint(props) {
         ) : (
           ""
         )}
+        <Table
+          sx={{
+            [`& .${tableCellClasses.root}`]: {
+              borderBottom: "none",
+            },
+          }}
+        >
+          <TableBody>
+            <TableRow>
+              <TableCell style={{ width: "40%" }}>
+                <Typography>
+                  <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+                    Additional comments :&nbsp;&nbsp;
+                    {link["Additional comments"]}
+                  </Box>
+                </Typography>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
       </Box>
     );
   });
   console.log("eventLDict", eventLDict);
 
-  // const listItemTable =eventLDict.map((link) => (
-  // const listItemTable = eventLDict.map((link) => (
-  //   <Box
-  //   sx={{
-  //     display: "flex",
-  //     // justifyContent: "space-between",
-  //     justifyContent: "space-around",
-  //     // flexDirection: { xs: "column", md: "row" },
-  //   }}
-  // >
-  //   <>
-  //     {Object.values(link).includes("true") ||
-  //     Object.keys(link).includes("Others") ? (
-  //       <Table
-  //         sx={{
-  //           width: "40%",
-  //           minWidth: 150,
-  //           // width: { xs: "100%", md: "40%" },
-  //           "@media screen and (max-width: 600px)": {
-  //             width: "100%",
-  //           },
-  //         }}
-  //       >
-  //         <TableBody>
-  //           <Box
-  //             sx={{
-  //               border: 1,
-  //               fontSize: 10,
-  //               mt: 1,
-  //               mb: 1,
-  //               borderBottom: 0,
-  //               borderRight: 0,
-  //             }}
-  //           >
-  //             <TableRow>
-  //               <TableCell
-  //                 colSpan={3}
-  //                 align="center"
-  //                 className={classes.tableRightBorder + " " + "antibio"}
-  //                 style={{
-  //                   fontWeight: "bold",
-  //                   borderBottom: "1px solid black ",
-  //                   fontSize: "13px",
-  //                   borderRight: "1px solid black",
-  //                 }}
-  //               >
-  //                 Gram Staining
-  //               </TableCell>
-  //             </TableRow>
-
-  //             {getPlayersByPosition(link, "").map((player, index) => {
-  //               console.log(
-  //                 "link[player] == ",
-  //                 (link[player] == "true").length
-  //               );
-  //               return (
-  //                 <>
-  //                   {link[player] == "true" || player == "Others" ? (
-  //                     <TableRow key={index}>
-  //                       {/* <TableCell
-  //                         className={
-  //                           classes.tableRightBorder + " " + "antibio"
-  //                         }
-  //                         style={{
-  //                           width: "10%",
-  //                           borderBottom: "1px solid black",
-  //                         }}
-  //                       >
-  //                         <Typography>
-  //                           <Box
-  //                             className="boxClass"
-  //                             sx={{ fontSize: 12, m: 1 }}
-  //                           >
-  //                             {index + 1}
-
-  //                             {count}
-  //                           </Box>
-  //                         </Typography>
-  //                       </TableCell> */}
-
-  //                       <TableCell
-  //                         className={
-  //                           classes.tableRightBorder + " " + "antibio"
-  //                         }
-  //                         style={{ borderBottom: "1px solid black" }}
-  //                         sx={{
-  //                           width: "30%",
-  //                         }}
-  //                       >
-  //                         <Typography>
-  //                           <Box
-  //                             className="boxClass"
-  //                             sx={{ fontSize: 12, m: 1 }}
-  //                           >
-  //                             {player}
-  //                             {/* {player.split("_")[0]} */}
-  //                           </Box>
-  //                         </Typography>
-  //                       </TableCell>
-
-  //                       <TableCell
-  //                         className={
-  //                           classes.tableRightBorder + " " + "antibio"
-  //                         }
-  //                         style={{ borderBottom: "1px solid black" }}
-  //                         sx={{
-  //                           width: "30%",
-  //                         }}
-  //                       >
-  //                         <Typography>
-  //                           <Box
-  //                             className="boxClass"
-  //                             sx={{ fontSize: 12, m: 1 }}
-  //                           >
-  //                             {player == "Others" ? link[player] : "Yes"}
-  //                           </Box>
-  //                         </Typography>
-  //                       </TableCell>
-  //                     </TableRow>
-  //                   ) : (
-  //                     ""
-  //                   )}
-  //                 </>
-  //               );
-  //             })}
-  //           </Box>
-  //         </TableBody>
-  //       </Table>
-  //     ) : (
-  //       ""
-  //     )}
-  //     {Object.keys(link).some((key) => key.includes("staining")) ? (
-  //       <Table
-  //         sx={{
-  //           width: "40%",
-  //           minWidth: 150,
-  //           "@media screen and (max-width: 600px)": {
-  //             width: "100%",
-  //           },
-  //           // width: { xs: "100%", md: "40%" },
-  //         }}
-  //       >
-  //         <TableBody>
-  //           <Box
-  //             sx={{
-  //               border: 1,
-  //               fontSize: 10,
-  //               mt: 1,
-  //               mb: 1,
-  //               borderBottom: 0,
-  //               borderRight: 0,
-  //             }}
-  //           >
-  //             <TableRow>
-  //               <TableCell
-  //                 colSpan={3}
-  //                 align="center"
-  //                 className={classes.tableRightBorder + " " + "antibio"}
-  //                 style={{
-  //                   fontWeight: "bold",
-  //                   borderBottom: "1px solid black ",
-  //                   fontSize: "13px",
-  //                   borderRight: "1px solid black",
-  //                 }}
-  //               >
-  //                 Preliminary tests
-  //               </TableCell>
-  //             </TableRow>
-
-  //             {getPlayersByPosition(link, "").map((player, index) => {
-  //               return (
-  //                 <>
-  //                   {EXCEPTION_CONDITION.includes(player) ? (
-  //                     <TableRow key={index}>
-  //                       {/* <TableCell
-  //                         className={
-  //                           classes.tableRightBorder + " " + "antibio"
-  //                         }
-  //                         style={{
-  //                           width: "10%",
-  //                           borderBottom: "1px solid black",
-  //                         }}
-  //                       >
-  //                         <Typography>
-  //                           <Box
-  //                             className="boxClass"
-  //                             sx={{ fontSize: 12, m: 1 }}
-  //                           >
-
-  //                             {count}
-  //                           </Box>
-  //                         </Typography>
-  //                       </TableCell> */}
-
-  //                       <TableCell
-  //                         className={
-  //                           classes.tableRightBorder + " " + "antibio"
-  //                         }
-  //                         style={{ borderBottom: "1px solid black" }}
-  //                         sx={{
-  //                           width: "30%",
-  //                         }}
-  //                       >
-  //                         <Typography>
-  //                           <Box
-  //                             className="boxClass"
-  //                             sx={{ fontSize: 12, m: 1 }}
-  //                           >
-  //                             {player}
-  //                             {/* {player.split("_")[0]} */}
-  //                           </Box>
-  //                         </Typography>
-  //                       </TableCell>
-
-  //                       <TableCell
-  //                         className={
-  //                           classes.tableRightBorder + " " + "antibio"
-  //                         }
-  //                         style={{ borderBottom: "1px solid black" }}
-  //                         sx={{
-  //                           width: "30%",
-  //                         }}
-  //                       >
-  //                         <Typography>
-  //                           <Box
-  //                             className="boxClass"
-  //                             sx={{ fontSize: 12, m: 1 }}
-  //                           >
-  //                             {link[player]}
-  //                           </Box>
-  //                         </Typography>
-  //                       </TableCell>
-  //                     </TableRow>
-  //                   ) : (
-  //                     ""
-  //                   )}
-  //                 </>
-  //               );
-  //             })}
-  //           </Box>
-  //         </TableBody>
-  //       </Table>
-  //     ) : (
-  //       ""
-  //     )}
-  //   </>
-  // </Box>
-  // ));
   let contentDisplayed = false;
 
   return (
@@ -1042,8 +845,9 @@ export default function EventListPrint(props) {
           {/* {listItemTable} */}
 
           {listItems}
+          {console.log("entityDict===================", entityDict)}
 
-          {eventClinical.length !== 0 ? (
+          {/* {eventClinical.length !== 0 ? (
             <Box sx={{ border: 2, fontSize: 12, ml: 6, mr: 6, mt: 1, mb: 1 }}>
               <Table
                 sx={{
@@ -1121,7 +925,7 @@ export default function EventListPrint(props) {
             </Box>
           ) : (
             ""
-          )}
+          )} */}
         </Box>
 
         {eventLDict.map((link, index) => (
@@ -1134,7 +938,7 @@ export default function EventListPrint(props) {
                       borderBottom: "none",
                     },
                   }}
-                  style={{marginTop:'5px'}}
+                  style={{ marginTop: "5px" }}
                 >
                   <TableBody>
                     <TableRow
@@ -1157,7 +961,7 @@ export default function EventListPrint(props) {
                           </Box>
                         </Typography>
                       </TableCell>
-                     
+
                       <TableCell style={{ borderRight: "1px solid black" }}>
                         <Typography>
                           <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
@@ -1172,30 +976,17 @@ export default function EventListPrint(props) {
                           </Box>
                         </Typography>
                       </TableCell>
-                      {/* <TableCell style={{ borderRight: "1px solid black" }}>
-                        <Typography>
-                          <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                            Reviewed By:{link["Report reviewed by"]}
-                          </Box>
-                        </Typography>
-                      </TableCell>
-                      <TableCell style={{ borderRight: "1px solid black" }}>
-                        <Typography>
-                          <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                            Reviewed Date:{link["Report review date"]}
-                          </Box>
-                        </Typography>
-                      </TableCell> */}
                     </TableRow>
                   </TableBody>
                 </Table>
+
                 <Table
                   sx={{
                     [`& .${tableCellClasses.root}`]: {
                       borderBottom: "none",
                     },
                   }}
-                  style={{marginTop:'5px'}}
+                  style={{ marginTop: "5px" }}
                 >
                   <TableBody>
                     <TableRow
@@ -1204,19 +995,21 @@ export default function EventListPrint(props) {
                         borderBottom: "1px solid black ",
                         fontSize: "13px",
                         borderTop: "1px solid black",
-                       
                       }}
                     >
-                      
-                      <TableCell style={{ borderRight: "1px solid black", borderLeft: "1px solid black",
-                         }}>
+                      <TableCell
+                        style={{
+                          borderLeft: "1px solid black",
+                          borderRight: "1px solid black",
+                        }}
+                      >
                         <Typography>
                           <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
                             Reviewed By:{link["Report reviewed by"]}
                           </Box>
                         </Typography>
                       </TableCell>
-                     
+
                       <TableCell style={{ borderRight: "1px solid black" }}>
                         <Typography>
                           <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
@@ -1234,17 +1027,7 @@ export default function EventListPrint(props) {
                     </TableRow>
                   </TableBody>
                 </Table>
-                {/* <div>
-      <span style={{fontSize:'12px',fontWeight:'500'}}>Additional Remarks:</span>
-    </div>
-    <div style={{ display: "flex", justifyContent: "space-around" }}>
-      <span style={{fontSize:'12px',fontWeight:'500'}}>Reported By:{link["Final report released by"]}</span>
-      <span style={{fontSize:'12px',fontWeight:'500'}}>Reported Date:{link["Report release date"]}</span>
-    </div>
-    <div style={{ display: "flex", justifyContent: "space-around" }}>
-      <span style={{fontSize:'12px',fontWeight:'500'}}>Reviewed By:{link["Report reviewed by"]}</span>
-      <span style={{fontSize:'12px',fontWeight:'500'}}>Reviewed Date:{link["Report review date"]}</span>
-    </div> */}
+
                 <div
                   style={{
                     display: "flex",

@@ -1,5 +1,5 @@
 export const GP_PROGRAM_ID = ["ICxr5ByOXkV", "qlHnTeSDOfP"]
-export const STERILE_OTHERPROGRAM=["NmpjHa3bXmX"]
+export const STERILE_OTHERPROGRAM=["WhYipXYg2Nh","NmpjHa3bXmX"]
 export const TABVALUES = [
     { "name": "All records", "key": "all", "code": "all" },
     { "name": "Pending sample result", "key": "pending", "code": "ST" },

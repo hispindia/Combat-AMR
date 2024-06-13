@@ -54,6 +54,7 @@ const reducer = (state, action) => {
 
 export const useEvents = (status, eventstatus, code,isFollowUp) => {
     var programApi = [];
+    var programApiSterile = [];
    
     const dispatch = useDispatch()
     const categories = useSelector(state => state.appConfig.categories)
@@ -63,7 +64,7 @@ export const useEvents = (status, eventstatus, code,isFollowUp) => {
     var isFollowUp = useSelector(state => state.data.followup)
     const programs = useSelector(state => state.metadata.programs)
     var userAccess = false;
-
+console.log("programList:================= ",programList)
     programs.forEach(p => {
         p.programStages.forEach(ps => {
             userAccess = ps.access.data.write
@@ -83,11 +84,12 @@ export const useEvents = (status, eventstatus, code,isFollowUp) => {
         programApi = [sampleTestingProgram]
     }
     else if(code == "STT"){
-        programApi.push([sampleTestingProgram])
+        // programApi.push([sampleTestingProgram])
         // programApi.push([programApiforStrile])
+        programApiSterile = STERILE_OTHERPROGRAM;
         // programApi = ([sampleTestingProgram] || [programApiforStrile] )
             //  programApiforStrile = STERILE_OTHERPROGRAM;
-      console.log("STTTTTT",programApi)
+      console.log("STTTTTT============",programApi)
     }
     else if (code == "GP") {
         programApi = GP_PROGRAM_ID
@@ -117,10 +119,10 @@ export const useEvents = (status, eventstatus, code,isFollowUp) => {
             try {
 
 
-                if (eventstatus == "COMPLETED" && programApi.length < 2) {
+                if (eventstatus == "COMPLETED" && programApiSterile.length == 2) {
 
 
-                    const eventsData = await getSterileTEI(selected,programApi,eventstatus).then((eventResult) =>
+                    const eventsData = await getSterileTEI(selected,programApiSterile,eventstatus).then((eventResult) =>
                     dispatcher({
                     type: NEW_ROWS,
                     rows: eventResult,

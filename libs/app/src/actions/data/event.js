@@ -558,7 +558,6 @@ export const setEventValue = (key, value, isPrev,printValues) => (dispatch, getS
     const tempStatus = "ACTIVE";
     const previousEventId = getState().data.previousEvent
     const userGroup = getState().metadata.NotesDE["Notes"]
-
     if (key == userGroup) {
         value = value + "-"+ previousEventId
     }

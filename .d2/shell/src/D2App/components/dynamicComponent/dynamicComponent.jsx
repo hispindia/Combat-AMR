@@ -38,6 +38,7 @@ class DynamicComponent extends Component {
       if (endDate) url += `&endDate=${endDate}`;
       return axios.get(url).then((resp) => {
         resp.data.events.forEach((event) => {
+          console.log("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",event)
           var eventData = {};
           var dataElement = {};
           var dataValue = {};
