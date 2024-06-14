@@ -391,7 +391,7 @@ export default function EventListPrint(props) {
   const listItems = eventLDict.map((link) => {
     count = 0;
     return (
-      <Box sx={{ border: 1, fontSize: 10, ml: 6, mr: 6, mt: 1, mb: 1 }}>
+      <Box sx={{ border: 1, fontSize: 12, ml: 6, mr: 6, mt: 1, mb: 1 }}>
         <Table
           sx={{
             [`& .${tableCellClasses.root}`]: {
@@ -401,14 +401,14 @@ export default function EventListPrint(props) {
         >
           <TableBody>
             <TableRow>
-              <TableCell style={{ width: "40%" }}>
+              <TableCell style={{ width: "30%" }}>
                 <Typography>
                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
                     {DEPARTMENT} :&nbsp;&nbsp;{link["Hospital department"]}
                   </Box>
                 </Typography>
               </TableCell>
-              <TableCell style={{ width: "30%" }}>
+              <TableCell style={{ width: "40%", textAlign: "center" }}>
                 <Typography>
                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
                     {SAMPLE_TYPE} :&nbsp;&nbsp;{link["Sample type"]}
@@ -422,7 +422,7 @@ export default function EventListPrint(props) {
                   </Box>
                 </Typography>
               </TableCell> */}
-              <TableCell style={{ width: "30%" }}>
+              <TableCell style={{ width: "30%", textAlign: "right" }}>
                 <Typography>
                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
                     {LAB_ID} :&nbsp;&nbsp;{link[LAB_ID]}
@@ -432,41 +432,22 @@ export default function EventListPrint(props) {
             </TableRow>
 
             <TableRow>
-              {/* <TableCell style={{ width: "40%" }}>
-                <Typography>
-                  <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                    {LAB_ID} :&nbsp;&nbsp;{link[LAB_ID]}
-                  </Box>
-                </Typography>
-              </TableCell> */}
-              <TableCell style={{ width: "40%" }}>
+              <TableCell style={{ width: "30%" }}>
                 <Typography>
                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
                     {LOCATION} :&nbsp;&nbsp;{link[LOCATION]}
                   </Box>
                 </Typography>
               </TableCell>
-              <TableCell style={{ width: "30%" }}>
+              <TableCell style={{ width: "40%", textAlign: "center" }}>
                 <Typography>
                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                    {SAMPLE_DATE}: :&nbsp;&nbsp;
+                    {SAMPLE_DATE} :&nbsp;&nbsp;
                     {moment(link[SAMPLE_DATE]).format("DD/MM/yyyy")}
                   </Box>
                 </Typography>
               </TableCell>
             </TableRow>
-
-            {/* <TableRow>
-              <TableCell style={{ width: "40%" }}>
-                <Typography>
-                  <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                    {PATHOGEN} :&nbsp;&nbsp;&nbsp;&nbsp;{link["Pathogen"]}
-                  </Box>
-                </Typography>
-              </TableCell>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-            </TableRow> */}
           </TableBody>
         </Table>
 
@@ -494,14 +475,6 @@ export default function EventListPrint(props) {
               >
                 <TableBody>
                   <Box
-                    // sx={{
-                    //   border: 1,
-                    //   fontSize: 10,
-                    //   mt: 1,
-                    //   mb: 1,
-                    //   borderBottom: 0,
-                    //   borderRight: 0,
-                    // }}
                     sx={{
                       border: 1,
                       fontSize: 10,
@@ -552,9 +525,12 @@ export default function EventListPrint(props) {
                                 className={
                                   classes.tableRightBorder + " " + "antibio"
                                 }
-                                style={{ borderBottom: "1px solid black" }}
+                                style={{
+                                  borderBottom: "1px solid black",
+                                  textAlign: "center",
+                                }}
                                 sx={{
-                                  width: "30%",
+                                  width: "300px",
                                 }}
                               >
                                 <Typography>
@@ -572,9 +548,12 @@ export default function EventListPrint(props) {
                                 className={
                                   classes.tableRightBorder + " " + "antibio"
                                 }
-                                style={{ borderBottom: "1px solid black" }}
+                                style={{
+                                  borderBottom: "1px solid black",
+                                  textAlign: "center",
+                                }}
                                 sx={{
-                                  width: "30%",
+                                  width: "300px",
                                 }}
                               >
                                 <Typography>
@@ -614,17 +593,25 @@ export default function EventListPrint(props) {
         >
           <TableBody>
             <TableRow>
-              <TableCell style={{ width: "40%" }}>
+              <TableCell style={{ width: "30%" }}>
                 <Typography>
                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                    {PATHOGEN_G} :&nbsp;&nbsp;{link[PATHOGEN_G]}
+                    {/* {PATHOGEN_G} :&nbsp;&nbsp;{link[PATHOGEN_G]} */}
+                    <span>{PATHOGEN_G}</span> :&nbsp;&nbsp;
+                    <span style={{ fontWeight: "bold" }}>
+                      {link[PATHOGEN_G]}
+                    </span>
                   </Box>
                 </Typography>
               </TableCell>
               <TableCell style={{ width: "40%" }}>
                 <Typography>
                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                    {PATHOGEN} :&nbsp;&nbsp;&nbsp;&nbsp;{link["Pathogen"]}
+                    {/* {PATHOGEN} :&nbsp;&nbsp;&nbsp;&nbsp;{link["Pathogen"]} */}
+                    <span>{PATHOGEN}</span> :&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span style={{ fontWeight: "bold" }}>
+                      {link["Pathogen"]}
+                    </span>
                   </Box>
                 </Typography>
               </TableCell>
@@ -694,7 +681,7 @@ export default function EventListPrint(props) {
                       className={classes.tableRightBorder + " " + "antibio"}
                       style={{
                         width: "60%",
-                        textAlign: "left",
+                        textAlign: "center",
                         borderBottom: "1px solid black",
                       }}
                     >
@@ -750,15 +737,31 @@ export default function EventListPrint(props) {
       aria-describedby="scroll-dialog-description"
     >
       <DialogContent dividers ref={ref}>
-        <div
+        {/* <div
           style={{
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             flexDirection: "column",
           }}
+        > */}
+        <div
+          style={{
+            textAlign: "center",
+            justifyContent: "center",
+            alignItems: "center",
+            display: "flex",
+          }}
         >
-          <h2>JIMMA UNIVERSITY MEDICAL CENTER LABORATORY</h2>
+          <img style={{ width: "130px" }} src={EAS} alt="Left Logo" />
+          <div style={{ marginRight: "50px", marginLeft: "50px" }}>
+            <h2>JIMMA UNIVERSITY MEDICAL CENTER LABORATORY</h2>
+            <h4>Document Number: JUMCL-REC-F-103</h4>
+            <h5>Version Number:5.0</h5>
+          </div>
+          <img style={{ height: "80px" }} src={JIMA} alt="Right Logo" />
+        </div>
+        {/* <h2>JIMMA UNIVERSITY MEDICAL CENTER LABORATORY</h2>
           <h4>Document Number: JUMCL-REC-F-103</h4>
           <h5>Version Number:5.0</h5>
           <div
@@ -774,10 +777,10 @@ export default function EventListPrint(props) {
               alt="Left Logo"
             />
             <span style={{ flex: "1" }}></span>{" "}
-            {/* Empty span to push the text to the center */}
+          
             <img style={{ height: "80px" }} src={JIMA} alt="Right Logo" />
           </div>
-        </div>
+        </div> */}
 
         <Box sx={{ border: "1px solid black", fontSize: 12, m: 1 }}>
           <Box sx={{ border: 2, fontSize: 12, ml: 6, mr: 6, mt: 1, mb: 1 }}>
@@ -931,117 +934,249 @@ export default function EventListPrint(props) {
         {eventLDict.map((link, index) => (
           <React.Fragment key={index}>
             {!contentDisplayed && (
-              <Box sx={{ fontSize: 12, p: 1 }}>
-                <Table
-                  sx={{
-                    [`& .${tableCellClasses.root}`]: {
-                      borderBottom: "none",
-                    },
-                  }}
-                  style={{ marginTop: "5px" }}
-                >
-                  <TableBody>
-                    <TableRow
-                      style={{
-                        fontWeight: "bold",
-                        borderBottom: "1px solid black ",
-                        fontSize: "13px",
-                        borderTop: "1px solid black",
-                      }}
-                    >
-                      <TableCell
-                        style={{
-                          borderLeft: "1px solid black",
-                          borderRight: "1px solid black",
-                        }}
-                      >
-                        <Typography>
-                          <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                            Reported By:{link["Final report released by"]}
-                          </Box>
-                        </Typography>
-                      </TableCell>
+              // <Box sx={{ fontSize: 12, p: 1 }}>
+              //   <Table
+              //     sx={{
+              //       [`& .${tableCellClasses.root}`]: {
+              //         borderBottom: "none",
+              //       },
+              //     }}
+              //     style={{ marginTop: "5px" }}
+              //   >
+              //     <TableBody>
+              //       <TableRow
+              //         style={{
+              //           fontWeight: "bold",
+              //           borderBottom: "1px solid black ",
+              //           fontSize: "13px",
+              //           borderTop: "1px solid black",
+              //         }}
+              //       >
+              //         <TableCell
+              //           style={{
+              //             borderLeft: "1px solid black",
+              //             borderRight: "1px solid black",
+              //           }}
+              //         >
+              //           <Typography>
+              //             <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+              //               Reported By:{link["Final report released by"]}
+              //             </Box>
+              //           </Typography>
+              //         </TableCell>
 
-                      <TableCell style={{ borderRight: "1px solid black" }}>
-                        <Typography>
-                          <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                            Reported Date:{link["Report release date"]}
-                          </Box>
-                        </Typography>
-                      </TableCell>
-                      <TableCell style={{ borderRight: "1px solid black" }}>
-                        <Typography>
-                          <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                            Signature:
-                          </Box>
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
+              //         <TableCell style={{ borderRight: "1px solid black" }}>
+              //           <Typography>
+              //             <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+              //               Reported Date:{link["Report release date"]}
+              //             </Box>
+              //           </Typography>
+              //         </TableCell>
+              //         <TableCell style={{ borderRight: "1px solid black" }}>
+              //           <Typography>
+              //             <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+              //               Signature:
+              //             </Box>
+              //           </Typography>
+              //         </TableCell>
+              //       </TableRow>
+              //     </TableBody>
+              //   </Table>
 
-                <Table
-                  sx={{
-                    [`& .${tableCellClasses.root}`]: {
-                      borderBottom: "none",
-                    },
-                  }}
-                  style={{ marginTop: "5px" }}
-                >
-                  <TableBody>
-                    <TableRow
-                      style={{
-                        fontWeight: "bold",
-                        borderBottom: "1px solid black ",
-                        fontSize: "13px",
-                        borderTop: "1px solid black",
-                      }}
-                    >
-                      <TableCell
-                        style={{
-                          borderLeft: "1px solid black",
-                          borderRight: "1px solid black",
-                        }}
-                      >
-                        <Typography>
-                          <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                            Reviewed By:{link["Report reviewed by"]}
-                          </Box>
-                        </Typography>
-                      </TableCell>
+              //   <Table
+              //     sx={{
+              //       [`& .${tableCellClasses.root}`]: {
+              //         borderBottom: "none",
+              //       },
+              //     }}
+              //     style={{ marginTop: "5px" }}
+              //   >
+              //     <TableBody>
+              //       <TableRow
+              //         style={{
+              //           fontWeight: "bold",
+              //           borderBottom: "1px solid black ",
+              //           fontSize: "13px",
+              //           borderTop: "1px solid black",
+              //         }}
+              //       >
+              //         <TableCell
+              //           style={{
+              //             borderLeft: "1px solid black",
+              //             borderRight: "1px solid black",
+              //           }}
+              //         >
+              //           <Typography>
+              //             <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+              //               Reviewed By:{link["Report reviewed by"]}
+              //             </Box>
+              //           </Typography>
+              //         </TableCell>
 
-                      <TableCell style={{ borderRight: "1px solid black" }}>
-                        <Typography>
-                          <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                            Reviewed Date:{link["Report review date"]}
-                          </Box>
-                        </Typography>
-                      </TableCell>
-                      <TableCell style={{ borderRight: "1px solid black" }}>
-                        <Typography>
-                          <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                            Signature:
-                          </Box>
-                        </Typography>
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
+              //         <TableCell style={{ borderRight: "1px solid black" }}>
+              //           <Typography>
+              //             <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+              //               Reviewed Date:{link["Report review date"]}
+              //             </Box>
+              //           </Typography>
+              //         </TableCell>
+              //         <TableCell style={{ borderRight: "1px solid black" }}>
+              //           <Typography>
+              //             <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+              //               Signature:
+              //             </Box>
+              //           </Typography>
+              //         </TableCell>
+              //       </TableRow>
+              //     </TableBody>
+              //   </Table>
 
+              //   <div
+              //     style={{
+              //       display: "flex",
+              //       alignItems: "center",
+              //       justifyContent: "center",
+              //       flexDirection: "column",
+              //     }}
+              //   >
+              //     {/* <span style={{ fontWeight: "bold" }}> INTERNAL USE ONLY</span> */}
+              //     <span style={{ fontWeight: "bold" }}>
+              //       This is Controlled Document For Internal Use Only
+              //     </span>
+              //   </div>
+              // </Box>
+
+              // <Table
+              //   sx={{
+              //     [`& .${tableCellClasses.root}`]: {
+              //       borderBottom: "none",
+              //     },
+              //   }}
+              // >
+              //   <TableBody>
+              //     <TableRow>
+              //       <TableCell style={{ width: "30%" }}>
+              //         {/* <Typography>
+              //           <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+              //             Reported By:&nbsp;&nbsp;
+              //             {link["Final report released by"]}
+              //           </Box>
+              //         </Typography> */}
+              //        <Typography>Reported By:</Typography>
+              //        <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+
+              //             {link["Final report released by"]}
+              //           </Box>
+              //       </TableCell>
+              //       <TableCell style={{ width: "30%", textAlign: "center" }}>
+              //         <Typography>
+              //           <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+              //             Reported Date:&nbsp;&nbsp;
+              //             {link["Report release date"]}
+              //           </Box>
+              //         </Typography>
+              //       </TableCell>
+
+              //       <TableCell style={{ width: "40%", textAlign: "center" }}>
+              //         <Typography>
+              //           <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+              //             Signature:
+              //           </Box>
+              //         </Typography>
+              //       </TableCell>
+              //     </TableRow>
+
+              //     <TableRow>
+              //       <TableCell style={{ width: "30%" }}>
+              //         <Typography>
+              //           <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+              //             Reviewed By:&nbsp;&nbsp;{link["Report reviewed by"]}
+              //           </Box>
+              //         </Typography>
+              //       </TableCell>
+              //       <TableCell style={{ width: "30%", textAlign: "center" }}>
+              //         <Typography>
+              //           <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+              //             Reviewed Date::&nbsp;&nbsp;
+              //             {link["Report review date"]}
+              //           </Box>
+              //         </Typography>
+              //       </TableCell>
+
+              //       <TableCell style={{ width: "40%", textAlign: "center" }}>
+              //         <Typography>
+              //           <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+              //             Signature:
+              //           </Box>
+              //         </Typography>
+              //       </TableCell>
+              //     </TableRow>
+              //   </TableBody>
+              // </Table>
+              <div
+                class="container"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  width: "100%",
+                  margin: "0px",
+                  marginLeft: "70px",
+                }}
+              >
                 <div
+                  class="row"
                   style={{
                     display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexDirection: "column",
+                    width: "100%",
+                    borderBottom: "none",
                   }}
                 >
-                  {/* <span style={{ fontWeight: "bold" }}> INTERNAL USE ONLY</span> */}
-                  <span style={{ fontWeight: "bold" }}>
-                    This is Controlled Document For Internal Use Only
-                  </span>
+                  <div class="cell" style={{ flex: "1" }}>
+                    <div class="boxClass" style={{ fontSize: "12px" }}>
+                      Reported By:&nbsp;&nbsp;
+                      {link["Final report released by"]}
+                    </div>
+                  </div>
+
+                  <div class="cell" style={{ flex: "1" }}>
+                    <div class="boxClass" style={{ fontSize: "12px" }}>
+                      Reported Date:&nbsp;&nbsp;
+                      {link["Report release date"]}
+                    </div>
+                  </div>
+                  <div class="cell" style={{ flex: "1" }}>
+                    <div class="boxClass" style={{ fontSize: "12px" }}>
+                      Signature:
+                    </div>
+                  </div>
                 </div>
-              </Box>
+                <div
+                  class="row"
+                  style={{
+                    display: "flex",
+                    width: "100%",
+                    borderBottom: "none",
+                  }}
+                >
+                  <div class="cell" style={{ flex: "1" }}>
+                    <div class="boxClass" style={{ fontSize: "12px" }}>
+                      Reviewed By:&nbsp;&nbsp;
+                      {link["Report reviewed by"]}
+                    </div>
+                  </div>
+                  <div class="cell" style={{ flex: "1" }}>
+                    <div class="boxClass" style={{ fontSize: "12px" }}>
+                      Reviewed Date:&nbsp;&nbsp;
+                      {link["Report review date"]}
+                    </div>
+                  </div>
+                  <div class="cell" style={{ flex: "1" }}>
+                    <div class="boxClass" style={{ fontSize: "12px" }}>
+                      Signature:
+                    </div>
+                  </div>
+                </div>
+              </div>
             )}
             {(contentDisplayed = true)}
           </React.Fragment>
