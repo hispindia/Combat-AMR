@@ -404,14 +404,17 @@ export default function EventListPrint(props) {
               <TableCell style={{ width: "30%" }}>
                 <Typography>
                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                    {DEPARTMENT} :&nbsp;&nbsp;{link["Hospital department"]}
+                    <span>{DEPARTMENT}</span> :&nbsp;&nbsp;
+                    <span>{link["Hospital department"]}</span>
                   </Box>
                 </Typography>
               </TableCell>
               <TableCell style={{ width: "40%", textAlign: "center" }}>
                 <Typography>
                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                    {SAMPLE_TYPE} :&nbsp;&nbsp;{link["Sample type"]}
+                    {/* {SAMPLE_TYPE} :&nbsp;&nbsp;{link["Sample type"]} */}
+                    <span>{SAMPLE_TYPE}</span> :&nbsp;&nbsp;
+                    <span>{link["Sample type"]}</span>
                   </Box>
                 </Typography>
               </TableCell>
@@ -425,7 +428,9 @@ export default function EventListPrint(props) {
               <TableCell style={{ width: "30%", textAlign: "right" }}>
                 <Typography>
                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                    {LAB_ID} :&nbsp;&nbsp;{link[LAB_ID]}
+                    {/* {LAB_ID} :&nbsp;&nbsp;{link[LAB_ID]} */}
+                    <span> {LAB_ID} </span> :&nbsp;&nbsp;
+                    <span>{link[LAB_ID]}</span>
                   </Box>
                 </Typography>
               </TableCell>
@@ -435,15 +440,21 @@ export default function EventListPrint(props) {
               <TableCell style={{ width: "30%" }}>
                 <Typography>
                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                    {LOCATION} :&nbsp;&nbsp;{link[LOCATION]}
+                    {/* {LOCATION} :&nbsp;&nbsp;{link[LOCATION]} */}
+                    <span> {LOCATION} </span> :&nbsp;&nbsp;
+                    <span>{link[LOCATION]}</span>
                   </Box>
                 </Typography>
               </TableCell>
               <TableCell style={{ width: "40%", textAlign: "center" }}>
                 <Typography>
                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                    {SAMPLE_DATE} :&nbsp;&nbsp;
-                    {moment(link[SAMPLE_DATE]).format("DD/MM/yyyy")}
+                    {/* {SAMPLE_DATE} :&nbsp;&nbsp;
+                    {moment(link[SAMPLE_DATE]).format("DD/MM/yyyy")} */}
+                    <span> {SAMPLE_DATE} </span> :&nbsp;&nbsp;
+                    <span>
+                      {moment(link[SAMPLE_DATE]).format("DD/MM/yyyy")}
+                    </span>
                   </Box>
                 </Typography>
               </TableCell>
