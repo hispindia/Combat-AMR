@@ -1,5 +1,6 @@
 import { TEST_RESULT_ELEMENT } from "constants/dhis2";
 import * as INVALID_REASONS from "constants/invalidReasons";
+import { data } from "reducers/data";
 
 export const eventRules = (
   values,
@@ -52,7 +53,9 @@ export const eventRules = (
   const setColors = (condition, affected, testValue) => {
     console.log("condition====11=====", condition);
     console.log("affected=====111====", affected);
-
+    console.log("STAGE==========",stage)
+    console.log("testValue for test ",testValue)
+    console.log("!affected.optionSetValue",!affected.optionSetValue)
     if (!affected.optionSetValue) return;
     if (affected.optionSet !== TEST_RESULT_ELEMENT) return;
     const variables = getVariables(condition);
@@ -91,17 +94,68 @@ export const eventRules = (
         // }
       });
     }
+    console.log("why tested value",affected)
+    // if (condition == (values['VbUbBX7G6Jf'] = 'Rejected') || (values['VbUbBX7G6Jf'] = 'Mixed flora')) {
+      if (affected?.id == "VbUbBX7G6Jf") {
+        console.log("varibale for helper",variables)
+      variables.forEach((id) => {
+        const dataElement = stage.dataElements[id];
+console.log("dataElement helper",dataElement)
+        console.log("testValue=======111==test222222222222===", testValue);
+
+        dataElement.warning = "Resistant to 3rd generation cephalosporins";
+
+        // if (testValue == "Resistant" && dataElement.id == "nwF1JnlMJXo") {
+        //   dataElement.warning = "hhhhhhh";
+        // }
+      });
+
+    }
+    else {
+      variables.forEach((id) => {
+        const dataElement = stage.dataElements[id];
+
+        console.log("testValue=======111=====", testValue);
+
+        dataElement.warning = "";
+
+        // if (testValue == "Resistant" && dataElement.id == "nwF1JnlMJXo") {
+        //   dataElement.warning = "hhhhhhh";
+        // }
+      });
+    }
+    // }
+  //   if(rules && rules.forEach((rule,index) => {
+  //     rule[1].programRuleActions== "SHOWWARNING"
+  //   }) && condition == (values['VbUbBX7G6Jf'] = 'Rejected') || (values['VbUbBX7G6Jf'] = 'Mixed flora') ){
+
+  //     variables.forEach((id) => {
+  //       const dataElement = stage.dataElements[id];
+  // console.log("dataEEEEEEEEEEEEEEEEE",dataElement)
+  //       console.log("testValue===666666====111=====", testValue);
+
+  //       dataElement.warning = "Resistant to 3rd generation cephalosporins";
+
+  //       // if (testValue == "Resistant" && dataElement.id == "nwF1JnlMJXo") {
+  //       //   dataElement.warning = "hhhhhhh";
+  //       // }
+  //     });
+  //   }
+   
+   
+     
   };
 
   rules.forEach((rule) => {
     rule.programRuleActions.forEach((r) => {
+      console.log("RUle================",rule)
       try {
-        const cond = eval(rule.condition);
+        const cond = eval(rule?.condition);
         const de = r.dataElement
           ? stage.dataElements[r.dataElement.id]
           : r.content
-          ? { id: r.content.slice(2, -1), hasCalculatedVar: true }
-          : null;
+            ? { id: r.content.slice(2, -1), hasCalculatedVar: true }
+            : null;
         const s = r.programStageSection
           ? findSection(r.programStageSection.id)
           : null;
@@ -141,8 +195,8 @@ export const eventRules = (
                 deKey == "dataElement"
                   ? stage.dataElements[r.dataElement.id]
                   : r.content
-                  ? { id: r.content.slice(2, -1), hasCalculatedVar: true }
-                  : null;
+                    ? { id: r.content.slice(2, -1), hasCalculatedVar: true }
+                    : null;
               if (!cond) {
                 return;
                 // if (values[de.id]) {
@@ -162,11 +216,15 @@ export const eventRules = (
             });
             break;
           case "SHOWWARNING":
+            console.log("SHOWWARNING=====",rule,de,r)
+            setColors(rule.condition, de, r.data);
             if (cond && de.warning !== r.content) de.warning = r.content;
             else if (!cond && de.warning === r.content) de.warning = null;
             break;
           case "SHOWERROR":
-            if (cond && de.error !== r.content) de.error = r.content;
+            console.log(rule,de, r,"HHHHHHHHHHHHHHHHHHHHHHHHH")
+            setColors(rule.condition, de, r.data);
+            if (cond && de.error == r.content) de.error = r.content;
             else if (!cond && de.error === r.content) de.error = null;
             break;
           default:

@@ -76,27 +76,76 @@ export const eventRules = (
       }
     });
     if (affected?.id == "kk15uVyCVnc" && testValue == "Resistant") {
-        variables.forEach((id) => {
-          const dataElement = stage.dataElements[id];
-  
-          console.log("testValue=======111=====", testValue);
-          if (testValue == "Resistant") {
-            dataElement.warning = "Resistant to 3rd generation cephalosporins";
-          } else {
-            dataElement.warning = "";
-          }
-  
-          // if (testValue == "Resistant" && dataElement.id == "nwF1JnlMJXo") {
-          //   dataElement.warning = "hhhhhhh";
-          // }
-        });
-      }
+      variables.forEach((id) => {
+        const dataElement = stage.dataElements[id];
+
+        console.log("testValue=======111=====", testValue);
+        if (testValue == "Resistant") {
+          dataElement.warning = "Resistant to 3rd generation cephalosporins";
+        } else {
+          dataElement.warning = "";
+        }
+
+        // if (testValue == "Resistant" && dataElement.id == "nwF1JnlMJXo") {
+        //   dataElement.warning = "hhhhhhh";
+        // }
+      });
+    }
+    
+    if (affected?.id == "VbUbBX7G6Jf") {
+      console.log("testvalue sample ",testValue)
+
+      variables.forEach((id) => {
+        const dataElement = stage.dataElements[id];
+
+        console.log("testValue=======111=====", testValue);
+        console.log("dataElement ====== data",dataElement)
+
+        dataElement.warning = "Resistant to 3rd generation cephalosporins";
+
+        // if (testValue == "Resistant" && dataElement.id == "nwF1JnlMJXo") {
+        //   dataElement.warning = "hhhhhhh";
+        // }
+      });
+
+    }
+    else {
+      variables.forEach((id) => {
+        const dataElement = stage.dataElements[id];
+
+        console.log("testValue=======111=====", testValue);
+
+        dataElement.warning = "";
+
+        // if (testValue == "Resistant" && dataElement.id == "nwF1JnlMJXo") {
+        //   dataElement.warning = "hhhhhhh";
+        // }
+      });
+    }
+
+  //   if(rules && rules.forEach((rule,index) => {
+  //     rule[1].programRuleActions== "SHOWWARNING"
+  //   }) && condition == (values['VbUbBX7G6Jf'] = 'Rejected') || (values['VbUbBX7G6Jf'] = 'Mixed flora') ){
+
+  //     variables.forEach((id) => {
+  //       const dataElement = stage.dataElements[id];
+  // console.log("dataEEEEEEEEEEEEEEEEE",dataElement)
+  //       console.log("testValue===666666====111=====", testValue);
+
+  //       dataElement.warning = "Resistant to 3rd generation cephalosporins";
+
+  //       // if (testValue == "Resistant" && dataElement.id == "nwF1JnlMJXo") {
+  //       //   dataElement.warning = "hhhhhhh";
+  //       // }
+  //     });
+  //   }
+
   };
 
   rules.forEach((rule) => {
     rule.programRuleActions.forEach((r) => {
       try {
-        const cond = eval(rule.condition);
+        const cond = eval(rule?.condition);
         const de = r.dataElement ? stage.dataElements[r.dataElement.id] : null;
         const s = r.programStageSection
           ? findSection(r.programStageSection.id)
@@ -139,10 +188,12 @@ export const eventRules = (
             de.disabled = true;
             break;
           case "SHOWWARNING":
+            setColors(rule.condition, de, r.data);
             if (cond && de.warning !== r.content) de.warning = r.content;
             else if (!cond && de.warning === r.content) de.warning = null;
             break;
           case "SHOWERROR":
+            setColors(rule.condition, de, r.data);
             if (cond && de.error !== r.content) de.error = r.content;
             else if (!cond && de.error === r.content) de.error = null;
             break;

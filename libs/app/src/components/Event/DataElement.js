@@ -71,6 +71,18 @@ export const DataElement = ({ id }) => {
   const displayFormName = useSelector(
     (state) => state.data.event.programStage.dataElements[id].displayFormName
   );
+  const displayHospitalSort = useSelector(
+    (state) => state.data.event.programStage.dataElements["Gkmu7ySPxjb"]
+  );
+  const sampleResultDataElement = useSelector(
+    (state) => state.data.event.programStage.dataElements["VbUbBX7G6Jf"]
+  );
+  const ReasonDataElement = useSelector(
+    (state) => state.data.event.programStage.dataElements["Oziw3yNGpiD"]
+  );
+  const ReasonDataElement1 = useSelector(
+    (state) => state.data.event.programStage.dataElements
+  );
   if (displayFormName == NOTES) {
     value = value.split("-")[0];
   }
@@ -102,6 +114,9 @@ export const DataElement = ({ id }) => {
   const warning = useSelector(
     (state) => state.data.event.programStage.dataElements[id].warning
   );
+  const warningSampleResult = useSelector(
+    (state) => state.data.event.programStage.dataElements['VbUbBX7G6Jf']?.warning
+  );
   const eventValPassed = useSelector((state) => state.data.event.values);
   const sampleRecivedDate = useSelector(
     (state) => state.data.event.values["N2f6uoy2zqE"]
@@ -113,6 +128,9 @@ export const DataElement = ({ id }) => {
     const diffTime = Math.abs(date2.getTime() - date1.getTime());
     return Math.ceil(diffTime / (1000 * 3600 * 24));
   };
+  console.log("ReasonDataElement1=============", ReasonDataElement1)
+  console.log("warning=============", warning)
+  console.log("ReasonDataElement==============", ReasonDataElement)
   const updateDaysDifference = (receivedDate, collectedDate) => {
     if (receivedDate && collectedDate) {
       const daysDifference = calculateDayDifference(
@@ -236,8 +254,8 @@ export const DataElement = ({ id }) => {
   };
 
   const handleChange = (event) => {
+    console.log("event+++++++++++++++++", event)
     if (id == "TcThq7OLuKf") {
-     
       dispatch(setEventValue(id, event.target.value, false, printValues));//add code for Additonal comment
     } else dispatch(addNotes(id, event.target.value));
     // dispatch(addNotes(id, event.target.value));
@@ -245,11 +263,27 @@ export const DataElement = ({ id }) => {
   };
 
   if (hide) return null;
+  
+  //function for sortig the option set values according to alphabetical order for this DataElement Gkmu7ySPxjb
+  function sortAlphabetically(arr) {
+    return arr.sort((a, b) => {
+      if (a.label < b.label) {
+        return -1;
+      }
+      if (a.label > b.label) {
+        return 1;
+      }
+      return 0;
+    });
+  }
 
+
+  // console.log(sortedData,"Mixed flora");
   return (
     <Padding>
       {optionSetValue ? (
         optionSets[optionSet].length < 5 ? (
+
           <RadioInputs
             objects={optionSets[optionSet]}
             name={id}
@@ -261,7 +295,7 @@ export const DataElement = ({ id }) => {
           />
         ) : (
           <SelectInput
-            objects={optionSets[optionSet]}
+            objects={displayHospitalSort?.id == "Gkmu7ySPxjb" ? sortAlphabetically(optionSets[optionSet]) : optionSets[optionSet]}
             name={id}
             label={displayFormName}
             value={value}
@@ -319,29 +353,34 @@ export const DataElement = ({ id }) => {
               ? error
               : id === SAMPLE_ID_ELEMENT &&
                 duplicate === DUPLICACY.DUPLICATE_ERROR
-              ? duplicate
-              : ""
+                ? duplicate
+                : ""
           }
           warning={
             warning
               ? warning
               : id === SAMPLE_ID_ELEMENT &&
                 duplicate === DUPLICACY.DUPLICATE_WARNING
-              ? duplicate
-              : ""
+                ? duplicate
+                : ""
           }
           loading={
             id === SAMPLE_ID_ELEMENT &&
-            duplicate === DUPLICACY.DUPLICATE_CHECKING
+              duplicate === DUPLICACY.DUPLICATE_CHECKING
               ? true
               : false
           }
         />
       )}
+
+
+
+      {/* {(id == "VbUbBX7G6Jf" && value == "Mixed flora") || ((id == "VbUbBX7G6Jf" && value == "Rejected" && (id == "Oziw3yNGpiD" && value !== ""))) ? <div style={{ color: '#D9534F', textAlign: 'center' }}>Please repeat sample1111111</div> : ""} */}
+      {(sampleResultDataElement?.id === "VbUbBX7G6Jf" && value == "Mixed flora") || (sampleResultDataElement?.id === "VbUbBX7G6Jf" && value == "Rejected") ? (<div style={{ color: '#D9534F', textAlign: 'center' }}>{warningSampleResult}</div>) : ""}
     </Padding>
   );
 };
-
+// (values['Oziw3yNGpiD'] != '') || (values['VbUbBX7G6Jf'] == 'Mixed flora')
 DataElement.propTypes = {
   id: string.isRequired,
 };
