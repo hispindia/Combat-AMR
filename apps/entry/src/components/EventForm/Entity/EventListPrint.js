@@ -767,8 +767,8 @@ export default function EventListPrint(props) {
           <img style={{ width: "130px" }} src={EAS} alt="Left Logo" />
           <div style={{ marginRight: "50px", marginLeft: "50px" }}>
             <h2>JIMMA UNIVERSITY MEDICAL CENTER LABORATORY</h2>
-            <h4>Document Number: JUMCL-REC-F-103</h4>
-            <h5>Version Number:5.0</h5>
+            <h4>Document No: JUMCL/MIC/F7.4-004</h4>
+            <h5>Version No: 5.0</h5>
           </div>
           <img style={{ height: "80px" }} src={JIMA} alt="Right Logo" />
         </div>
@@ -1189,9 +1189,11 @@ export default function EventListPrint(props) {
                 </div>
               </div>
             )}
+           
             {(contentDisplayed = true)}
           </React.Fragment>
         ))}
+         <div style={{fontWeight:'bold',textAlign:'center'}}>JUMC Laboratory is accredited in Microbiology Test by Ethiopian Accreditation Service Since 2023</div>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="secondary">
