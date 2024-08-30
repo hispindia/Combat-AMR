@@ -50,8 +50,8 @@ export const eventRules = (
   };
 
   const setColors = (condition, affected, testValue) => {
-    console.log("condition====11=====", condition);
-    console.log("affected=====111====", affected);
+    console.log("condition====11====hhhhh=", condition);
+    console.log("affected=====111=hhhhhhh===", affected);
 
     if (!affected.optionSetValue) return;
     if (affected.optionSet !== TEST_RESULT_ELEMENT) return;
@@ -74,14 +74,14 @@ export const eventRules = (
           dataElement.warning = "";
       }
     });
-    // Add condition for this dataElement kk15uVyCVnc
+    // Add condition for this dataElement kk15uVyCVnc(Cefoxitin_Result)
     if (affected?.id == "kk15uVyCVnc" && testValue == "Resistant") {
       variables.forEach((id) => {
         const dataElement = stage.dataElements[id];
 
-        console.log("testValue=======111=====", testValue);
+        console.log("testValue=======111===hhhhh==", testValue);
         if (testValue == "Resistant") {
-          dataElement.warning = "Resistant to 3rd generation cephalosporins";
+          dataElement.warning = dataElement?.warning? dataElement.warning :"Resistant for 3rd generation cephalosporins and oxacillin";
         } else {
           dataElement.warning = "";
         }

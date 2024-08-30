@@ -1193,7 +1193,7 @@ export default function EventListPrint(props) {
             {(contentDisplayed = true)}
           </React.Fragment>
         ))}
-         <div style={{fontWeight:'bold',textAlign:'center'}}>JUMC Laboratory is accredited in Microbiology Test by Ethiopian Accreditation Service Since 2023</div>
+         <div style={{fontWeight:'bold',textAlign:'center',padding:'20px'}}>JUMC Laboratory is accredited in Microbiology Test by Ethiopian Accreditation Service Since 2023</div>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="secondary">
