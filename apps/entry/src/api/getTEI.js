@@ -27,11 +27,11 @@ export const getAntibioticFollowTEI = async (
   //var api_GP1 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&followUp=false&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
   //var api_GP2 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&followUp=false&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
 
-  var api_GP1_follow = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&followUp=true&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&paging=false`;
-  var api_GP2_follow = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&followUp=true&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&paging=false`;
+  var api_GP1_follow = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&followUp=true&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&skipPaging=true`;
+  var api_GP2_follow = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&followUp=true&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&skipPaging=true`;
 
-  var api_GP1 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&followUp=false&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&paging=false`;
-  var api_GP2 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&followUp=false&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&paging=false`;
+  var api_GP1 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&followUp=false&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&skipPaging=true`;
+  var api_GP2 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&followUp=false&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&skipPaging=true`;
 
   var eventApi_GP1_follow = `../../../api/events.json?fields=*&orgUnit=${orgUnit}&status=${eventStatus}&program=${sampleTestingProgram[0]}&followUp=true&programStatus=ACTIVE&programStage=LEaC0JtgaRF&paging=false`;
   var eventApi_GP2_follow = `../../../api/events.json?fields=*&orgUnit=${orgUnit}&status=${eventStatus}&program=${sampleTestingProgram[1]}&followUp=true&programStatus=ACTIVE&programStage=ZH528YQyn18&paging=false`;
@@ -303,8 +303,8 @@ export const getPendingAntiResult = async (
   var requestFive = ``;
   var SampleDict = {};
 
-  var api_GP1 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&paging=false`;
-  var api_GP2 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&paging=false`;
+  var api_GP1 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&skipPaging=true`;
+  var api_GP2 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&skipPaging=true`;
 
   //var api_GP1 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
   //var api_GP2 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
@@ -456,8 +456,8 @@ export const getSterileTEI = async (
   );
 
   //var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
-  var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&paging=false`;
-  var api_other = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=bwJT1BnH3qE&paging=false`;
+  var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&skipPaging=true`;
+  var api_other = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=bwJT1BnH3qE&skipPaging=true`;
 
   requestOne = axios.get(api_sample);
   requestThree = axios.get(api_other);
@@ -899,8 +899,8 @@ export const getPendingSampleResult = async (
   var SampleDict = {};
 
   //var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
-  var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&paging=false`;
-  var eventApi = `../../../api/events.json?fields=*&orgUnit=${orgUnit}&status=ACTIVE&program=${sampleTestingProgram}&programStatus=ACTIVE&paging=false`;
+  var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&skipPaging=true`;
+  var eventApi = `../../../api/events.json?fields=*&orgUnit=${orgUnit}&status=ACTIVE&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&paging=false`;
   requestOne = axios.get(api_sample);
   requestTwo = axios.get(eventApi);
 
@@ -1000,10 +1000,10 @@ export const getAllTei = async (orgUnit, sampleTestingProgram, eventStatus) => {
   var requestFive = "";
   var SampleDict = {};
 
-  api_GP1 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&paging=false`;
-  api_GP2 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&paging=false`;
-  api_GP3 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[2]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=bwJT1BnH3qE&paging=false`;
-  api_GP5 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[3]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&paging=false`;
+  api_GP1 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LEaC0JtgaRF&skipPaging=true`;
+  api_GP2 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[1]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=ZH528YQyn18&skipPaging=true`;
+  api_GP3 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[2]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=bwJT1BnH3qE&skipPaging=true`;
+  api_GP5 = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[3]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&skipPaging=true`;
 
   api_GP4 = `../../../api/29/sqlViews/aqByEsDNZMv/data.json?paging=false`;
 
@@ -1053,7 +1053,7 @@ export const getAllTei = async (orgUnit, sampleTestingProgram, eventStatus) => {
             rowList.push(responsefives);
             // console.log("responseThreeteis==========", responseThreeteis);
           });
-          if (responseFour.data.listGrid.rows) {
+          if (responseFour.data && responseFour.data.listGrid.rows) {
             responseFour.data.listGrid.rows.forEach((events) => {
               console.log("event:???????????????????????????? ", events);
               // let eventDeCode = events.dataValues.deCode;
@@ -1096,14 +1096,14 @@ export const getAllTei = async (orgUnit, sampleTestingProgram, eventStatus) => {
             JSON.parse
           );
           console.log("unique========================", rowUnique);
-          rowUnique.forEach((teis, index) => {
+         rowUnique.length > 0 && rowUnique.forEach((teis, index) => {
             let trackedEntityInstance = teis[0];
             let orgUnit = teis[3];
             if (
               SampleDict[trackedEntityInstance] &&
               SampleDict[trackedEntityInstance].length
             ) {
-              // let index = teiRows.length;
+              let index = teiRows.length;
               teiRows[index] = ["", "", "", "", "", "", "", "", "", "", ""];
               teiRows[index]["0"] = teis[8]; //CR Number //Registration number
               teiRows[index]["1"] = teis[9]; //Name/First Name

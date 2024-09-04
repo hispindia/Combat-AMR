@@ -1,4 +1,5 @@
 import React from 'react'
+import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { Modal, ButtonStrip } from '@dhis2/ui-core'
@@ -11,9 +12,17 @@ const Text = styled.div`
 
 export const EntityModal = () => {
     const dispatch = useDispatch()
+    const history = useHistory();
     const modal = useSelector(state => state.data.entity.modal)
+    const orgUnit = useSelector(state => state.selectedOrgUnit.id);
 
-    const onModalClick = getEntity => dispatch(removeModal(getEntity))
+    // const onModalClick = getEntity => dispatch(removeModal(getEntity))
+
+    // if (!modal) return null
+    const onModalClick = () => {
+        //alert( orgUnit + "-- " + modal.entityId );
+        history.push(`/orgUnit/${ orgUnit }/trackedEntityInstances/${modal.entityId}`)
+    }
 
     if (!modal) return null
 
