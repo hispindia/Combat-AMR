@@ -27,6 +27,9 @@ export var tanda = {
             name:'Lab ID',
         },
         {
+           name: 'Sample Collection Date',
+            },
+        {
             name: 'Organisation unit ID',
             options: { display: false },
         },

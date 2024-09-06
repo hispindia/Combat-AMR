@@ -80,7 +80,8 @@ export const TableList = (props) => {
                 options: { display: false },
             },
             {
-                name: 'Age',
+                // name: 'Age',
+                name: 'DOB',
                                 options: {
                     customBodyRender: (value, tableMeta, updateValue) => {
                         return (
@@ -156,6 +157,25 @@ export const TableList = (props) => {
                 }
             },
             {
+                name: 'Sample Collection Date',
+                                options: {
+                    customBodyRender: (value, tableMeta, updateValue) => {
+                        return (
+                            <Link
+                                component="button"
+                                variant="body2"
+                                color = "inherit"
+                                onClick={() => {
+                                    onEventClick(tableMeta.rowData,tableMeta.rowData[6], tableMeta.rowData[7])
+                                }}
+                            >
+                                {tableMeta.rowData[10]}
+                            </Link>
+                        );
+                    }
+                }
+            },
+            {
                 name: 'Organisation unit ID',
                 options: { display: false },
             },
@@ -218,7 +238,8 @@ export const TableList = (props) => {
                 options: { display: false },
             },
             {
-                name: 'Age',
+                // name: 'Age',
+                name: 'DOB',
             },
             {
                 name: 'Sex',
@@ -229,6 +250,7 @@ export const TableList = (props) => {
             {
                 name: 'Lab ID',
             },
+            
             {
                 name: 'Organisation unit ID',
                 options: { display: false },
@@ -241,6 +263,9 @@ export const TableList = (props) => {
                 name: 'Tracked Entity Type',
                 options: { display: false },
             },
+            {
+                name:'Sample Collection Date',
+             },
             {
                 name: 'Program',
                 options: { display: false },

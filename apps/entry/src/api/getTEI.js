@@ -87,12 +87,12 @@ export const getAntibioticFollowTEI = async (
             var LastUpdatedDate = "";
 
             if (!SampleDict.hasOwnProperty(trackerid)) {
-              console.log("event+++++++++++++", event);
-              if (event.lastUpdated) {
-                LastUpdatedDate = event.lastUpdated;
+             
+              if (event.eventDate) {
+                LastUpdatedDate = event.eventDate;
               }
               event.dataValues.forEach((labEvent, index) => {
-                console.log("labevent date=============", labEvent);
+               
                 if (labEvent.dataElement == "si9RY754UNU") {
                   labSampleID = labEvent.value; // Update the outer variable
                 }
@@ -117,9 +117,9 @@ export const getAntibioticFollowTEI = async (
             var LastUpdatedDate = "";
 
             if (!SampleDict.hasOwnProperty(trackerid)) {
-              console.log("event+++++++++++++", event);
-              if (event.lastUpdated) {
-                LastUpdatedDate = event.lastUpdated;
+           
+              if (event.eventDate) {
+                LastUpdatedDate = event.eventDate;
               }
               event.dataValues.forEach((labEvent, index) => {
                 if (labEvent.dataElement == "si9RY754UNU") {
@@ -146,7 +146,7 @@ export const getAntibioticFollowTEI = async (
             var LastUpdatedDate = "";
 
             if (!SampleDict.hasOwnProperty(trackerid)) {
-              console.log("event+++++++++++++", event);
+            
               if (event.lastUpdated) {
                 LastUpdatedDate = event.lastUpdated;
               }
@@ -175,7 +175,7 @@ export const getAntibioticFollowTEI = async (
             var LastUpdatedDate = "";
 
             if (!SampleDict.hasOwnProperty(trackerid)) {
-              console.log("event+++++++++++++", event);
+           
               if (event.lastUpdated) {
                 LastUpdatedDate = event.lastUpdated;
               }
@@ -266,7 +266,7 @@ export const getAntibioticFollowTEI = async (
             if (trackedEntityInstance in SampleDict) {
               teiRows[index]["6"] = SampleDict[trackedEntityInstance][0];
               teiRows[index]["5"] = SampleDict[trackedEntityInstance][1];
-              teiRows[index]["8"] = SampleDict[trackedEntityInstance][2];
+              teiRows[index]["10"] = SampleDict[trackedEntityInstance][2].split("T")[0];//sample time
             }
           });
         }
@@ -338,9 +338,9 @@ export const getPendingAntiResult = async (
             var LastUpdatedDate = "";
 
             if (!SampleDict.hasOwnProperty(trackerid)) {
-              console.log("event+++++++++++++", event);
-              if (event.lastUpdated) {
-                LastUpdatedDate = event.lastUpdated;
+       
+              if (event.eventDate) {
+                LastUpdatedDate = event.eventDate;
               }
               event.dataValues.forEach((labEvent, index) => {
                 if (labEvent.dataElement == "si9RY754UNU") {
@@ -366,9 +366,9 @@ export const getPendingAntiResult = async (
             var LastUpdatedDate = "";
 
             if (!SampleDict.hasOwnProperty(trackerid)) {
-              console.log("event+++++++++++++", event);
-              if (event.lastUpdated) {
-                LastUpdatedDate = event.lastUpdated;
+           
+              if (event.eventDate) {
+                LastUpdatedDate = event.eventDate;
               }
               event.dataValues.forEach((labEvent, index) => {
                 if (labEvent.dataElement == "si9RY754UNU") {
@@ -417,7 +417,7 @@ export const getPendingAntiResult = async (
             if (trackedEntityInstance in SampleDict) {
               teiRows[index]["6"] = SampleDict[trackedEntityInstance][0]; //Sample ID
               teiRows[index]["5"] = SampleDict[trackedEntityInstance][1]; // Location
-              teiRows[index]["8"] = SampleDict[trackedEntityInstance][2]; // Location
+              teiRows[index]["10"] = SampleDict[trackedEntityInstance][2].split("T")[0]; // sample date
             }
           });
         }
@@ -447,13 +447,11 @@ export const getSterileTEI = async (
   var requestThree = "";
   var requestFour = "";
   var requestTwo = "";
+  var requestFive = "";
   var events = [];
   var eventsOther = []
   var SampleDict = {};
-  console.log(
-    "sampleTestingProgram=======================SSSSSSSSSSSSSSSSSSS",
-    sampleTestingProgram[0]
-  );
+
 
   //var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
   var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram[0]}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&skipPaging=true`;
@@ -461,20 +459,23 @@ export const getSterileTEI = async (
 
   requestOne = axios.get(api_sample);
   requestThree = axios.get(api_other);
-  var sterileUrl = `../../../api/events.json?skipPaging=true&fields=event,trackedEntityInstance,dataValues[dataElement,value]&order=created:asc&program=WhYipXYg2Nh&orgUnit=${orgUnit}&status=COMPLETED`;
-  var sterileUrlother = `../../../api/events.json?skipPaging=true&fields=event,trackedEntityInstance,dataValues[dataElement,value]&order=created:asc&program=NmpjHa3bXmX&orgUnit=${orgUnit}&status=COMPLETED`;
+  var sterileUrl = `../../../api/events.json?skipPaging=true&fields=event,trackedEntityInstance,eventDate,dataValues[dataElement,value]&order=created:asc&program=WhYipXYg2Nh&orgUnit=${orgUnit}&status=COMPLETED&paging=false`;
+  var sterileUrlother = `../../../api/events.json?skipPaging=true&fields=event,trackedEntityInstance,eventDate,dataValues[dataElement,value]&order=created:asc&program=NmpjHa3bXmX&orgUnit=${orgUnit}&status=COMPLETED&paging=false`;
+  var EventUrl =`../../../api/29/sqlViews/lu68vCIwD0u/data.json?paging=false`;
+  
   requestTwo = axios.get(sterileUrl);
   requestFour = axios.get(sterileUrlother);
+  requestFive = axios.get(EventUrl)
 
   return axios
-    .all([requestOne, requestTwo, requestThree, requestFour])
+    .all([requestOne, requestTwo, requestThree, requestFour,requestFive])
     .then(
       axios.spread((...responses) => {
         const responseOne = responses[0];
         const responseTwo = responses[1];
         const responseThree = responses[2];
         const responseFour = responses[3];
-
+        const responseFive = responses[4];
         responseTwo.data.events.forEach((event) => {
           var eventData = {};
           var dataElement = {};
@@ -484,7 +485,7 @@ export const getSterileTEI = async (
           // if(event.lastUpdated){
           //   LastUpdatedDate= event.lastUpdated;
           // }
-
+     
           eventData.tei = event["trackedEntityInstance"];
           event.dataValues.forEach(
             (dataValue) =>
@@ -503,9 +504,15 @@ export const getSterileTEI = async (
           var trackerid = event?.trackedEntityInstance;
           var labSampleID = "";
           var locationValue = "";
+          var LastUpdatedDate = "";
+
 
           if (!SampleDict.hasOwnProperty(trackerid)) {
+            if (event.eventDate) {
+              LastUpdatedDate = event.eventDate;
+            }
             event.dataValues.forEach((labEvent, index) => {
+            
               if (labEvent.dataElement == "si9RY754UNU") {
                 labSampleID = labEvent.value; // Update the outer variable
               }
@@ -513,7 +520,7 @@ export const getSterileTEI = async (
               if (labEvent.dataElement == "q7U3sRRnFg5") {
                 locationValue = labEvent.value; // Update the outer variable
               }
-              SampleDict[trackerid] = [labSampleID, locationValue]; // Assign updated values after the loop
+              SampleDict[trackerid] = [labSampleID, locationValue,LastUpdatedDate]; // Assign updated values after the loop
             });
           }
         });
@@ -526,7 +533,7 @@ export const getSterileTEI = async (
           // if(event.lastUpdated){
           //   LastUpdatedDate= event.lastUpdated;
           // }
-          console.log("data", dataElement);
+     
           eventData.tei = event["trackedEntityInstance"];
           event.dataValues.forEach(
             (dataValue) =>
@@ -536,12 +543,16 @@ export const getSterileTEI = async (
           // dataValue["deCode"] = dataElement["VbUbBX7G6Jf"];
           eventData.dataValues = dataValue;
           eventsOther.push(eventData);
-          console.log("EVENTDATA===========", eventsOther);
+         
           var trackerid = event?.trackedEntityInstance;
           var labSampleID = "";
           var locationValue = "";
+          var LastUpdatedDate ="";
 
           if (!SampleDict.hasOwnProperty(trackerid)) {
+            if (event.eventDate) {
+              LastUpdatedDate = event.eventDate;
+            }
             event.dataValues.forEach((labEvent, index) => {
               if (labEvent.dataElement == "si9RY754UNU") {
                 labSampleID = labEvent.value; // Update the outer variable
@@ -550,7 +561,7 @@ export const getSterileTEI = async (
               if (labEvent.dataElement == "q7U3sRRnFg5") {
                 locationValue = labEvent.value; // Update the outer variable
               }
-              SampleDict[trackerid] = [labSampleID, locationValue]; // Assign updated values after the loop
+              SampleDict[trackerid] = [labSampleID, locationValue,LastUpdatedDate]; // Assign updated values after the loop
             });
           }
         });
@@ -559,14 +570,11 @@ export const getSterileTEI = async (
           eventsOther.forEach((event) => {
             let eventTei = event.tei;
             let eventDeCode = event.dataValues.deCode;
-            console.log("eventDeCode+++++++++++++++", eventDeCode);
+      
 
             responseOne.data.rows.forEach((teis) => {
               let trackedEntityInstance = teis[0];
-              console.log(
-                "trackedEntityInstance=============",
-                trackedEntityInstance
-              );
+         
               if (
                 eventTei == trackedEntityInstance &&
                 trackedEntityInstance in SampleDict
@@ -587,7 +595,7 @@ export const getSterileTEI = async (
                 ];
                 teiSterileRows[index]["0"] = teis[8]; //CR Number
                 teiSterileRows[index]["1"] = teis[9]; //Name
-                teiSterileRows[index]["8"] = teis[2];
+                // teiSterileRows[index]["10"] = teis[2];//sample date
                 teiSterileRows[index]["3"] = teis[12]; //Age
                 teiSterileRows[index]["4"] = teis[13]; //Sex
                 // teiSterileRows[index]['5'] = teis[15]; //Address
@@ -597,8 +605,8 @@ export const getSterileTEI = async (
                   SampleDict[trackedEntityInstance][0];
                 teiSterileRows[index]["5"] =
                   SampleDict[trackedEntityInstance][1]; //Location
-                // teiSterileRows[index]["8"] =
-                // SampleDict[trackedEntityInstance][2]; //Location
+                teiSterileRows[index]["10"] =
+                SampleDict[trackedEntityInstance][2].split("T")[0];//sample date; 
                 index = index + 1;
               } else {
                 return;
@@ -608,7 +616,6 @@ export const getSterileTEI = async (
           events.forEach((event) => {
             let eventTei = event.tei;
             let eventDeCode = event.dataValues.deCode;
-
             if (
               eventDeCode == "Sterile" ||
               eventDeCode == "Not available" ||
@@ -622,6 +629,7 @@ export const getSterileTEI = async (
                   eventTei == trackedEntityInstance &&
                   trackedEntityInstance in SampleDict
                 ) {
+                 
                   let orgUnit = teis[3];
                   teiSterileRows[index] = [
                     "",
@@ -638,7 +646,7 @@ export const getSterileTEI = async (
                   ];
                   teiSterileRows[index]["0"] = teis[8]; //CR Number
                   teiSterileRows[index]["1"] = teis[9]; //Name
-                  teiSterileRows[index]["8"] = teis[2];
+                  // teiSterileRows[index]["10"] = teis[2].split(" ")[0];//sample date
                   teiSterileRows[index]["3"] = teis[12]; //Age
                   teiSterileRows[index]["4"] = teis[13]; //Sex
                   // teiSterileRows[index]['5'] = teis[15]; //Address
@@ -648,8 +656,8 @@ export const getSterileTEI = async (
                     SampleDict[trackedEntityInstance][0];
                   teiSterileRows[index]["5"] =
                     SampleDict[trackedEntityInstance][1]; //Location
-                  // teiSterileRows[index]["8"] =
-                  // SampleDict[trackedEntityInstance][2]; //Location
+                  teiSterileRows[index]["10"] =
+                  SampleDict[trackedEntityInstance][2].split("T")[0];//sample date; 
                   index = index + 1;
                 } else {
                   return;
@@ -895,22 +903,32 @@ export const getPendingSampleResult = async (
   var api_sample = ``;
   var requestOne = "";
   var requestTwo = ``;
+  var requestThree = " ";
   var trackedEntityData = [];
   var SampleDict = {};
 
   //var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
   var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&skipPaging=true`;
   var eventApi = `../../../api/events.json?fields=*&orgUnit=${orgUnit}&status=ACTIVE&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&paging=false`;
+//  var eventApi1 =  `../../../api/29/sqlViews/TtARsHJzVha/data.json?paging=false`;
+
   requestOne = axios.get(api_sample);
   requestTwo = axios.get(eventApi);
+  // requestThree = axios.get(eventApi1);
 
   return axios
-    .all([requestOne, requestTwo])
+    .all([requestOne, requestTwo,requestThree])
     .then(
       axios.spread((...responses) => {
         const responseOne = responses[0];
         const responseTwo = responses[1];
+        const responseThree = responses[2];
         var trackedEntityInstanceEvent = [];
+        if (responseThree.data && responseThree.data.listGrid.rows) {
+          responseThree.data.listGrid.rows.forEach((events) => {
+            console.log("eventSHHHHHHHHHHHHHHHHH",events)
+
+          })}
         if (responseTwo.data) {
           responseTwo.data.events.forEach((event, index) => {
             trackedEntityInstanceEvent.push(event.trackedEntityInstance);
@@ -918,11 +936,9 @@ export const getPendingSampleResult = async (
             var labSampleID = "";
             var locationValue = "";
             var LastUpdatedDate = "";
-            console.log("event+++++++++++++", event);
-
             if (!SampleDict.hasOwnProperty(trackerid)) {
-              if (event.lastUpdated) {
-                LastUpdatedDate = event.lastUpdated;
+              if (event.eventDate) {
+                LastUpdatedDate = event.eventDate;
               }
               event.dataValues.forEach((labEvent, index) => {
                 if (labEvent.dataElement == "si9RY754UNU") {
@@ -966,13 +982,13 @@ export const getPendingSampleResult = async (
             if (trackedEntityInstance in SampleDict) {
               teiRows[index]["6"] = SampleDict[trackedEntityInstance][0];
               teiRows[index]["5"] = SampleDict[trackedEntityInstance][1];
-              teiRows[index]["8"] = SampleDict[trackedEntityInstance][2];
+              teiRows[index]["10"] = SampleDict[trackedEntityInstance][2].split("T")[0];//sample date
+
             }
           });
         }
         return teiRows.sort(function(a, b) {
-          // Turn your strings into dates, and then subtract them
-          // to get a value that is either negative, positive, or zero.
+         
           return new Date(b[8]) - new Date(a[8]);
         });
       })
@@ -1039,23 +1055,23 @@ export const getAllTei = async (orgUnit, sampleTestingProgram, eventStatus) => {
         ) {
           responseOne.data.rows.forEach((responseOneTei) => {
             rowList.push(responseOneTei);
-            console.log("responseOneTei==========", responseOneTei);
+         
           });
           responseTwo.data.rows.forEach((responseTwoteis) => {
             rowList.push(responseTwoteis);
-            console.log("responseTwoteis==========", responseTwoteis);
+           
           });
           responseThree.data.rows.forEach((responseThreeteis) => {
             rowList.push(responseThreeteis);
-            console.log("responseThreeteis==========", responseThreeteis);
+      
           });
           responseFive.data.rows.forEach((responsefives) => {
             rowList.push(responsefives);
-            // console.log("responseThreeteis==========", responseThreeteis);
+         
           });
           if (responseFour.data && responseFour.data.listGrid.rows) {
             responseFour.data.listGrid.rows.forEach((events) => {
-              console.log("event:???????????????????????????? ", events);
+           
               // let eventDeCode = events.dataValues.deCode;
               var dataElement = {};
               var orgunits = events[0];
@@ -1065,8 +1081,9 @@ export const getAllTei = async (orgUnit, sampleTestingProgram, eventStatus) => {
 
               var locationValue = "";
               if (!SampleDict.hasOwnProperty(trackerid)) {
-                if (events[4]) {
-                  LastUpdatedDate = events[4];
+
+                if (events[5]) {
+                  LastUpdatedDate = events[5];
                 }
                 var eventDataValuesOutputArray = JSON.parse(events[3]);
                 for (const [key, value] of Object.entries(
@@ -1090,12 +1107,12 @@ export const getAllTei = async (orgUnit, sampleTestingProgram, eventStatus) => {
               }
             });
           }
-          console.log("rowLIst===========", rowList);
+         
           let rowUnique = Array.from(
             new Set(rowList.map(JSON.stringify)),
             JSON.parse
           );
-          console.log("unique========================", rowUnique);
+        
          rowUnique.length > 0 && rowUnique.forEach((teis, index) => {
             let trackedEntityInstance = teis[0];
             let orgUnit = teis[3];
@@ -1114,14 +1131,15 @@ export const getAllTei = async (orgUnit, sampleTestingProgram, eventStatus) => {
               teiRows[index]["7"] = trackedEntityInstance;
               // teiRows[index]["8"] = teis[5];
               if (trackedEntityInstance in SampleDict) {
+           
                 teiRows[index]["6"] = SampleDict[trackedEntityInstance][0];
                 teiRows[index]["5"] = SampleDict[trackedEntityInstance][1];
-                teiRows[index]["8"] = SampleDict[trackedEntityInstance][2];
+                teiRows[index]["10"] = SampleDict[trackedEntityInstance][2].split(" ")[0];//sample date 
               }
             }
           });
         }
-        console.log("teiRows================", teiRows);
+       
         // return teiRows;
         //return teiRows.reverse();
         return teiRows.sort(function(a, b) {
