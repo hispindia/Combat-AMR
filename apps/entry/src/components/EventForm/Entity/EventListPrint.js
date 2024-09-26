@@ -45,6 +45,7 @@ import {
   AGE,
   PATHOGEN_G,
   PATHOGEN,
+  REASON_FOR_REJECTION,
   AST,
   NOTES,
 } from "./constants";
@@ -604,28 +605,46 @@ export default function EventListPrint(props) {
         >
           <TableBody>
             <TableRow>
-              <TableCell style={{ width: "30%" }}>
-                <Typography>
-                  <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                    {/* {PATHOGEN_G} :&nbsp;&nbsp;{link[PATHOGEN_G]} */}
-                    <span>{PATHOGEN_G}</span> :&nbsp;&nbsp;
-                    <span style={{ fontWeight: "bold" }}>
-                      {link[PATHOGEN_G]}
-                    </span>
-                  </Box>
-                </Typography>
-              </TableCell>
+              {(link["Sample Result"] !== "Rejected") && (link["Sample Result"] !== "No aerobic growth") && (link["Sample Result"] !== "Sterile") ? (
+                 <TableCell style={{ width: "30%" }}>
+                 <Typography>
+                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+                     {/* {PATHOGEN_G} :&nbsp;&nbsp;{link[PATHOGEN_G]} */}
+                     <span>{PATHOGEN_G}</span> :&nbsp;&nbsp;
+                     <span style={{ fontWeight: "bold" }}>
+                       {link[PATHOGEN_G]}
+                     </span>
+                   </Box>
+                 </Typography>
+               </TableCell>
+              ) : null}
+             
               <TableCell style={{ width: "40%" }}>
                 <Typography>
                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
                     {/* {PATHOGEN} :&nbsp;&nbsp;&nbsp;&nbsp;{link["Pathogen"]} */}
                     <span>{PATHOGEN}</span> :&nbsp;&nbsp;&nbsp;&nbsp;
                     <span style={{ fontWeight: "bold" }}>
-                      {link["Pathogen"]}
+                      {/* {link["Pathogen"]} */}
+                      {link["Pathogen Group"] == "Sample testing" ? link["Sample Result"] : link["Pathogen"]}
                     </span>
                   </Box>
                 </Typography>
               </TableCell>
+              {(link["Sample Result"] == "Rejected")  ?(
+                 <TableCell >
+                 <Typography>
+                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+                     {/* {PATHOGEN_G} :&nbsp;&nbsp;{link[PATHOGEN_G]} */}
+                     <span>{REASON_FOR_REJECTION}</span> :&nbsp;&nbsp;
+                     <span style={{ fontWeight: "bold" }}>
+                       {link['Reason for rejection']}
+                     </span>
+                   </Box>
+                 </Typography>
+               </TableCell>
+              ):null}
+
             </TableRow>
           </TableBody>
         </Table>

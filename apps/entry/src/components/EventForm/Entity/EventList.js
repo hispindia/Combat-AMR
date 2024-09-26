@@ -73,6 +73,8 @@ const Events = ({ match, history }) => {
       var eventL = [];
       if (events != undefined) {
         const v = events.map((ele, index) => {
+          console.log("clinicianPsList=======================",clinicianPsList)
+          console.log("ele.programStage============",ele.programStage)
           if (!clinicianPsList.includes(ele.programStage)) {
             // if (ele.status == COMPLETED) {
               var proId = ele.program;
@@ -287,6 +289,7 @@ const Events = ({ match, history }) => {
   };
   var val = () => {
     if (events != undefined) {
+      console.log("events=================",events)
       const v = events.map((ele, index) => {
         if (!clinicianPsList.includes(ele.programStage)) {
           var proId = ele.program;
