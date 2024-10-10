@@ -103,8 +103,8 @@ export const EventForm = ({ history, match }) => {
       var eventClini = [];
       if (events != undefined) {
         const v = events.map((ele, index) => {
-          if (clinicianPsList.includes(ele.programStage)) {
-            var proId = ele.program;
+          if (clinicianPsList.includes(ele?.programStage)) {
+            var proId = ele?.program;
             var name = [],
               dataValue = [],
               data = [],
@@ -112,7 +112,7 @@ export const EventForm = ({ history, match }) => {
             var listorganisms = [];
             var orgValue = [];
             var orgn = "";
-            date["value"] = ele.eventDate.substring(0, 10);
+            date["value"] = ele?.eventDate?.substring(0, 10);
             for (let program of programs) {
               if (program.id == proId) {
                 name["value"] = program.name;

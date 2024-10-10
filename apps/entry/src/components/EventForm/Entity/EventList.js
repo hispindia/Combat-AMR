@@ -72,12 +72,12 @@ const Events = ({ match, history }) => {
     const eveValue = () => {
       var eventL = [];
       if (events != undefined) {
-        const v = events.map((ele, index) => {
+        const v = events?.map((ele, index) => {
           console.log("clinicianPsList=======================",clinicianPsList)
           console.log("ele.programStage============",ele.programStage)
-          if (!clinicianPsList.includes(ele.programStage)) {
+          if (!clinicianPsList.includes(ele?.programStage)) {
             // if (ele.status == COMPLETED) {
-              var proId = ele.program;
+              var proId = ele?.program;
               var name = [],
                 dataValue = [],
                 data = [],
@@ -87,7 +87,7 @@ const Events = ({ match, history }) => {
               var orgn = "";
               var sampleVal = [];
               //date['value'] =  JSON.stringify(new Date(ele.eventDate)).slice(1,11);
-              date["value"] = ele.eventDate.substring(0, 10);
+              date["value"] = ele?.eventDate?.substring(0, 10);
               for (let program of programs) {
                 if (program.id == proId) {
                   name["value"] = program.name;
@@ -150,7 +150,7 @@ const Events = ({ match, history }) => {
             var orgn = "";
             var sampleVal = [];
             //date['value'] =  JSON.stringify(new Date(ele.eventDate)).slice(1,11);
-            date["value"] = ele.eventDate.substring(0, 10);
+            date["value"] = ele?.eventDate?.substring(0, 10);
             for (let program of programs) {
               if (program.id == proId) {
                 name["value"] = program.name;
@@ -290,7 +290,7 @@ const Events = ({ match, history }) => {
   var val = () => {
     if (events != undefined) {
       console.log("events=================",events)
-      const v = events.map((ele, index) => {
+      const v = events?.map((ele, index) => {
         if (!clinicianPsList.includes(ele.programStage)) {
           var proId = ele.program;
           var name = [],
@@ -302,7 +302,7 @@ const Events = ({ match, history }) => {
           var orgn = "";
           var sampleVal = [];
           //date['value'] =  JSON.stringify(new Date(ele.eventDate)).slice(1,11);
-          date["value"] = ele.eventDate.substring(0, 10);
+          date["value"] = ele?.eventDate?.substring(0, 10);
           for (let program of programs) {
             if (program.id == proId) {
               name["value"] = program.name;
