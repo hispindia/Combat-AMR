@@ -51,6 +51,7 @@
         "source-map-explorer": "^2.0.1"
     },
     "dependencies": {
+        "@hisp-amr/api": "^0.0.8",
         "axios": "^0.21.1",
         "cross-env": "^7.0.0",
         "sync-request": "^6.1.0"

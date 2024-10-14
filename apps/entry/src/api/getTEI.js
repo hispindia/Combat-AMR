@@ -495,7 +495,18 @@ export const getSterileTEI = async (
             dataElement["VbUbBX7G6Jf"] == "Sterile" ||
             dataElement["VbUbBX7G6Jf"] == "Not available" ||
             dataElement["VbUbBX7G6Jf"] == "Rejected" ||
-            dataElement["VbUbBX7G6Jf"] == "No aerobic growth"
+            dataElement["VbUbBX7G6Jf"] == "No aerobic growth" ||
+            dataElement["VbUbBX7G6Jf"] == "No Growth in 24 hrs" ||
+            dataElement["VbUbBX7G6Jf"] == "No aerobic growth after 7 days" ||
+            dataElement["VbUbBX7G6Jf"] == "No significant bacteria isolated" ||
+            dataElement["VbUbBX7G6Jf"] == "No Salmonella or Shigella" ||
+            dataElement["VbUbBX7G6Jf"] == "No V. cholerae isolated" ||
+            dataElement["VbUbBX7G6Jf"] == "No Growth in 48 hrs" ||
+            dataElement["VbUbBX7G6Jf"] == "Normal Respiratory flora isolated at 48 hrs" ||
+            dataElement["VbUbBX7G6Jf"] == "No Growth in 72 hrs" ||
+            dataElement["VbUbBX7G6Jf"] == "No Pathogenic growth in 72 hrs" ||
+            dataElement["VbUbBX7G6Jf"] == "Culture negative for Group A beta-haemolytic streptococcus" ||
+            dataElement["VbUbBX7G6Jf"] == "No gonococcus isolated in 72 hrs"
           )
             dataValue["deCode"] = dataElement["VbUbBX7G6Jf"];
           eventData.dataValues = dataValue;
@@ -559,7 +570,7 @@ export const getSterileTEI = async (
           eventsOther.forEach((event) => {
             let eventTei = event.tei;
             let eventDeCode = event.dataValues.deCode;
-            console.log("eventDeCode+++++++++++++++", eventDeCode);
+           
 
             responseOne.data.rows.forEach((teis) => {
               let trackedEntityInstance = teis[0];
@@ -608,12 +619,23 @@ export const getSterileTEI = async (
           events.forEach((event) => {
             let eventTei = event.tei;
             let eventDeCode = event.dataValues.deCode;
-
+            console.log("eventDeCode+++++++++++++++", eventDeCode);
             if (
               eventDeCode == "Sterile" ||
               eventDeCode == "Not available" ||
               eventDeCode == "Rejected" ||
-              eventDeCode == "No aerobic growth"
+              eventDeCode == "No aerobic growth" ||
+              eventDeCode == "No Growth in 24 hrs" ||
+              eventDeCode == "No aerobic growth after 7 days" ||
+              eventDeCode == "No significant bacteria isolated" ||
+              eventDeCode == "No Salmonella or Shigella" ||
+              eventDeCode == "No V. cholerae isolated" ||
+              eventDeCode == "No Growth in 48 hrs" ||
+              eventDeCode == "Normal Respiratory flora isolated at 48 hrs" ||
+              eventDeCode == "No Growth in 72 hrs" ||
+              eventDeCode == "No Pathogenic growth in 72 hrs" ||
+              eventDeCode == "Culture negative for Group A beta-haemolytic streptococcus" ||
+              eventDeCode == "No gonococcus isolated in 72 hrs"
             ) {
               responseOne.data.rows.forEach((teis) => {
                 let trackedEntityInstance = teis[0];
