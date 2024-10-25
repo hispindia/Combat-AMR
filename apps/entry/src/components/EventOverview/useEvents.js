@@ -163,10 +163,12 @@ console.log("programList:================= ",programList)
                     }
                     )
                 }
-                else if (eventstatus == "ALL" && programApi.length > 2) {
+                else if (eventstatus == "ALL" && Array.isArray(programApi) && programApi.length) {
 
                     const eventsTeiall = await getAllTei(selected, programApi, eventstatus).then((teiRows) => {
-                        if (teiRows) {
+                      
+                        if (teiRows  && teiRows?.length > 0)  {
+                            teiRows = teiRows.filter(row => row !== null && row !== undefined);// check the Tei before passing in the rows 
                             dispatcher({
                                 type: NEW_ROWS,
                                 rows: teiRows,

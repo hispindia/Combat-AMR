@@ -923,6 +923,7 @@ export const getPendingSampleResult = async (
   //var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&assignedUser=&pageSize=50&page=1&totalPages=false&paging=false`
   var api_sample = `../../../api/30/trackedEntityInstances/query.json?ou=${orgUnit}&ouMode=SELECTED&&order=created:desc&program=${sampleTestingProgram}&programStatus=ACTIVE&eventStartDate=2018-08-09&eventEndDate=2024-01-30&programStage=LjiZPsbh1oy&paging=false`;
   var eventApi = `../../../api/events.json?fields=*&orgUnit=${orgUnit}&status=ACTIVE&program=${sampleTestingProgram}&programStatus=ACTIVE&paging=false`;
+  
   requestOne = axios.get(api_sample);
   requestTwo = axios.get(eventApi);
 
@@ -1006,6 +1007,8 @@ export const getPendingSampleResult = async (
       console.error(errors);
     });
 };
+
+
 
 export const getAllTei = async (orgUnit, sampleTestingProgram, eventStatus) => {
   var teiRows = [];
