@@ -473,8 +473,8 @@ export default function EventListPrint(props) {
         >
           <>
             {Object.values(link).includes("true") ||
-            Object.keys(link).includes("Others") ||
-            Object.keys(link).some((key) => key.includes("staining")) ? (
+              Object.keys(link).includes("Others") ||
+              Object.keys(link).some((key) => key.includes("staining")) ? (
               <Table
               // sx={{
               //   width: "40%",
@@ -530,8 +530,8 @@ export default function EventListPrint(props) {
                       return (
                         <>
                           {link[player] == "true" ||
-                          player == "Others" ||
-                          EXCEPTION_CONDITION.includes(player) ? (
+                            player == "Others" ||
+                            EXCEPTION_CONDITION.includes(player) ? (
                             <TableRow key={index}>
                               <TableCell
                                 className={
@@ -576,8 +576,8 @@ export default function EventListPrint(props) {
                                     {player == "Others"
                                       ? link[player]
                                       : link[player] == "true"
-                                      ? "Yes"
-                                      : link[player]}
+                                        ? "Yes"
+                                        : link[player]}
                                   </Box>
                                 </Typography>
                               </TableCell>
@@ -606,19 +606,19 @@ export default function EventListPrint(props) {
           <TableBody>
             <TableRow>
               {(link["Sample Result"] !== "Rejected") && (link["Sample Result"] !== "No aerobic growth") && (link["Sample Result"] !== "Sterile") ? (
-                 <TableCell style={{ width: "30%" }}>
-                 <Typography>
-                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                     {/* {PATHOGEN_G} :&nbsp;&nbsp;{link[PATHOGEN_G]} */}
-                     <span>{PATHOGEN_G}</span> :&nbsp;&nbsp;
-                     <span style={{ fontWeight: "bold" }}>
-                       {link[PATHOGEN_G]}
-                     </span>
-                   </Box>
-                 </Typography>
-               </TableCell>
+                <TableCell style={{ width: "30%" }}>
+                  <Typography>
+                    <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+                      {/* {PATHOGEN_G} :&nbsp;&nbsp;{link[PATHOGEN_G]} */}
+                      <span>{PATHOGEN_G}</span> :&nbsp;&nbsp;
+                      <span style={{ fontWeight: "bold" }}>
+                        {link[PATHOGEN_G]}
+                      </span>
+                    </Box>
+                  </Typography>
+                </TableCell>
               ) : null}
-             
+
               <TableCell style={{ width: "40%" }}>
                 <Typography>
                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
@@ -631,19 +631,19 @@ export default function EventListPrint(props) {
                   </Box>
                 </Typography>
               </TableCell>
-              {(link["Sample Result"] == "Rejected")  ?(
-                 <TableCell >
-                 <Typography>
-                   <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                     {/* {PATHOGEN_G} :&nbsp;&nbsp;{link[PATHOGEN_G]} */}
-                     <span>{REASON_FOR_REJECTION}</span> :&nbsp;&nbsp;
-                     <span style={{ fontWeight: "bold" }}>
-                       {link['Reason for rejection']}
-                     </span>
-                   </Box>
-                 </Typography>
-               </TableCell>
-              ):null}
+              {(link["Sample Result"] == "Rejected") ? (
+                <TableCell >
+                  <Typography>
+                    <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+                      {/* {PATHOGEN_G} :&nbsp;&nbsp;{link[PATHOGEN_G]} */}
+                      <span>{REASON_FOR_REJECTION}</span> :&nbsp;&nbsp;
+                      <span style={{ fontWeight: "bold" }}>
+                        {link['Reason for rejection']}
+                      </span>
+                    </Box>
+                  </Typography>
+                </TableCell>
+              ) : null}
 
             </TableRow>
           </TableBody>
@@ -737,6 +737,32 @@ export default function EventListPrint(props) {
           }}
         >
           <TableBody>
+          <TableRow>
+              <TableCell style={{ width: "40%" }}>
+                {link["Resistant for Carbapenems"] && (
+                  <Typography>
+
+                    <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+                    <span style={{ fontWeight: 'bold' }}>Alert:</span>&nbsp;&nbsp;
+                      <span style={{ color: 'red' }}>Resistant for Carbapenems</span>
+                    </Box>
+                  </Typography>
+                )}
+
+              </TableCell>
+              <TableCell style={{ width: "40%" }}>
+                {link["Resistant for ESBL"] && (
+                  <Typography>
+                    <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+                    <span style={{ fontWeight: 'bold' }}>Alert:</span>&nbsp;&nbsp;
+                      <span style={{ color: 'red' }}>Resistant for ESBL</span>
+                    </Box>
+
+                  </Typography>
+                )}
+              </TableCell>
+
+            </TableRow>
             <TableRow>
               <TableCell style={{ width: "40%" }}>
                 <Typography>
@@ -747,6 +773,7 @@ export default function EventListPrint(props) {
                 </Typography>
               </TableCell>
             </TableRow>
+            
           </TableBody>
         </Table>
       </Box>
@@ -1208,11 +1235,11 @@ export default function EventListPrint(props) {
                 </div>
               </div>
             )}
-           
+
             {(contentDisplayed = true)}
           </React.Fragment>
         ))}
-         <div style={{fontWeight:'bold',textAlign:'center',padding:'20px'}}>JUMC Laboratory is accredited in Microbiology Test by Ethiopian Accreditation Service Since 2023</div>
+        <div style={{ fontWeight: 'bold', textAlign: 'center', padding: '20px' }}>JUMC Laboratory is accredited in Microbiology Test by Ethiopian Accreditation Service Since 2023</div>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="secondary">

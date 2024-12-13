@@ -19,13 +19,16 @@ export const SwitchInput = props => {
     }
 
     return (
+        <>
         <Switch
             name={props.name}
             checked={value}
             label={props.label}
             disabled={props.disabled}
             onChange={onChange}
-        />
+            />
+            {props?.warningValue?<small style={{color:'red',display:'block',textAlign:'left',fontSize:'16px',fontWeight:'bold'}}>{ props?.warningValue||''  }</small>:''}
+            </>
     )
 }
 
@@ -35,4 +38,5 @@ SwitchInput.propTypes = {
     label: string.isRequired,
     disabled: bool,
     value: string,
+    warningValue:string,
 }

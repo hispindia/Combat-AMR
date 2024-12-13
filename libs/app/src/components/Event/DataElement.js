@@ -237,7 +237,7 @@ export const DataElement = ({ id }) => {
 
   const handleChange = (event) => {
     if (id == "TcThq7OLuKf") {
-     
+
       dispatch(setEventValue(id, event.target.value, false, printValues));//add code for Additonal comment
     } else dispatch(addNotes(id, event.target.value));
     // dispatch(addNotes(id, event.target.value));
@@ -279,6 +279,8 @@ export const DataElement = ({ id }) => {
           required={required}
           value={value}
           disabled={disabled || completed}
+          warningValue={warning}
+        
         />
       ) : valueType === "DATE" ? (
         <DateInput
@@ -319,20 +321,20 @@ export const DataElement = ({ id }) => {
               ? error
               : id === SAMPLE_ID_ELEMENT &&
                 duplicate === DUPLICACY.DUPLICATE_ERROR
-              ? duplicate
-              : ""
+                ? duplicate
+                : ""
           }
           warning={
             warning
               ? warning
               : id === SAMPLE_ID_ELEMENT &&
                 duplicate === DUPLICACY.DUPLICATE_WARNING
-              ? duplicate
-              : ""
+                ? duplicate
+                : ""
           }
           loading={
             id === SAMPLE_ID_ELEMENT &&
-            duplicate === DUPLICACY.DUPLICATE_CHECKING
+              duplicate === DUPLICACY.DUPLICATE_CHECKING
               ? true
               : false
           }

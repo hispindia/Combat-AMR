@@ -184,7 +184,123 @@ export const Aggregate = async ({
 
     let period = sampleDate.substring(0, 7).replace('-', "");
     
-    //now every metadata is fetched so for each get and update the data.
+    // //now every metadata is fetched so for each get and update the data.
+    // let defaultResponse = await getValue({
+    //     period: period,
+    //     dataSet: defaultDataSet,
+    //     de: de,
+    //     orgUnit: orgUnit,
+    //     cc: cc,
+    //     cp: cp,
+    //     co: coDefault,
+    //     operation: operation
+    // })
+
+    // let defaultValue = 0;
+    // if (defaultResponse.response) { //this means that there have been a successfull fetching of data
+    //     defaultValue = defaultResponse.value
+    // } else {
+    //     //if code reaches here, then it is in an unstable state so respond with an error
+    //     changeStatus(false)
+    //     return {
+    //         response: false,
+    //         message: defaultResponse.message
+    //     }
+    // }
+
+    // try {
+    //     let b = await post(
+    //         request(`dataValues.json`, {
+    //             options: [
+    //                 `pe=${period}&ds=${defaultDataSet}&de=${de}&ou=${orgUnit}&cc=${cc}&cp=${cp}&value=${defaultValue}&co=${coDefault}`,
+    //             ],
+    //             data: {}
+    //         })
+    //     )
+    //     console.error("Post request not working. Response received:", b)
+    //     changeStatus(false)
+    //     return {
+    //         response: false,
+    //         message: "Unable to send data to data set"
+    //     }
+    // } catch (error) {
+    //     if (error.toString().startsWith("SyntaxError: Unexpected end of JSON")) {
+    //         //this is because post request doesn't send back a response and it is a successful request.
+
+    //     } else {
+    //         console.error("Error in posting default value", error);
+    //         changeStatus(false)
+    //         return {
+    //             response: false,
+    //             message: "Unable to send data to data set"
+    //         }
+    //     }
+    // }// original code when getting error in mark complete 
+ 
+    //  for (let index in importantValues) {
+    //     let co = importantValues[index]
+
+    //     let individualResponse = await getValue({
+    //         period: period,
+    //         dataSet: antibioticWiseDataSet,
+    //         de: deAntibioticWise,
+    //         cc: cc,
+    //         cp: cp,
+    //         co: co,
+    //         orgUnit: orgUnit,
+    //         operation: operation
+    //     })
+
+    //     let individualValue = 0
+
+    //     if (individualResponse.response) { //this means that there have been a successfull fetching of data
+    //         individualValue = individualResponse.value
+    //     } else {
+    //         changeStatus(false)
+    //         //if code reaches here, then it is in an unstable state so respond with an error
+    //         return {
+    //             response: false,
+    //             message: individualResponse.message
+    //         }
+    //     }
+    //     try {
+    //         let b = await post(
+    //             request(`dataValues.json`, {
+    //                 options: [
+    //                     `pe=${period}&ds=${antibioticWiseDataSet}&de=${deAntibioticWise}&ou=${orgUnit}&cc=${cc}&cp=${cp}&value=${individualValue}&co=${co}`,
+    //                 ],
+    //                 data: {}
+    //             })
+    //         )
+    //         //if code reaches here then it means that there is an error in the post request.
+    //         console.error("Post request not working. Response received:", b)
+    //         changeStatus(false)
+    //         return {
+    //             response: false,
+    //             message: "Unable to aggregate data"
+    //         }
+    //     } catch (error) {
+    //         if (error.toString().startsWith("SyntaxError: Unexpected end of JSON")) {
+    //             //this is because post request doesn't send back a response and 
+    //             //The syntax error is because of a successfull post request.
+    //         } else {
+    //             //This means that the post is working properly
+    //             console.error("Unable to post data", error)
+    //             changeStatus(false)
+    //             return {
+    //                 response: false,
+    //                 message: "Unable to aggregate data"
+    //             }
+    //         }
+    //     }
+    // };
+
+    // changeStatus(false)
+    // return {
+    //     response: true,
+    //     message: "Successfull"
+    // };// original code when getting error of Markcomplete 
+
     let defaultResponse = await getValue({
         period: period,
         dataSet: defaultDataSet,
@@ -194,20 +310,20 @@ export const Aggregate = async ({
         cp: cp,
         co: coDefault,
         operation: operation
-    })
-
+    });
+    
     let defaultValue = 0;
-    if (defaultResponse.response) { //this means that there have been a successfull fetching of data
-        defaultValue = defaultResponse.value
+    if (defaultResponse.response) { // this means that data fetching was successful
+        defaultValue = defaultResponse.value;
     } else {
-        //if code reaches here, then it is in an unstable state so respond with an error
-        changeStatus(false)
+        // If code reaches here, it is in an unstable state, so respond with an error
+        changeStatus(false);
         return {
             response: false,
             message: defaultResponse.message
-        }
+        };
     }
-
+    
     try {
         let b = await post(
             request(`dataValues.json`, {
@@ -216,30 +332,33 @@ export const Aggregate = async ({
                 ],
                 data: {}
             })
-        )
-        console.error("Post request not working. Response received:", b)
-        changeStatus(false)
-        return {
-            response: false,
-            message: "Unable to send data to data set"
+        );
+    
+        if (!b || b.status === 204) { // Handle empty or 204 responses
+            console.warn("Post request successful but no content returned.");
+        } else {
+            try {
+                console.log("Post request response received:", await b.json());
+            } catch (jsonError) {
+                console.warn("Response not in JSON format or empty.");
+            }
         }
     } catch (error) {
-        if (error.toString().startsWith("SyntaxError: Unexpected end of JSON")) {
-            //this is because post request doesn't send back a response and it is a successful request.
-
+        if (error.toString().includes("Unexpected end of JSON")) {
+            console.warn("Known issue: empty JSON response, assuming success.");
         } else {
             console.error("Error in posting default value", error);
-            changeStatus(false)
+            changeStatus(false);
             return {
                 response: false,
                 message: "Unable to send data to data set"
-            }
+            };
         }
     }
-
+    
     for (let index in importantValues) {
-        let co = importantValues[index]
-
+        let co = importantValues[index];
+    
         let individualResponse = await getValue({
             period: period,
             dataSet: antibioticWiseDataSet,
@@ -249,20 +368,21 @@ export const Aggregate = async ({
             co: co,
             orgUnit: orgUnit,
             operation: operation
-        })
-
-        let individualValue = 0
-
-        if (individualResponse.response) { //this means that there have been a successfull fetching of data
-            individualValue = individualResponse.value
+        });
+    
+        let individualValue = 0;
+    
+        if (individualResponse.response) { // this means that data fetching was successful
+            individualValue = individualResponse.value;
         } else {
-            changeStatus(false)
-            //if code reaches here, then it is in an unstable state so respond with an error
+            changeStatus(false);
+            // If code reaches here, it is in an unstable state, so respond with an error
             return {
                 response: false,
                 message: individualResponse.message
-            }
+            };
         }
+    
         try {
             let b = await post(
                 request(`dataValues.json`, {
@@ -271,33 +391,37 @@ export const Aggregate = async ({
                     ],
                     data: {}
                 })
-            )
-            //if code reaches here then it means that there is an error in the post request.
-            console.error("Post request not working. Response received:", b)
-            changeStatus(false)
-            return {
-                response: false,
-                message: "Unable to aggregate data"
+            );
+    
+            if (!b || b.status === 204) { // Handle empty or 204 responses
+                console.warn(`Post request successful for co=${co} but no content returned.`);
+            } else {
+                try {
+                    console.log(`Post request response received for co=${co}:`, await b.json());
+                } catch (jsonError) {
+                    console.warn(`Response not in JSON format or empty for co=${co}.`);
+                }
             }
         } catch (error) {
-            if (error.toString().startsWith("SyntaxError: Unexpected end of JSON")) {
-                //this is because post request doesn't send back a response and 
-                //The syntax error is because of a successfull post request.
+            if (error.toString().includes("Unexpected end of JSON")) {
+                console.warn(`Known issue: empty JSON response for co=${co}, assuming success.`);
             } else {
-                //This means that the post is working properly
-                console.error("Unable to post data", error)
-                changeStatus(false)
+                console.error("Unable to post data for co:", co, error);
+                changeStatus(false);
                 return {
                     response: false,
                     message: "Unable to aggregate data"
-                }
+                };
             }
         }
-    };
-
-    changeStatus(false)
+    }
+    
+    changeStatus(true);
     return {
         response: true,
-        message: "Successfull"
+        message: "Successful"
     };
+    
+
+   
 }
