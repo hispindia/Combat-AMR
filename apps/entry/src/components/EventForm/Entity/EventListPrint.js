@@ -473,129 +473,132 @@ export default function EventListPrint(props) {
         >
           <>
             {Object.values(link).includes("true") ||
-              Object.keys(link).includes("Others") ||
-              Object.keys(link).some((key) => key.includes("staining")) ? (
-              <Table
-              // sx={{
-              //   width: "40%",
-              //   minWidth: 150,
-              //   // width: { xs: "100%", md: "40%" },
-              //   "@media screen and (max-width: 600px)": {
-              //     width: "100%",
-              //   },
-              // }}
-              >
-                <TableBody>
-                  <Box
-                    sx={{
-                      border: 1,
-                      fontSize: 10,
-                      ml: 20,
-                      mr: 20,
-                      mt: 1,
-                      mb: 1,
-                      borderBottom: 0,
-                      borderRight: 0,
-                    }}
-                  >
-                    <TableRow>
-                      <TableCell
-                        colSpan={3}
-                        align="center"
-                        className={classes.tableRightBorder + " " + "antibio"}
-                        style={{
-                          fontWeight: "bold",
-                          borderBottom: "1px solid black ",
-                          fontSize: "13px",
-                          borderRight: "1px solid black",
-                        }}
-                      >
-                        Preliminary tests
-                      </TableCell>
-                    </TableRow>
+            Object.keys(link).includes("Others") ||
+            Object.keys(link).some((key) => key.includes("staining"))
+              ? (() => {
+                  // Filter the data to be displayed in the table
+                  const filteredPlayers = [
+                    ...getPlayersByPosition(link, "").filter(
+                      (player) =>
+                        (link[player] === "true" || player === "Others") &&
+                        !link["Resistant for Carbapenems"] &&// Remove this filed from the Table 
+                        !link["Resistant for ESBL"] &&
+                        link[player] !== undefined
+                    ),
+                    ...getPlayersByPosition(link, "").filter(
+                      (player) =>
+                        !(link[player] === "true" || player === "Others") &&
+                        !link["Resistant for Carbapenems"] &&
+                        !link["Resistant for ESBL"] &&
+                        link[player] !== undefined
+                    ),
+                  ];
+                  console.log("Filtered Players:", filteredPlayers); // Debugging
 
-                    {[
-                      ...getPlayersByPosition(link, "").filter(
-                        (player) => link[player] == "true" || player == "Others"
-                      ),
-                      ...getPlayersByPosition(link, "").filter(
-                        (player) =>
-                          !(link[player] == "true" || player == "Others")
-                      ),
-                    ].map((player, index) => {
-                      console.log(
-                        "link[player] == ",
-                        (link[player] == "true").length
-                      );
-                      return (
-                        <>
-                          {link[player] == "true" ||
-                            player == "Others" ||
-                            EXCEPTION_CONDITION.includes(player) ? (
-                            <TableRow key={index}>
-                              <TableCell
-                                className={
-                                  classes.tableRightBorder + " " + "antibio"
-                                }
-                                style={{
-                                  borderBottom: "1px solid black",
-                                  textAlign: "center",
-                                }}
-                                sx={{
-                                  width: "300px",
-                                }}
-                              >
-                                <Typography>
-                                  <Box
-                                    className="boxClass"
-                                    sx={{ fontSize: 12, m: 1 }}
-                                  >
-                                    {player}
-                                    {/* {player.split("_")[0]} */}
-                                  </Box>
-                                </Typography>
-                              </TableCell>
+                  // Only render the table if there is data to display
+                  if (filteredPlayers.length === 0) {
+                    return null; // Don't render the table
+                  }
 
-                              <TableCell
-                                className={
-                                  classes.tableRightBorder + " " + "antibio"
-                                }
-                                style={{
-                                  borderBottom: "1px solid black",
-                                  textAlign: "center",
-                                }}
-                                sx={{
-                                  width: "300px",
-                                }}
-                              >
-                                <Typography>
-                                  <Box
-                                    className="boxClass"
-                                    sx={{ fontSize: 12, m: 1 }}
+                  return (
+                    <Table>
+                      <TableBody>
+                        <Box
+                          sx={{
+                            border: 1,
+                            fontSize: 10,
+                            ml: 20,
+                            mr: 20,
+                            mt: 1,
+                            mb: 1,
+                            borderBottom: 0,
+                            borderRight: 0,
+                          }}
+                        >
+                          <TableRow>
+                            <TableCell
+                              colSpan={3}
+                              align="center"
+                              className={
+                                classes.tableRightBorder + " " + "antibio"
+                              }
+                              style={{
+                                fontWeight: "bold",
+                                borderBottom: "1px solid black ",
+                                fontSize: "13px",
+                                borderRight: "1px solid black",
+                              }}
+                            >
+                              Preliminary tests
+                            </TableCell>
+                          </TableRow>
+
+                          {filteredPlayers.map((player, index) => (
+                            <React.Fragment key={index}>
+                              {link[player] === "true" ||
+                              player === "Others" ||
+                              EXCEPTION_CONDITION.includes(player) ? (
+                                <TableRow>
+                                  <TableCell
+                                    className={
+                                      classes.tableRightBorder + " " + "antibio"
+                                    }
+                                    style={{
+                                      borderBottom: "1px solid black",
+                                      textAlign: "center",
+                                    }}
+                                    sx={{
+                                      width: "300px",
+                                    }}
                                   >
-                                    {player == "Others"
-                                      ? link[player]
-                                      : link[player] == "true"
-                                        ? "Yes"
-                                        : link[player]}
-                                  </Box>
-                                </Typography>
-                              </TableCell>
-                            </TableRow>
-                          ) : (
-                            ""
-                          )}
-                        </>
-                      );
-                    })}
-                  </Box>
-                </TableBody>
-              </Table>
-            ) : (
-              ""
-            )}
+                                    <Typography>
+                                      <Box
+                                        className="boxClass"
+                                        sx={{ fontSize: 12, m: 1 }}
+                                      >
+                                        {player}
+                                      </Box>
+                                    </Typography>
+                                  </TableCell>
+
+                                  <TableCell
+                                    className={
+                                      classes.tableRightBorder + " " + "antibio"
+                                    }
+                                    style={{
+                                      borderBottom: "1px solid black",
+                                      textAlign: "center",
+                                    }}
+                                    sx={{
+                                      width: "300px",
+                                    }}
+                                  >
+                                    <Typography>
+                                      <Box
+                                        className="boxClass"
+                                        sx={{ fontSize: 12, m: 1 }}
+                                      >
+                                        {player === "Others"
+                                          ? link[player]
+                                          : link[player] === "true"
+                                          ? "Yes"
+                                          : link[player]}
+                                      </Box>
+                                    </Typography>
+                                  </TableCell>
+                                </TableRow>
+                              ) : null}
+                            </React.Fragment>
+                          ))}
+                        </Box>
+                      </TableBody>
+                    </Table>
+                  );
+                })()
+              : null}
           </>
         </Box>
+
         <Table
           sx={{
             [`& .${tableCellClasses.root}`]: {
@@ -605,7 +608,9 @@ export default function EventListPrint(props) {
         >
           <TableBody>
             <TableRow>
-              {(link["Sample Result"] !== "Rejected") && (link["Sample Result"] !== "No aerobic growth") && (link["Sample Result"] !== "Sterile") ? (
+              {link["Sample Result"] !== "Rejected" &&
+              link["Sample Result"] !== "No aerobic growth" &&
+              link["Sample Result"] !== "Sterile" ? (
                 <TableCell style={{ width: "30%" }}>
                   <Typography>
                     <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
@@ -626,25 +631,26 @@ export default function EventListPrint(props) {
                     <span>{PATHOGEN}</span> :&nbsp;&nbsp;&nbsp;&nbsp;
                     <span style={{ fontWeight: "bold" }}>
                       {/* {link["Pathogen"]} */}
-                      {link["Pathogen Group"] == "Sample testing" ? link["Sample Result"] : link["Pathogen"]}
+                      {link["Pathogen Group"] == "Sample testing"
+                        ? link["Sample Result"]
+                        : link["Pathogen"]}
                     </span>
                   </Box>
                 </Typography>
               </TableCell>
-              {(link["Sample Result"] == "Rejected") ? (
-                <TableCell >
+              {link["Sample Result"] == "Rejected" ? (
+                <TableCell>
                   <Typography>
                     <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
                       {/* {PATHOGEN_G} :&nbsp;&nbsp;{link[PATHOGEN_G]} */}
                       <span>{REASON_FOR_REJECTION}</span> :&nbsp;&nbsp;
                       <span style={{ fontWeight: "bold" }}>
-                        {link['Reason for rejection']}
+                        {link["Reason for rejection"]}
                       </span>
                     </Box>
                   </Typography>
                 </TableCell>
               ) : null}
-
             </TableRow>
           </TableBody>
         </Table>
@@ -737,31 +743,31 @@ export default function EventListPrint(props) {
           }}
         >
           <TableBody>
-          <TableRow>
+            <TableRow>
               <TableCell style={{ width: "40%" }}>
                 {link["Resistant for Carbapenems"] && (
                   <Typography>
-
                     <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                    <span style={{ fontWeight: 'bold' }}>Alert:</span>&nbsp;&nbsp;
-                      <span style={{ color: 'red' }}>Resistant for Carbapenems</span>
+                      <span style={{ fontWeight: "bold" }}>Alert:</span>
+                      &nbsp;&nbsp;
+                      <span style={{ color: "red" }}>
+                        Resistant for Carbapenems
+                      </span>
                     </Box>
                   </Typography>
                 )}
-
               </TableCell>
               <TableCell style={{ width: "40%" }}>
                 {link["Resistant for ESBL"] && (
                   <Typography>
                     <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
-                    <span style={{ fontWeight: 'bold' }}>Alert:</span>&nbsp;&nbsp;
-                      <span style={{ color: 'red' }}>Resistant for ESBL</span>
+                      <span style={{ fontWeight: "bold" }}>Alert:</span>
+                      &nbsp;&nbsp;
+                      <span style={{ color: "red" }}>Resistant for ESBL</span>
                     </Box>
-
                   </Typography>
                 )}
               </TableCell>
-
             </TableRow>
             <TableRow>
               <TableCell style={{ width: "40%" }}>
@@ -773,7 +779,6 @@ export default function EventListPrint(props) {
                 </Typography>
               </TableCell>
             </TableRow>
-            
           </TableBody>
         </Table>
       </Box>
@@ -1239,7 +1244,12 @@ export default function EventListPrint(props) {
             {(contentDisplayed = true)}
           </React.Fragment>
         ))}
-        <div style={{ fontWeight: 'bold', textAlign: 'center', padding: '20px' }}>JUMC Laboratory is accredited in Microbiology Test by Ethiopian Accreditation Service Since 2023</div>
+        <div
+          style={{ fontWeight: "bold", textAlign: "center", padding: "20px" }}
+        >
+          JUMC Laboratory is accredited in Microbiology Test by Ethiopian
+          Accreditation Service Since 2023
+        </div>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="secondary">
