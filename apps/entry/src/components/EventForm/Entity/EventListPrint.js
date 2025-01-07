@@ -473,71 +473,74 @@ export default function EventListPrint(props) {
         >
           <>
             {Object.values(link).includes("true") ||
-            Object.keys(link).includes("Others") ||
-            Object.keys(link).some((key) => key.includes("staining"))
+              Object.keys(link).includes("Others") ||
+              Object.keys(link).some((key) => key.includes("staining"))
               ? (() => {
-                  // Filter the data to be displayed in the table
-                  const filteredPlayers = [
-                    ...getPlayersByPosition(link, "").filter(
-                      (player) =>
-                        (link[player] === "true" || player === "Others") &&
-                        !link["Resistant for Carbapenems"] &&// Remove this filed from the Table 
-                        !link["Resistant for ESBL"] &&
-                        link[player] !== undefined
-                    ),
-                    ...getPlayersByPosition(link, "").filter(
-                      (player) =>
-                        !(link[player] === "true" || player === "Others") &&
-                        !link["Resistant for Carbapenems"] &&
-                        !link["Resistant for ESBL"] &&
-                        link[player] !== undefined
-                    ),
-                  ];
-                  console.log("Filtered Players:", filteredPlayers); // Debugging
+                // Filter the data to be displayed in the table
+                const filteredPlayers = [
+                  ...getPlayersByPosition(link, "").filter(
+                    (player) =>
+                      (link[player] === "true" || player === "Others")
+                      ||
+                      !link["Resistant for Carbapenems"] || // Remove this filed from the Table 
+                      !link["Resistant for ESBL"]
+                      || link[player] !== undefined
+                  ),
+                  // ...getPlayersByPosition(link, "").filter(
+                  //   (player) =>
+                  //     !(link[player] === "true" || player === "Others") ||
+                  //     !link["Resistant for Carbapenems"] ||
+                  //     !link["Resistant for ESBL"] ||
+                  //     link[player] !== undefined
+                  // ),
+                ];
+                console.log("Filtered Players:", filteredPlayers); // Debugging
 
-                  // Only render the table if there is data to display
-                  if (filteredPlayers.length === 0) {
-                    return null; // Don't render the table
-                  }
+                // Only render the table if there is data to display
+                if (filteredPlayers.length === 0) {
+                  return null; // Don't render the table
+                }
 
-                  return (
-                    <Table>
-                      <TableBody>
-                        <Box
-                          sx={{
-                            border: 1,
-                            fontSize: 10,
-                            ml: 20,
-                            mr: 20,
-                            mt: 1,
-                            mb: 1,
-                            borderBottom: 0,
-                            borderRight: 0,
-                          }}
-                        >
-                          <TableRow>
-                            <TableCell
-                              colSpan={3}
-                              align="center"
-                              className={
-                                classes.tableRightBorder + " " + "antibio"
-                              }
-                              style={{
-                                fontWeight: "bold",
-                                borderBottom: "1px solid black ",
-                                fontSize: "13px",
-                                borderRight: "1px solid black",
-                              }}
-                            >
-                              Preliminary tests
-                            </TableCell>
-                          </TableRow>
+                return (
+                  <Table>
+                    <TableBody>
+                      <Box
+                        sx={{
+                          border: 1,
+                          fontSize: 10,
+                          ml: 20,
+                          mr: 20,
+                          mt: 1,
+                          mb: 1,
+                          borderBottom: 0,
+                          borderRight: 0,
+                        }}
+                      >
+                        <TableRow>
+                          <TableCell
+                            colSpan={3}
+                            align="center"
+                            className={
+                              classes.tableRightBorder + " " + "antibio"
+                            }
+                            style={{
+                              fontWeight: "bold",
+                              borderBottom: "1px solid black ",
+                              fontSize: "13px",
+                              borderRight: "1px solid black",
+                            }}
+                          >
+                            Preliminary tests
+                          </TableCell>
+                        </TableRow>
 
-                          {filteredPlayers.map((player, index) => (
+                        {filteredPlayers
+                          .filter(player => player !== "Resistant for Carbapenems" &&  player !== "Resistant for ESBL") // Exclude specific player
+                          .map((player, index) => (
                             <React.Fragment key={index}>
                               {link[player] === "true" ||
-                              player === "Others" ||
-                              EXCEPTION_CONDITION.includes(player) ? (
+                                player === "Others" ||
+                                EXCEPTION_CONDITION.includes(player) ? (
                                 <TableRow>
                                   <TableCell
                                     className={
@@ -581,8 +584,8 @@ export default function EventListPrint(props) {
                                         {player === "Others"
                                           ? link[player]
                                           : link[player] === "true"
-                                          ? "Yes"
-                                          : link[player]}
+                                            ? "Yes"
+                                            : link[player]}
                                       </Box>
                                     </Typography>
                                   </TableCell>
@@ -590,11 +593,12 @@ export default function EventListPrint(props) {
                               ) : null}
                             </React.Fragment>
                           ))}
-                        </Box>
-                      </TableBody>
-                    </Table>
-                  );
-                })()
+
+                      </Box>
+                    </TableBody>
+                  </Table>
+                );
+              })()
               : null}
           </>
         </Box>
@@ -609,8 +613,8 @@ export default function EventListPrint(props) {
           <TableBody>
             <TableRow>
               {link["Sample Result"] !== "Rejected" &&
-              link["Sample Result"] !== "No aerobic growth" &&
-              link["Sample Result"] !== "Sterile" ? (
+                link["Sample Result"] !== "No aerobic growth" &&
+                link["Sample Result"] !== "Sterile" ? (
                 <TableCell style={{ width: "30%" }}>
                   <Typography>
                     <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
