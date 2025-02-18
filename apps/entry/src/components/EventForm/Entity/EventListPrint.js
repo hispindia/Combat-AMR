@@ -463,7 +463,7 @@ export default function EventListPrint(props) {
           </TableBody>
         </Table>
 
-        <Box
+        {/* <Box
           sx={
             {
               // display: "flex",
@@ -535,7 +535,7 @@ export default function EventListPrint(props) {
                         </TableRow>
 
                         {filteredPlayers
-                          .filter(player => player !== "Resistant for Carbapenems" &&  player !== "Resistant for ESBL") // Exclude specific player
+                          .filter(player => player !== "Resistant for Carbapenems" &&  player !== "Resistant for ESBL" && player !== "Resistant for Methicillin") // Exclude specific player
                           .map((player, index) => (
                             <React.Fragment key={index}>
                               {link[player] === "true" ||
@@ -601,7 +601,165 @@ export default function EventListPrint(props) {
               })()
               : null}
           </>
+        </Box> */}
+
+
+
+
+
+        <Box
+          sx={{
+            // display: "flex",
+            // justifyContent: "space-around",
+          }}
+        >
+          <>
+            {Object.values(link).includes("true") ||
+              Object.keys(link).includes("Others") ||
+              Object.keys(link).some((key) => key.includes("staining")) ? (() => {
+                // List of fields that should be checked for isolation
+                const isolatedFields = [
+                  "Resistant for Methicillin",
+                  "Resistant for Carbapenems",
+                  "Resistant for ESBL",
+                  "Resistant for Vancomycin"
+                  // Add any other fields you want to check in isolation(check if only these fields present then table will not show )
+                ];
+
+                // List of fields that should be present to display the table(requried fields that will present all time)
+                const requiredFields = [
+                  "AFB staining",
+                  "Gram Negative Bacilli",
+                  "Indian Ink (Negative staining)",
+                ];
+
+                // Check if any of the required fields are present
+                const hasRequiredFields = Object.keys(link).some(
+                  (key) => requiredFields.includes(key)
+                );
+
+                // Check if only one of the isolated fields is present and no required fields
+                const isIsolatedFieldPresent = isolatedFields.some(
+                  (field) => Object.keys(link).includes(field) && !hasRequiredFields
+                );
+
+                // If only isolated fields are present without the required fields, return null
+                if (isIsolatedFieldPresent) {
+                  return null; // Don't render the table
+                }
+
+                // Filter the data to be displayed in the table
+                const filteredPlayers = [
+                  ...getPlayersByPosition(link, "").filter(
+                    (player) =>
+                      (link[player] === "true" || player === "Others") ||
+                      // !link["Resistant for Carbapenems"] || // Remove this field from the Table
+                      // !link["Resistant for ESBL"] ||
+                      link[player] !== undefined
+                  ),
+                ];
+                console.log("Filtered Players:", filteredPlayers); // Debugging
+
+                // Only render the table if there is data to display
+                if (filteredPlayers.length === 0) {
+                  return null; // Don't render the table
+                }
+
+                return (
+                  <Table>
+                    <TableBody>
+                      <Box
+                        sx={{
+                          border: 1,
+                          fontSize: 10,
+                          ml: 20,
+                          mr: 20,
+                          mt: 1,
+                          mb: 1,
+                          borderBottom: 0,
+                          borderRight: 0,
+                        }}
+                      >
+                        <TableRow>
+                          <TableCell
+                            colSpan={3}
+                            align="center"
+                            className={classes.tableRightBorder + " " + "antibio"}
+                            style={{
+                              fontWeight: "bold",
+                              borderBottom: "1px solid black ",
+                              fontSize: "13px",
+                              borderRight: "1px solid black",
+                            }}
+                          >
+                            Preliminary tests
+                          </TableCell>
+                        </TableRow>
+
+                        {filteredPlayers
+                          .filter(
+                            (player) =>
+                              player !== "Resistant for Carbapenems" &&
+                              player !== "Resistant for ESBL" &&
+                              player !== "Resistant for Methicillin" &&
+                              player !== "Resistant for Vancomycin"// remove these above fileds from the table
+                          )
+                          .map((player, index) => (
+                            <React.Fragment key={index}>
+                              {link[player] === "true" ||
+                                player === "Others" ||
+                                EXCEPTION_CONDITION.includes(player) ? (
+                                <TableRow>
+                                  <TableCell
+                                    className={classes.tableRightBorder + " " + "antibio"}
+                                    style={{
+                                      borderBottom: "1px solid black",
+                                      textAlign: "center",
+                                    }}
+                                    sx={{
+                                      width: "300px",
+                                    }}
+                                  >
+                                    <Typography>
+                                      <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+                                        {player}
+                                      </Box>
+                                    </Typography>
+                                  </TableCell>
+
+                                  <TableCell
+                                    className={classes.tableRightBorder + " " + "antibio"}
+                                    style={{
+                                      borderBottom: "1px solid black",
+                                      textAlign: "center",
+                                    }}
+                                    sx={{
+                                      width: "300px",
+                                    }}
+                                  >
+                                    <Typography>
+                                      <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+                                        {player === "Others"
+                                          ? link[player]
+                                          : link[player] === "true"
+                                            ? "Yes"
+                                            : link[player]}
+                                      </Box>
+                                    </Typography>
+                                  </TableCell>
+                                </TableRow>
+                              ) : null}
+                            </React.Fragment>
+                          ))}
+                      </Box>
+                    </TableBody>
+                  </Table>
+                );
+              })() : null}
+          </>
         </Box>
+
+
 
         <Table
           sx={{
@@ -749,28 +907,46 @@ export default function EventListPrint(props) {
           <TableBody>
             <TableRow>
               <TableCell style={{ width: "40%" }}>
-                {link["Resistant for Carbapenems"] && (
+                {link["Resistant for Carbapenems"] ? (
                   <Typography>
                     <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
                       <span style={{ fontWeight: "bold" }}>Alert:</span>
                       &nbsp;&nbsp;
-                      <span style={{ color: "red" }}>
+                      <span style={{ color: "red", fontWeight:'bold',fontSize:'13px' }}>
                         Resistant for Carbapenems
                       </span>
                     </Box>
                   </Typography>
-                )}
+                ) :  link["Resistant for Methicillin"] ? (
+                  <Typography>
+                  <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+                    <span style={{ fontWeight: "bold" }}>Alert:</span>
+                    &nbsp;&nbsp;
+                    <span style={{ color: "red", fontWeight:'bold',fontSize:'13px' }}>
+                    Resistant for Methicillin
+                    </span>
+                  </Box>
+                </Typography>
+                ): ""}
               </TableCell>
               <TableCell style={{ width: "40%" }}>
-                {link["Resistant for ESBL"] && (
+                {link["Resistant for ESBL"] ? (
                   <Typography>
                     <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
                       <span style={{ fontWeight: "bold" }}>Alert:</span>
                       &nbsp;&nbsp;
-                      <span style={{ color: "red" }}>Resistant for ESBL</span>
+                      <span style={{ color: "red", fontWeight:'bold',fontSize:'13px' }}>Resistant for ESBL</span>
                     </Box>
                   </Typography>
-                )}
+                ) : link["Resistant for Vancomycin"] ? (
+                  <Typography>
+                  <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
+                    <span style={{ fontWeight: "bold" }}>Alert:</span>
+                    &nbsp;&nbsp;
+                    <span style={{ color: "red", fontWeight:'bold',fontSize:'13px' }}>Resistant for Vancomycin</span>
+                  </Box>
+                </Typography>
+                ) : ""}
               </TableCell>
             </TableRow>
             <TableRow>
@@ -1043,7 +1219,7 @@ export default function EventListPrint(props) {
               //             <Box className="boxClass" sx={{ fontSize: 12, m: 1 }}>
               //               Signature:
               //             </Box>
-              //           </Typography>
+              //           </Typography>f
               //         </TableCell>
               //       </TableRow>
               //     </TableBody>
