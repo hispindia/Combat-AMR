@@ -49,6 +49,9 @@ export const SwitchInput = props => {
             onChange={onChange}
             />
             {props?.warningValue?<small style={blinkStyle}>{ props?.warningValue||''  }</small>:''}
+            {props?.warningValue === 'Resistant for Carbapenem' && <p style={{border:'1px solid black', textAlign:'justify',fontSize:'13px',padding:'5px'}}>According to the phenotype AST result, the bacteria may be carbapenem-resistant; therefore, further confirmation is recommended. It is also important for the treating physician to consider the public health implications of these bacteria. It would be recommended to isolate the patient and implement strict infection prevention measures. Additionally, reviewing and optimizing antibiotic prescribing practices, closely monitoring the patient's health outcomes, and reporting cases of carbapenem resistance to the responsible stakeholders are advised.</p>}
+    {props.warningValue === 'Resistant for ESBL' && <p style={{border:'1px solid black',textAlign:'justify',fontSize:'13px',padding:'5px'}}>According to the phenotype AST result, the bacteria may be ESBL-resistant; therefore, further confirmation is recommended. Additionally, it is important for the treating physician to consider the public health implications of these bacteria. It would also be advisable to implement strict infection prevention protocols and review and optimize antibiotics prescribing practices.</p>}
+    {props.warningValue === 'Resistant for Methicillin' && <p style={{border:'1px solid black', textAlign:'justify', fontSize:'13px',padding:'5px'}}>The bacteria could be MRSA, so the treating physician should be aware of MRSA that is resistant to all beta-lactam antibiotics, including methicillin and cephalosporins. Alternative treatments could be vancomycin or linezolid. However, the susceptibility results must be interpreted in the context of the clinical scenario.</p>}
             </>
     )
 }
