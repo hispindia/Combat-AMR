@@ -38,7 +38,7 @@ export const Panel = ({ showEdit }) => {
     /**
      * Called when a new program is selected.
      */
-    const onProgramChange = async (name, value) =>{
+    const onProgramChange = async (name, value) => {
         dispatch(setProgram(value))
     }
 
@@ -46,7 +46,7 @@ export const Panel = ({ showEdit }) => {
      * Called when something other than program is changed
      */
     const onChange = (name, value) => {
-            dispatch(setPanelValue(name, value))
+        dispatch(setPanelValue(name, value))
     }
 
     /**
@@ -60,8 +60,8 @@ export const Panel = ({ showEdit }) => {
         }
         var datedisabled = false;
         var hideType = Object.keys(isPrevEvent).length;
-        if ((hideType && id == "programStage")|| (id == "programStage" && programs && programs.length < 3)) {
-            id = "null" ;
+        if ((hideType && id == "programStage") || (id == "programStage" && programs && programs.length < 3)) {
+            id = "null";
         }
         if (hideType) {
             datedisabled = true;
@@ -74,20 +74,20 @@ export const Panel = ({ showEdit }) => {
         }
         else {
             if (editable) {
-               datedisabled = true;
+                datedisabled = true;
             }
         }
         switch (id) {
             case `defaultProgram`:
-            return getInput({
-                ...common,
-                id: 'program',
-                name: 'program',
-                label: 'Group',
-                objects: defaultProgram,
-                onChange: onProgramChange,
-                value: program
-            })
+                return getInput({
+                    ...common,
+                    id: 'program',
+                    name: 'program',
+                    label: 'Group',
+                    objects: defaultProgram,
+                    onChange: onProgramChange,
+                    value: program
+                })
             case 'program':
                 return getInput({
                     ...common,
@@ -99,15 +99,15 @@ export const Panel = ({ showEdit }) => {
                     value: program,
                 })
             case 'programStage':
-                    return getInput({
-                        ...common,
-                        id: 'programStage',
-                        name: 'programStage',
-                        label: 'Type',
-                        objects: stageLists[program],
-                        onChange: onChange,
-                        value: programStage,
-                    })
+                return getInput({
+                    ...common,
+                    id: 'programStage',
+                    name: 'programStage',
+                    label: 'Type',
+                    objects: stageLists[program],
+                    onChange: onChange,
+                    value: programStage,
+                })
             case 'organism':
                 return getInput({
                     ...common,
@@ -121,7 +121,7 @@ export const Panel = ({ showEdit }) => {
             case 'sampleDate':
                 return getInput({
                     disabled: datedisabled,
-                    required:true,
+                    required: true,
                     id: 'sampleDate',
                     name: 'sampleDate',
                     label: 'Date of Sample',
@@ -153,9 +153,9 @@ export const Panel = ({ showEdit }) => {
     if (!entityValid) return null
 
     return (
-        <CardSection heading="Panel" buttons={showEdit && <PanelButtons />}>
+        <CardSection heading="" buttons={showEdit && <PanelButtons />}>
             <Grid container spacing={0}>
-                <Grid item xs>
+                {/* <Grid item xs>
                     {(defaultProgram.length && !editable) ?  getDataElement('defaultProgram'): getDataElement('program')}
                     {program &&
                         stageLists[program].length >= 1 &&
@@ -164,6 +164,33 @@ export const Panel = ({ showEdit }) => {
                 <Grid item xs>
                     {(program && organisms.length) ? getDataElement('organism') : ""}
                     {getDataElement('sampleDate')}
+                </Grid> */}
+
+
+
+
+                <Grid item xs>
+                    {getDataElement('sampleDate')}
+                    {program && stageLists[program].length >= 1 && (
+                        <div style={{ display: !editable || program == "WhYipXYg2Nh" && programStage == "LjiZPsbh1oy" ? 'none' : 'block' }}
+                        >
+                            {getDataElement('programStage')}
+                        </div>
+                    )}
+
+                </Grid>
+                <Grid item xs>
+                    {(program == "WhYipXYg2Nh" && defaultProgram.length == 1 && programStage == "LjiZPsbh1oy" && editable) ? (
+                        <div style={{
+                            display: program == "WhYipXYg2Nh" && programStage == "LjiZPsbh1oy" ? 'none' : 'block'
+                        }}>{getDataElement("defaultProgram")}</div>
+                    ) : (program == "" && programStage == "" && !editable) ? (
+                        <div >
+                            {getDataElement("defaultProgram")}
+                        </div>
+                    ) : <div style={{ display: !editable ? 'none' : 'block' }}>{getDataElement("program")}</div>}
+                    {(program && organisms.length) ? program !== "WhYipXYg2Nh" ? getDataElement('organism') : "" : ""}
+
                 </Grid>
             </Grid>
         </CardSection>

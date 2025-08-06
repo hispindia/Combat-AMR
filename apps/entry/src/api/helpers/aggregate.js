@@ -73,6 +73,7 @@ let getValue = async ({
  * 
  * @param {{event,operation}} operation event and operation operation is either "COMPLETE" or "INCOMPLETE" 
  */
+console.trace("check aggregate=======")
 export const Aggregate = async ({
     event,
     operation,

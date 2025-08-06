@@ -11,13 +11,6 @@ export var tanda = {
             name: 'Name of the Patient',
         },
         {
-            name: 'Ward',
-            options : {display:false},
-        },
-        {
-            name: 'Age',
-        },
-        {
             name: 'Sex',
         },
         {
@@ -26,9 +19,22 @@ export var tanda = {
         {
             name:'Lab ID',
         },
+        
+        {
+            name: 'Ward',
+            options : {display:false},
+        },
+        {
+            name: 'Age',
+            options : { display: false},
+        },
+        
         {
             name: 'Organisation unit ID',
             options: { display: false },
+        },
+         {
+            name:'Barcode',
         },
         {
             name: 'Tracked Entity Instance ID',

@@ -80,7 +80,7 @@ export const EntityInput = ({ attribute,userAccess }) => {
     if (attribute.hide) return null
 
 
-
+console.log("arrrrrrrrrrrrrrrrrrrrr",attribute)
     return (
         <Padding>
             {attribute.trackedEntityAttribute.valueType === 'AGE' ? (

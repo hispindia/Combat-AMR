@@ -27,6 +27,7 @@ const StyledButtonRow = styled(ButtonRow)`
 
 export const EventButtons = ({ history, existingEvent }) => {
     const dispatch = useDispatch()
+    console.trace("check")
     const buttonsDisabled = useSelector(state => state.data.buttonsDisabled)
     var btnStatus = useSelector(state => state.data.btnStatus)
     const status = useSelector(state => state.data.event.status)

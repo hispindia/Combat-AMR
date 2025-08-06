@@ -29,7 +29,8 @@ export const Entity = ({ showEdit }) => {
     )
 
     if (!attributes) return <LoadingSection />
-
+console.log("attributes",attributes)
+console.trace("chhhhhh")
     return (
         <CardSection
             heading="Person"

@@ -80,7 +80,7 @@ export const TableList = (props) => {
                 options: { display: false },
             },
             {
-                name: 'Age',
+                name: 'Sex',
                                 options: {
                     customBodyRender: (value, tableMeta, updateValue) => {
                         return (
@@ -98,25 +98,25 @@ export const TableList = (props) => {
                     }
                 }
             },
-            {
-                name: 'Sex',
-                                options: {
-                    customBodyRender: (value, tableMeta, updateValue) => {
-                        return (
-                            <Link
-                                component="button"
-                                variant="body2"
-                                color = "inherit"
-                                onClick={() => {
-                                    onEventClick(tableMeta.rowData,tableMeta.rowData[6], tableMeta.rowData[7])
-                                }}
-                            >
-                                {tableMeta.rowData[4]}
-                            </Link>
-                        );
-                    }
-                }
-            },
+            // {
+            //     name: 'Sex',
+            //                     options: {
+            //         customBodyRender: (value, tableMeta, updateValue) => {
+            //             return (
+            //                 <Link
+            //                     component="button"
+            //                     variant="body2"
+            //                     color = "inherit"
+            //                     onClick={() => {
+            //                         onEventClick(tableMeta.rowData,tableMeta.rowData[6], tableMeta.rowData[7])
+            //                     }}
+            //                 >
+            //                     {tableMeta.rowData[4]}
+            //                 </Link>
+            //             );
+            //         }
+            //     }
+            // },
             {
                 name: 'Location',
                                 options: {
@@ -155,6 +155,7 @@ export const TableList = (props) => {
                     }
                 }
             },
+           
             {
                 name: 'Organisation unit ID',
                 options: { display: false },
@@ -167,10 +168,32 @@ export const TableList = (props) => {
                 name: 'Tracked Entity Type',
                 options: { display: false },
             },
+             
             {
                 name: 'Program',
                 options: { display: false },
             },
+            {
+                name: 'Barcode',
+                                options: {
+                    customBodyRender: (value, tableMeta, updateValue) => {
+                         const barcode = tableMeta?.rowData?.[10] ?? ''; // safely access index 10
+                        return (
+                            <Link
+                                component="button"
+                                variant="body2"
+                                color = "inherit"
+                                onClick={() => {
+                                    onEventClick(tableMeta.rowData,tableMeta.rowData[6], tableMeta.rowData[7])
+                                }}
+                            >
+                                {barcode}
+                            </Link>
+                        );
+                    }
+                }
+            },
+           
             {
                 name: 'Follow up',
                 options: {
@@ -203,7 +226,8 @@ export const TableList = (props) => {
       
                     }
                 }
-            }]
+            },
+         ]
     }
     else {
                 headers = [
@@ -218,17 +242,20 @@ export const TableList = (props) => {
                 options: { display: false },
             },
             {
-                name: 'Age',
-            },
-            {
                 name: 'Sex',
             },
+            {
+                name: 'Age',
+                 options : { display: false},
+            },
+            
             {
                 name: 'Location',
             },
             {
                 name: 'Lab ID',
             },
+            
             {
                 name: 'Organisation unit ID',
                 options: { display: false },
@@ -240,6 +267,9 @@ export const TableList = (props) => {
             {
                 name: 'Tracked Entity Type',
                 options: { display: false },
+            },
+             {
+                name: 'Barcode',
             },
             {
                 name: 'Program',
