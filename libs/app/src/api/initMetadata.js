@@ -5,7 +5,7 @@ import { HIDE, IGNORE, EDITABLE } from 'constants'
 const getUserData = async () =>
     await get(
         request('me', {
-            fields: 'organisationUnits,userGroups,userCredentials[username],dataViewOrganisationUnits',
+            fields: 'organisationUnits,userGroups,userRoles,userCredentials[username],dataViewOrganisationUnits',
         })
     )
 
@@ -138,11 +138,13 @@ export const initMetadata = async isIsolate => {
     }
 
     const userData = await getUserData()
+    console.log("userRole=========",userData)
 
     const userGroups = userData.userGroups.map(userGroup => userGroup.id)
     const user = {
         username: userData.userCredentials.username,
         deoMember: userGroups.includes(DEO_GROUP),
+        userRole: userData.userRoles[0].id
     }
     const userOrgUnits = userData.organisationUnits.map(uo => uo.id)
     const userDataView = userData.dataViewOrganisationUnits.map(ou => ou.id)

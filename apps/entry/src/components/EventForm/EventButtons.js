@@ -1,344 +1,417 @@
-import React, { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import styled from 'styled-components'
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import styled from "styled-components";
 import {
-    ButtonRow,
-    submitEvent,
-    editEvent,
-    setDeletePrompt,
-    DUPLICATE_ERROR,
-    saveEvent,
-    inCompleteEvent,
-    nextEvent,
-    setAggregationProgress,
-    clinicianEvent,
-    saveClinician
-} from '@hisp-amr/app'
-import {
-    Aggregate
-} from '../../api/helpers/aggregate'
-import $ from "jquery"
-import { LABTECH } from './Entity/constants';
-
+  ButtonRow,
+  submitEvent,
+  editEvent,
+  setDeletePrompt,
+  DUPLICATE_ERROR,
+  saveEvent,
+  inCompleteEvent,
+  nextEvent,
+  setAggregationProgress,
+  clinicianEvent,
+  saveClinician,
+} from "@hisp-amr/app";
+import { Aggregate } from "../../api/helpers/aggregate";
+import $ from "jquery";
+import { LABTECH } from "./Entity/constants";
 
 const StyledButtonRow = styled(ButtonRow)`
-    margin: 0px;
-`
+  margin: 0px;
+`;
 
 export const EventButtons = ({ history, existingEvent }) => {
-    const dispatch = useDispatch()
-    const buttonsDisabled = useSelector(state => state.data.buttonsDisabled)
-    var btnStatus = useSelector(state => state.data.btnStatus)
-    const status = useSelector(state => state.data.event.status)
-    const event = useSelector(state => state.data.event)
-    const eventId = useSelector(state => state.data.event.id)
-    const invalid = useSelector(state => state.data.event.invalid)
-    const valid = useSelector(state => state.data.panel.valid)
-    const duplicate = useSelector(state => state.data.event.duplicate)
-    const exit = useSelector(state => state.data.exit)
-    const dataElementObjects = useSelector(state=> state.metadata.dataElementObjects)
-    const programs = useSelector(state=>state.metadata.programs)
-    const categoryCombos = useSelector(state=> state.metadata.categoryCombos)
-    const dataSets = useSelector(state=>state.metadata.dataSets)
-    const orgUnit = useSelector(state=>state.data.orgUnit)
-    const buttonLoading = useSelector(state => state.data.buttonLoading)
-    const pageFirst = useSelector(state => state.data.pageFirst)
-    const removeButtton = useSelector(state => state.data.removebtn)
-    const prevValues = Object.keys(useSelector(state => state.data.previousValues)).length ? true : false;
-    const isCompleteClicked = useSelector(state => state.data.completeClicked)
-    const entityValid = useSelector(state => state.data.entity.valid)
-    var { sampleDate, defaultProgram } = useSelector(state => state.data.panel)
-    var editable = useSelector(state => state.data.editable)
-    var addSampleValid = (defaultProgram.length && !editable && sampleDate) ? false : true
-    var aggregationOnProgress = useSelector(state => state.data.aggregationOnProgress)
-    var { program } = useSelector(state => state.data.panel);
-    var programCheck = program == "WhYipXYg2Nh" ? false : true;
-    var userAccess = false;
-    const username = useSelector(state => state.metadata.user.username)
-    var isClinicianClicked = useSelector(state => state.data.clinicianClicked)
-    var record = useSelector(state => state.data.record)
-    const userGroup = useSelector(state => state.metadata.userGroup)
-    programs.forEach(p => {
-        p.programStages.forEach(ps => {
-            userAccess = ps.access.data.write
-        })
-    })
+  const dispatch = useDispatch();
+  const buttonsDisabled = useSelector((state) => state.data.buttonsDisabled);
+  var btnStatus = useSelector((state) => state.data.btnStatus);
+  const status = useSelector((state) => state.data.event.status);
+  const event = useSelector((state) => state.data.event);
+  const eventId = useSelector((state) => state.data.event.id);
+  const invalid = useSelector((state) => state.data.event.invalid);
+  const valid = useSelector((state) => state.data.panel.valid);
+  const duplicate = useSelector((state) => state.data.event.duplicate);
+  const exit = useSelector((state) => state.data.exit);
+  const dataElementObjects = useSelector(
+    (state) => state.metadata.dataElementObjects,
+  );
+  const programs = useSelector((state) => state.metadata.programs);
+  const categoryCombos = useSelector((state) => state.metadata.categoryCombos);
+  const dataSets = useSelector((state) => state.metadata.dataSets);
+  const orgUnit = useSelector((state) => state.data.orgUnit);
+  const buttonLoading = useSelector((state) => state.data.buttonLoading);
+  const pageFirst = useSelector((state) => state.data.pageFirst);
+  const removeButtton = useSelector((state) => state.data.removebtn);
+  const prevValues = Object.keys(
+    useSelector((state) => state.data.previousValues),
+  ).length
+    ? true
+    : false;
+  const isCompleteClicked = useSelector((state) => state.data.completeClicked);
+  const entityValid = useSelector((state) => state.data.entity.valid);
+  var { sampleDate, defaultProgram } = useSelector((state) => state.data.panel);
+  var editable = useSelector((state) => state.data.editable);
+  var addSampleValid =
+    defaultProgram.length && !editable && sampleDate ? false : true;
+  var aggregationOnProgress = useSelector(
+    (state) => state.data.aggregationOnProgress,
+  );
+  var { program } = useSelector((state) => state.data.panel);
+  var programCheck = program == "WhYipXYg2Nh" ? false : true;
+  var userAccess = false;
+  const username = useSelector((state) => state.metadata.user.username);
+  var isClinicianClicked = useSelector((state) => state.data.clinicianClicked);
+  var record = useSelector((state) => state.data.record);
+  const userGroup = useSelector((state) => state.metadata.userGroup);
+// apply logic for 15 days editable event 
+  const today = new Date();
+  const eventDate = new Date(sampleDate); // convert to Date object
 
+  const diffTime = today.getTime() - eventDate.getTime();
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
 
-    const changeAggregationStatus = (status)=>{
+  const isOlderThan15Days = diffDays > 15;
 
-        dispatch(setAggregationProgress(status))
-        aggregationOnProgress = status
+//   console.log("diffDays ===", diffDays);
+//   console.log("isOlderThan15Days ===", isOlderThan15Days);
+  programs.forEach((p) => {
+    p.programStages.forEach((ps) => {
+      userAccess = ps.access.data.write;
+    });
+  });
+
+  const changeAggregationStatus = (status) => {
+    dispatch(setAggregationProgress(status));
+    aggregationOnProgress = status;
+  };
+
+  const onBack = () => {
+    // dispatch(falseClinicianEvent())
+    if (!prevValues && editable) {
+      // $("#popup").hide();
+      window.location.reload();
+    } else {
+      history.goBack();
+      setTimeout(function() {
+        window.location.reload();
+      }, 100);
     }
+  };
 
-    const onBack = () => {
-        // dispatch(falseClinicianEvent())
-        if (!prevValues && editable) {
-            // $("#popup").hide();
-            window.location.reload()
-         }
-        else {
-            history.goBack();
-            setTimeout(function(){window.location.reload();}, 100);
-        }
+  const onViewClinician = (ou, eventId, dataValues) => {
+    localStorage.setItem("eventId", eventId);
+    var event = eventId;
+    let btnStatus = false;
+    for (let dataValue of dataValues) {
+      let dataElement = dataValue.dataElement;
+      // if( dataElement == 'VbUbBX7G6Jf'){  // id of organism detected data element in sample testing
+      //     btnStatus = true;
+      // }
     }
+    let editStatus = true;
+    // dispatch(getExistingEvent(ou, eventId, editStatus, btnStatus))
+  };
 
-    const onViewClinician = (ou, eventId, dataValues) => {
-        localStorage.setItem('eventId', eventId)
-        var event = eventId;
-        let btnStatus= false
-        for (let dataValue of dataValues) {
-            let dataElement = dataValue.dataElement;
-            // if( dataElement == 'VbUbBX7G6Jf'){  // id of organism detected data element in sample testing
-            //     btnStatus = true;
-            // }
-        }
-        let editStatus = true;
-        // dispatch(getExistingEvent(ou, eventId, editStatus, btnStatus))
+  const onSubmit = async (addMore) => {
+    let res = await Aggregate({
+      event: event,
+      operation: "COMPLETE",
+      dataElements: dataElementObjects,
+      categoryCombos: categoryCombos,
+      dataSets: dataSets,
+      orgUnit: orgUnit.id,
+      programs: programs,
+      sampleDate: sampleDate,
+      changeStatus: changeAggregationStatus,
+    });
+    if (res.response) {
+      await dispatch(submitEvent(addMore));
     }
+    changeAggregationStatus(false);
+  };
+  const submitExit = async () => await onSubmit(false);
+  const onEdit = async () => {
+    let res = await Aggregate({
+      event: event,
+      operation: "INCOMPLETE",
+      dataElements: dataElementObjects,
+      categoryCombos: categoryCombos,
+      dataSets: dataSets,
+      sampleDate: sampleDate,
+      orgUnit: orgUnit.id,
+      programs: programs,
+      changeStatus: changeAggregationStatus,
+    });
 
-    const onSubmit = async addMore => {
-        let res = await Aggregate({
-            event:event,
-            operation:"COMPLETE",
-            dataElements:dataElementObjects,
-            categoryCombos: categoryCombos,
-            dataSets: dataSets,
-            orgUnit: orgUnit.id,
-            programs: programs,
-            sampleDate: sampleDate,
-            changeStatus : changeAggregationStatus
-        })
-        if(res.response){
-            await dispatch(submitEvent(addMore))
-        }
-        changeAggregationStatus(false);
+    if (res.response) {
+      await dispatch(editEvent());
     }
-    const submitExit = async () => await onSubmit(false)
-    const onEdit = async () => {
-        let res = await Aggregate({
-            event:event,
-            operation:"INCOMPLETE",
-            dataElements:dataElementObjects,
-            categoryCombos: categoryCombos,
-            dataSets: dataSets,
-            sampleDate: sampleDate,
-            orgUnit: orgUnit.id,
-            programs: programs,
-            changeStatus : changeAggregationStatus
-        })
+    changeAggregationStatus(false);
+  };
 
-        if(res.response){
-            await dispatch(editEvent())
-        }
-        changeAggregationStatus(false);
+  // Next button ,Submit and Add New ISO, Submit and Add New Sample, Save start
+  const onNextSubmit = async (next, addMoreSample, addMoreIso) =>
+    await dispatch(nextEvent(next, addMoreSample, addMoreIso));
+  const onNext = async () => await onNextSubmit(true, false, false); //next,addMoreSample,addMoreIso
+  const submitAddSample = async () => await onNextSubmit(false, true, false);
+  const submitAddIso = async () => await onNextSubmit(false, false, true);
+  const onSave = async () => await dispatch(saveEvent());
+  const onClinicianSubmit = async (next, addMoreSample, addMoreIso) =>
+    await dispatch(clinicianEvent(next, addMoreSample, addMoreIso));
+  const addClinician = async () => await onClinicianSubmit(false, false, true);
+  const onSaveC = async () => await dispatch(saveClinician());
+  // const onViewClinicianSubmit = async (next,addMoreSample,addMoreIso) => await dispatch(viewClinicianEvent(next,addMoreSample,addMoreIso))
+  // const onViewClinician = async () => await onViewClinicianSubmit(false,false,true)
+  // Next button ,Submit and Add New ISO, Submit and Add New Sample, Save end
+
+  const onInComplete = async () => {
+    let res = await Aggregate({
+      event: event,
+      operation: "INCOMPLETE",
+      dataElements: dataElementObjects,
+      categoryCombos: categoryCombos,
+      dataSets: dataSets,
+      sampleDate: sampleDate,
+      orgUnit: orgUnit.id,
+      programs: programs,
+      changeStatus: changeAggregationStatus,
+    });
+    if (res.response) {
+      await dispatch(inCompleteEvent());
     }
+    changeAggregationStatus(false);
+  };
 
-    // Next button ,Submit and Add New ISO, Submit and Add New Sample, Save start
-    const onNextSubmit = async (next,addMoreSample,addMoreIso) => await dispatch(nextEvent(next,addMoreSample,addMoreIso))
-    const onNext = async () => await onNextSubmit(true,false,false)     //next,addMoreSample,addMoreIso
-    const submitAddSample = async () => await onNextSubmit(false, true, false)
-    const submitAddIso = async () => await onNextSubmit(false,false,true)
-    const onSave = async () => await dispatch(saveEvent())
-    const onClinicianSubmit = async (next,addMoreSample,addMoreIso) => await dispatch(clinicianEvent(next,addMoreSample,addMoreIso))
-    const addClinician = async () => await onClinicianSubmit(false, false, true)
-    const onSaveC = async () => await dispatch(saveClinician())
-    // const onViewClinicianSubmit = async (next,addMoreSample,addMoreIso) => await dispatch(viewClinicianEvent(next,addMoreSample,addMoreIso))
-    // const onViewClinician = async () => await onViewClinicianSubmit(false,false,true)
-    // Next button ,Submit and Add New ISO, Submit and Add New Sample, Save end
+  const submitAddButton = {
+    label: "Submit and add new sample",
+    onClick: submitAddSample,
+    disabled: addSampleValid,
+    icon: "add",
+    primary: true,
+    tooltip:
+      duplicate === DUPLICATE_ERROR
+        ? DUPLICATE_ERROR
+        : invalid
+        ? invalid
+        : "Submit record and add new record for the same person",
+    loading: buttonLoading === "submitAdd",
+  };
 
-    const onInComplete = async () => {
-        let res = await Aggregate(
-            {
-                event: event,
-                operation: "INCOMPLETE",
-                dataElements: dataElementObjects,
-                categoryCombos: categoryCombos,
-                dataSets: dataSets,
-                sampleDate: sampleDate,
-                orgUnit: orgUnit.id,
-                programs: programs,
-                changeStatus : changeAggregationStatus
-            }
-        )
-        if(res.response){
-            await dispatch( inCompleteEvent() )
-        }
-        changeAggregationStatus(false);
-    }
+  const submitAddButtonIso = {
+    label: "Submit and add new isolate",
+    onClick: submitAddIso,
+    disabled: !valid || buttonsDisabled || aggregationOnProgress,
+    icon: "add",
+    primary: true,
+    tooltip:
+      duplicate === DUPLICATE_ERROR
+        ? DUPLICATE_ERROR
+        : invalid
+        ? invalid
+        : "Submit record and add new record for the same person",
+    loading: buttonLoading === "submitAdd",
+  };
 
-    const submitAddButton = {
-        label: 'Submit and add new sample',
-        onClick: submitAddSample,
-        disabled: addSampleValid,
-        icon: 'add',
-        primary: true,
-        tooltip:
-            duplicate === DUPLICATE_ERROR
-                ? DUPLICATE_ERROR
-                : invalid
-                ? invalid
-                : 'Submit record and add new record for the same person',
-        loading: buttonLoading === 'submitAdd',
-    }
+  const submitButton = {
+    label: "Submit",
+    onClick: onSave,
+    disabled: addSampleValid || aggregationOnProgress,
+    icon: "done",
+    primary: true,
+    tooltip:
+      duplicate === DUPLICATE_ERROR
+        ? DUPLICATE_ERROR
+        : invalid
+        ? invalid
+        : "Submit record",
+    loading: buttonLoading === "submit",
+  };
 
-    const submitAddButtonIso = {
-        label: 'Submit and add new isolate',
-        onClick: submitAddIso,
-        disabled: !valid || buttonsDisabled || aggregationOnProgress,
-        icon: 'add',
-        primary: true,
-        tooltip:
-            duplicate === DUPLICATE_ERROR
-                ? DUPLICATE_ERROR
-                : invalid
-                ? invalid
-                : 'Submit record and add new record for the same person',
-        loading: buttonLoading === 'submitAdd',
-    }
+  const Save = {
+    label: "Save",
+    onClick: onSave,
+    disabled: !entityValid || aggregationOnProgress,
+    icon: "done",
+    primary: true,
+    tooltip:
+      duplicate === DUPLICATE_ERROR
+        ? DUPLICATE_ERROR
+        : invalid
+        ? invalid
+        : "Submit record",
+    loading: buttonLoading === "save",
+  };
 
-    const submitButton = {
-        label: 'Submit',
-        onClick: onSave,
-        disabled: addSampleValid || aggregationOnProgress,
-        icon: 'done',
-        primary: true,
-        tooltip:
-            duplicate === DUPLICATE_ERROR
-                ? DUPLICATE_ERROR
-                : invalid
-                ? invalid
-                : 'Submit record',
-        loading: buttonLoading === 'submit',
-    }
+  const nextButton = {
+    label: "Next",
+    onClick: onNext,
+    disabled: buttonsDisabled || !!invalid,
+    icon: "arrow_forward",
+    primary: true,
+    tooltip:
+      duplicate === DUPLICATE_ERROR
+        ? DUPLICATE_ERROR
+        : invalid
+        ? invalid
+        : "Next record",
+    loading: buttonLoading === "next",
+  };
 
-    const Save = {
-        label: 'Save',
-        onClick: onSave,
-        disabled: !entityValid || aggregationOnProgress,
-        icon: 'done',
-        primary: true,
-        tooltip:
-            duplicate === DUPLICATE_ERROR
-                ? DUPLICATE_ERROR
-                : invalid
-                ? invalid
-                : 'Submit record',
-        loading: buttonLoading === 'save',
-    }
+  const completeButton = {
+    label: "Mark Complete",
+    onClick: submitExit,
+    disabled: buttonsDisabled || !!invalid || aggregationOnProgress,
+    icon: "done",
+    primary: true,
+    tooltip:
+      duplicate === DUPLICATE_ERROR
+        ? DUPLICATE_ERROR
+        : invalid
+        ? invalid
+        : "Complete Event",
+    loading: buttonLoading === "complete",
+  };
 
-    const nextButton = {
-        label: 'Next',
-        onClick: onNext,
-        disabled: buttonsDisabled || !!invalid,
-        icon: 'arrow_forward',
-        primary: true,
-        tooltip:
-            duplicate === DUPLICATE_ERROR
-                ? DUPLICATE_ERROR
-                : invalid
-                ? invalid
-                : 'Next record',
-        loading: buttonLoading === 'next',
-    }
+  const incompleteButton = {
+    label: "Mark Incomplete",
+    onClick: onInComplete,
+    // disabled: buttonsDisabled || !status.editable || btnStatus || aggregationOnProgress,
+    // apply isOlderThan15Days for this button 
+    disabled:
+      buttonsDisabled ||
+      btnStatus ||
+      aggregationOnProgress ||
+      isOlderThan15Days,
+    icon: "edit",
+    primary: true,
+    tooltip:
+      buttonsDisabled || !status.editable
+        ? "Records with this approval status cannot be edited"
+        : "Edit record",
+    loading: buttonLoading === "incomplete",
+  };
 
-    const completeButton = {
-        label: 'Mark Complete',
-        onClick: submitExit,
-        disabled: buttonsDisabled || !!invalid || aggregationOnProgress,
-        icon: 'done',
-        primary: true,
-        tooltip:
-            duplicate === DUPLICATE_ERROR
-                ? DUPLICATE_ERROR
-                : invalid
-                ? invalid
-                : 'Complete Event',
-        loading: buttonLoading === 'complete',
-    }
+  const editButton = {
+    label: "Edit",
+    onClick: onEdit,
+    // apply isOlderThan15Days for this button 
+    // disabled: buttonsDisabled || !status.editable || btnStatus || aggregationOnProgress,
+    disabled:
+      buttonsDisabled ||
+      aggregationOnProgress ||
+      btnStatus ||
+      isOlderThan15Days,
+    icon: "edit",
+    primary: true,
+    tooltip:
+      buttonsDisabled || !status.editable
+        ? "Records with this approval status cannot be edited"
+        : isOlderThan15Days
+        ? "Records older than 15 days cannot be edited"
+        : "Edit record",
+    loading: buttonLoading === "edit",
+  };
 
-    const incompleteButton = {
-        label: 'Mark Incomplete',
-        onClick: onInComplete,
-        disabled: buttonsDisabled || !status.editable || btnStatus || aggregationOnProgress,
-        icon: 'edit',
-        primary: true,
-        tooltip:
-            buttonsDisabled || !status.editable
-                ? 'Records with this approval status cannot be edited'
-                : 'Edit record',
-        loading: buttonLoading === 'incomplete',
-    }
+  const Go_Back = {
+    label: "Back",
+    primary: true,
+    tooltip: "Go Back",
+    onClick: onBack,
+  };
 
-    const editButton = {
-        label: 'Edit',
-        onClick: onEdit,
-        disabled: buttonsDisabled || !status.editable || btnStatus || aggregationOnProgress,
-        icon: 'edit',
-        primary: true,
-        tooltip:
-            buttonsDisabled || !status.editable
-                ? 'Records with this approval status cannot be edited'
-                : 'Edit record',
-        loading: buttonLoading === 'edit',
-    }
+  const Go_BackIso = {
+    label: "Back",
+    primary: true,
+    tooltip: "Go Back",
+    onClick: onBack,
+    disabled: !valid || buttonsDisabled,
+  };
 
-    const Go_Back = {
-        label: 'Back',
-        primary: true,
-        tooltip: "Go Back",
-        onClick: onBack,
-    }
+  const Clinician = {
+    label: "Clinician Notes",
+    onClick: addClinician,
+    disabled:
+      !valid || buttonsDisabled || aggregationOnProgress || isClinicianClicked,
+    primary: true,
+    tooltip:
+      duplicate === DUPLICATE_ERROR
+        ? DUPLICATE_ERROR
+        : invalid
+        ? invalid
+        : "Submit record and add new record for the same person",
+    loading: buttonLoading === "submitAdd",
+  };
 
-    const Go_BackIso = {
-        label: 'Back',
-        primary: true,
-        tooltip: "Go Back",
-        onClick: onBack,
-        disabled: !valid || buttonsDisabled,
-    }
+  const Save_Notes = {
+    label: "Save Notes",
+    onClick: onSaveC,
+    disabled: !entityValid || aggregationOnProgress,
+    primary: true,
+    tooltip:
+      duplicate === DUPLICATE_ERROR
+        ? DUPLICATE_ERROR
+        : invalid
+        ? invalid
+        : "Submit record",
+    loading: buttonLoading === "save",
+  };
 
-    const Clinician = {
-        label: 'Clinician Notes',
-        onClick: addClinician,
-        disabled: !valid || buttonsDisabled || aggregationOnProgress || isClinicianClicked,
-        primary: true,
-        tooltip:
-            duplicate === DUPLICATE_ERROR
-                ? DUPLICATE_ERROR
-                : invalid
-                ? invalid
-                : 'Submit record and add new record for the same person',
-        loading: buttonLoading === 'submitAdd',
-    }
+  const buttonsLab = () =>
+    existingEvent && !pageFirst
+      ? !eventId
+        ? []
+        : status.completed
+        ? [incompleteButton, editButton, Go_Back, Clinician]
+        : programCheck
+        ? [completeButton, Save, Go_Back, Clinician]
+        : [Save, Go_Back, Clinician]
+      : removeButtton
+      ? [nextButton, Go_Back]
+      : prevValues
+      ? isCompleteClicked
+        ? [incompleteButton, submitAddButtonIso, Go_BackIso, Clinician]
+        : [completeButton, submitAddButtonIso, Go_BackIso, Clinician]
+      : [submitButton, submitAddButton, Go_Back];
 
-    const Save_Notes = {
-        label: 'Save Notes',
-        onClick: onSaveC,
-        disabled: !entityValid || aggregationOnProgress,
-        primary: true,
-        tooltip:
-            duplicate === DUPLICATE_ERROR
-                ? DUPLICATE_ERROR
-                : invalid
-                ? invalid
-                : 'Submit record',
-        loading: buttonLoading === 'save',
-    }
+  const buttonsWrite = () =>
+    existingEvent && !pageFirst
+      ? !eventId
+        ? []
+        : status.completed
+        ? [incompleteButton, editButton, Go_Back, Clinician]
+        : programCheck
+        ? [completeButton, Save, Go_Back, Clinician]
+        : [Save, Go_Back, Clinician]
+      : removeButtton
+      ? [nextButton, Go_Back]
+      : prevValues
+      ? isCompleteClicked
+        ? [incompleteButton, submitAddButtonIso, Go_BackIso, Clinician]
+        : [completeButton, submitAddButtonIso, Go_BackIso, Clinician]
+      : isClinicianClicked
+      ? [Go_BackIso, Clinician, Save_Notes]
+      : [submitButton, submitAddButton, Go_Back];
 
-    const buttonsLab = () =>
-        existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back,Clinician] : programCheck ? [completeButton, Save, Go_Back,Clinician] : [Save, Go_Back,Clinician]
-            : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, Go_BackIso,Clinician] : [completeButton, submitAddButtonIso, Go_BackIso,Clinician]:[submitButton,submitAddButton,Go_Back]
+  const buttonsReadUsers = () => [Clinician, Go_Back];
 
-    const buttonsWrite = () =>
-        existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back, Clinician] : programCheck ? [completeButton, Save, Go_Back,Clinician] : [Save, Go_Back,Clinician]
-            : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, Go_BackIso, Clinician] : [completeButton, submitAddButtonIso, Go_BackIso,Clinician]:isClinicianClicked?[Go_BackIso,Clinician, Save_Notes]:[submitButton,submitAddButton,Go_Back]
+  const clinicinaButtons = () => [Save_Notes, Go_Back];
 
-
-    const buttonsReadUsers = () =>
-        [Clinician, Go_Back]
-
-    const clinicinaButtons = () => [Save_Notes,Go_Back]
-
-    return <StyledButtonRow buttons={userGroup === LABTECH ? isClinicianClicked && !record ? clinicinaButtons() : buttonsLab() : userAccess ? isClinicianClicked ? clinicinaButtons() : buttonsWrite() : isClinicianClicked ? clinicinaButtons() : buttonsReadUsers()} />
-}
+  return (
+    <StyledButtonRow
+      buttons={
+        userGroup === LABTECH
+          ? isClinicianClicked && !record
+            ? clinicinaButtons()
+            : buttonsLab()
+          : userAccess
+          ? isClinicianClicked
+            ? clinicinaButtons()
+            : buttonsWrite()
+          : isClinicianClicked
+          ? clinicinaButtons()
+          : buttonsReadUsers()
+      }
+    />
+  );
+};

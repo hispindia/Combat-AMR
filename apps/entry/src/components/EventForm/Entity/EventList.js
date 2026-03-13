@@ -35,13 +35,14 @@ const Events = ({ match, history }) => {
   var programs = useSelector((state) => state.metadata.programs);
   var teiId = match.params.teiId;
   var orgUnit = match.params.orgUnit;
+  const userRole = useSelector((state) => state.metadata.user.userRole);
   const categoryCombos = useSelector((state) => state.metadata.categoryCombos);
   const dataElementObjects = useSelector(
-    (state) => state.metadata.dataElementObjects
+    (state) => state.metadata.dataElementObjects,
   );
   const dataSets = useSelector((state) => state.metadata.dataSets);
   var aggregationOnProgress = useSelector(
-    (state) => state.data.aggregationOnProgress
+    (state) => state.data.aggregationOnProgress,
   );
   var userAccess = false;
   var clinicianPsList = useSelector((state) => state.metadata.clinicianPsList);
@@ -49,7 +50,6 @@ const Events = ({ match, history }) => {
   var [eventShow, setEventShow] = useState([]);
   var [eventCliShow, setEventCliShow] = useState([]);
   var [showReport, setShowReport] = useState(false);
-
   const onPrint = (check) => {
     if (!check) {
       setDialog(check);
@@ -65,7 +65,7 @@ const Events = ({ match, history }) => {
   });
 
   const { programOrganisms, optionSets } = useSelector(
-    (state) => state.metadata
+    (state) => state.metadata,
   );
 
   useEffect(() => {
@@ -73,58 +73,61 @@ const Events = ({ match, history }) => {
       var eventL = [];
       if (events != undefined) {
         const v = events?.map((ele, index) => {
-          console.log("clinicianPsList=======================",clinicianPsList)
-          console.log("ele.programStage============",ele.programStage)
+          // console.log(
+          //   "clinicianPsList=======================",
+          //   clinicianPsList,
+          // );
+          // console.log("ele.programStage============", ele.programStage);
           if (!clinicianPsList.includes(ele?.programStage)) {
             // if (ele.status == COMPLETED) {
-              var proId = ele?.program;
-              var name = [],
-                dataValue = [],
-                data = [],
-                date = [];
-              var listorganisms = [];
-              var orgValue = [];
-              var orgn = "";
-              var sampleVal = [];
-              //date['value'] =  JSON.stringify(new Date(ele.eventDate)).slice(1,11);
-              date["value"] = ele?.eventDate?.substring(0, 10);
-              for (let program of programs) {
-                if (program.id == proId) {
-                  name["value"] = program.name;
-                  optionSets[programOrganisms[program.id]].forEach((o) => {
-                    if (!listorganisms.find((org) => org.value === o.value))
-                      listorganisms.push(o);
+            var proId = ele?.program;
+            var name = [],
+              dataValue = [],
+              data = [],
+              date = [];
+            var listorganisms = [];
+            var orgValue = [];
+            var orgn = "";
+            var sampleVal = [];
+            //date['value'] =  JSON.stringify(new Date(ele.eventDate)).slice(1,11);
+            date["value"] = ele?.eventDate?.substring(0, 10);
+            for (let program of programs) {
+              if (program.id == proId) {
+                name["value"] = program.name;
+                optionSets[programOrganisms[program.id]].forEach((o) => {
+                  if (!listorganisms.find((org) => org.value === o.value))
+                    listorganisms.push(o);
+                });
+              }
+            }
+
+            for (let value of ele.dataValues) {
+              if (
+                value.dataElement == PATHOGEN_ID ||
+                value.dataElement == SAMPLE_RESULT_ID
+              ) {
+                // id of organism detected data element in sample testing
+
+                if (listorganisms.length > 0) {
+                  orgn = listorganisms.find((element) => {
+                    return element.value == value.value;
                   });
-                }
-              }
-
-              for (let value of ele.dataValues) {
-                if (
-                  value.dataElement == PATHOGEN_ID ||
-                  value.dataElement == SAMPLE_RESULT_ID
-                ) {
-                  // id of organism detected data element in sample testing
-
-                  if (listorganisms.length > 0) {
-                    orgn = listorganisms.find((element) => {
-                      return element.value == value.value;
-                    });
-                    if (orgn) {
-                      value.value = orgn.label;
-                    }
+                  if (orgn) {
+                    value.value = orgn.label;
                   }
-                  orgValue["value"] = value.value;
-                  dataValue["4"] = orgValue;
                 }
-                dataValue["5"] = date;
+                orgValue["value"] = value.value;
+                dataValue["4"] = orgValue;
               }
-              if (dataValue["4"]) {
-                if (dataValue["4"].value !== PATHOGEN_DETECTED) {
-                  data = dataValue;
-                  eventL.push(ele.event);
-                  setShowReport(true);
-                }
+              dataValue["5"] = date;
+            }
+            if (dataValue["4"]) {
+              if (dataValue["4"].value !== PATHOGEN_DETECTED) {
+                data = dataValue;
+                eventL.push(ele.event);
+                setShowReport(true);
               }
+            }
             // }
           }
         });
@@ -163,28 +166,27 @@ const Events = ({ match, history }) => {
 
             for (let value of ele.dataValues) {
               //if (value.dataElement === PATHOGEN_ID || value.dataElement === SAMPLE_RESULT_ID ) {
-                // id of organism detected data element in sample testing
+              // id of organism detected data element in sample testing
 
-                if (listorganisms.length > 0) {
-                  orgn = listorganisms.find((element) => {
-                    return element.value == value.value;
-                  });
-                  if (orgn) {
-                    value.value = orgn.label;
-                  }
+              if (listorganisms.length > 0) {
+                orgn = listorganisms.find((element) => {
+                  return element.value == value.value;
+                });
+                if (orgn) {
+                  value.value = orgn.label;
                 }
-                orgValue["value"] = value.value;
-                dataValue["4"] = orgValue;
+              }
+              orgValue["value"] = value.value;
+              dataValue["4"] = orgValue;
               //}
               dataValue["5"] = date;
             }
             if (dataValue["4"]) {
-                if (dataValue["4"].value !== PATHOGEN_DETECTED) {
-                    data = dataValue;
-                    eventClini.push(ele.event);
-                  }
+              if (dataValue["4"].value !== PATHOGEN_DETECTED) {
+                data = dataValue;
+                eventClini.push(ele.event);
+              }
             }
-         
           }
         });
 
@@ -216,7 +218,7 @@ const Events = ({ match, history }) => {
         event.trackedEntityInstance,
         event.event,
         true,
-        false
+        false,
       );
       let sampleDate = event.eventDate;
       //call aggregate
@@ -289,8 +291,9 @@ const Events = ({ match, history }) => {
   };
   var val = () => {
     if (events != undefined) {
-      console.log("events=================",events)
+      console.log("events=================", events);
       const v = events?.map((ele, index) => {
+       
         if (!clinicianPsList.includes(ele.programStage)) {
           var proId = ele.program;
           var name = [],
@@ -365,12 +368,11 @@ const Events = ({ match, history }) => {
             let data = [{ value: "" }];
             dataValue["4"] = data;
           }
-          if (dataValue["4"]){
+          if (dataValue["4"]) {
             if (dataValue["4"].value !== PATHOGEN_DETECTED) {
-                data = dataValue;
-              }
+              data = dataValue;
+            }
           }
-        
 
           return (
             <>
@@ -381,6 +383,7 @@ const Events = ({ match, history }) => {
                   ))}
                   <Button
                     primary={true}
+                    // disabled={userAccess }
                     onClick={() =>
                       onEdit(ele.orgUnit, ele.event, ele.dataValues)
                     }
@@ -416,14 +419,14 @@ const Events = ({ match, history }) => {
           Report
         </Button>
         &nbsp;&nbsp;&nbsp;
-        <Button
+        {/* <Button
           destructive={true}
           onClick={() => OnDelete()}
-          disabled={!userAccess}
+        //  disabled={userRole === "b5Ge6CbxcfE"}
         >
           Delete Record
         </Button>
-        &nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp; */}
         <Button primary={true} onClick={() => onYes()}>
           Back
         </Button>
