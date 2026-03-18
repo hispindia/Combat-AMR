@@ -37,11 +37,11 @@ export const EventButtons = ({ history, existingEvent }) => {
     const valid = useSelector(state => state.data.panel.valid)
     const duplicate = useSelector(state => state.data.event.duplicate)
     const exit = useSelector(state => state.data.exit)
-    const dataElementObjects = useSelector(state=> state.metadata.dataElementObjects)
-    const programs = useSelector(state=>state.metadata.programs)
-    const categoryCombos = useSelector(state=> state.metadata.categoryCombos)
-    const dataSets = useSelector(state=>state.metadata.dataSets)
-    const orgUnit = useSelector(state=>state.data.orgUnit)
+    const dataElementObjects = useSelector(state => state.metadata.dataElementObjects)
+    const programs = useSelector(state => state.metadata.programs)
+    const categoryCombos = useSelector(state => state.metadata.categoryCombos)
+    const dataSets = useSelector(state => state.metadata.dataSets)
+    const orgUnit = useSelector(state => state.data.orgUnit)
     const buttonLoading = useSelector(state => state.data.buttonLoading)
     const pageFirst = useSelector(state => state.data.pageFirst)
     const removeButtton = useSelector(state => state.data.removebtn)
@@ -51,14 +51,25 @@ export const EventButtons = ({ history, existingEvent }) => {
     var { sampleDate, defaultProgram } = useSelector(state => state.data.panel)
     var editable = useSelector(state => state.data.editable)
     var addSampleValid = (defaultProgram.length && !editable && sampleDate) ? false : true
-    var aggregationOnProgress = useSelector(state => state.data.aggregationOnProgress)
+    var aggregationOnProgress = useSelector(state => state.data.aggregationOnProgress);
     var { program } = useSelector(state => state.data.panel);
     var programCheck = program == "WhYipXYg2Nh" ? false : true;
     var userAccess = false;
     const username = useSelector(state => state.metadata.user.username)
     var isClinicianClicked = useSelector(state => state.data.clinicianClicked)
     var record = useSelector(state => state.data.record)
-    const userGroup = useSelector(state => state.metadata.userGroup)
+    const userGroup = useSelector(state => state.metadata.userGroup);
+    // apply logic for 15 days editable event 
+    const today = new Date();
+    const eventDate = new Date(sampleDate); // convert to Date object
+
+    const diffTime = today.getTime() - eventDate.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    const isOlderThan15Days = diffDays > 15;
+
+    //   console.log("diffDays ===", diffDays);
+    //   console.log("isOlderThan15Days ===", isOlderThan15Days);
     programs.forEach(p => {
         p.programStages.forEach(ps => {
             userAccess = ps.access.data.write
@@ -66,7 +77,7 @@ export const EventButtons = ({ history, existingEvent }) => {
     })
 
 
-    const changeAggregationStatus = (status)=>{
+    const changeAggregationStatus = (status) => {
 
         dispatch(setAggregationProgress(status))
         aggregationOnProgress = status
@@ -77,17 +88,19 @@ export const EventButtons = ({ history, existingEvent }) => {
         if (!prevValues && editable) {
             // $("#popup").hide();
             window.location.reload()
-         }
+        }
         else {
             history.goBack();
-            setTimeout(function(){window.location.reload();}, 100);
+            setTimeout(function () {
+                window.location.reload();
+            }, 100);
         }
-    }
+    };
 
     const onViewClinician = (ou, eventId, dataValues) => {
         localStorage.setItem('eventId', eventId)
         var event = eventId;
-        let btnStatus= false
+        let btnStatus = false
         for (let dataValue of dataValues) {
             let dataElement = dataValue.dataElement;
             // if( dataElement == 'VbUbBX7G6Jf'){  // id of organism detected data element in sample testing
@@ -100,17 +113,17 @@ export const EventButtons = ({ history, existingEvent }) => {
 
     const onSubmit = async addMore => {
         let res = await Aggregate({
-            event:event,
-            operation:"COMPLETE",
-            dataElements:dataElementObjects,
+            event: event,
+            operation: "COMPLETE",
+            dataElements: dataElementObjects,
             categoryCombos: categoryCombos,
             dataSets: dataSets,
             orgUnit: orgUnit.id,
             programs: programs,
             sampleDate: sampleDate,
-            changeStatus : changeAggregationStatus
+            changeStatus: changeAggregationStatus
         })
-        if(res.response){
+        if (res.response) {
             await dispatch(submitEvent(addMore))
         }
         changeAggregationStatus(false);
@@ -118,30 +131,30 @@ export const EventButtons = ({ history, existingEvent }) => {
     const submitExit = async () => await onSubmit(false)
     const onEdit = async () => {
         let res = await Aggregate({
-            event:event,
-            operation:"INCOMPLETE",
-            dataElements:dataElementObjects,
+            event: event,
+            operation: "INCOMPLETE",
+            dataElements: dataElementObjects,
             categoryCombos: categoryCombos,
             dataSets: dataSets,
             sampleDate: sampleDate,
             orgUnit: orgUnit.id,
             programs: programs,
-            changeStatus : changeAggregationStatus
+            changeStatus: changeAggregationStatus
         })
 
-        if(res.response){
+        if (res.response) {
             await dispatch(editEvent())
         }
         changeAggregationStatus(false);
     }
 
     // Next button ,Submit and Add New ISO, Submit and Add New Sample, Save start
-    const onNextSubmit = async (next,addMoreSample,addMoreIso) => await dispatch(nextEvent(next,addMoreSample,addMoreIso))
-    const onNext = async () => await onNextSubmit(true,false,false)     //next,addMoreSample,addMoreIso
+    const onNextSubmit = async (next, addMoreSample, addMoreIso) => await dispatch(nextEvent(next, addMoreSample, addMoreIso))
+    const onNext = async () => await onNextSubmit(true, false, false)     //next,addMoreSample,addMoreIso
     const submitAddSample = async () => await onNextSubmit(false, true, false)
-    const submitAddIso = async () => await onNextSubmit(false,false,true)
+    const submitAddIso = async () => await onNextSubmit(false, false, true)
     const onSave = async () => await dispatch(saveEvent())
-    const onClinicianSubmit = async (next,addMoreSample,addMoreIso) => await dispatch(clinicianEvent(next,addMoreSample,addMoreIso))
+    const onClinicianSubmit = async (next, addMoreSample, addMoreIso) => await dispatch(clinicianEvent(next, addMoreSample, addMoreIso))
     const addClinician = async () => await onClinicianSubmit(false, false, true)
     const onSaveC = async () => await dispatch(saveClinician())
     // const onViewClinicianSubmit = async (next,addMoreSample,addMoreIso) => await dispatch(viewClinicianEvent(next,addMoreSample,addMoreIso))
@@ -159,11 +172,11 @@ export const EventButtons = ({ history, existingEvent }) => {
                 sampleDate: sampleDate,
                 orgUnit: orgUnit.id,
                 programs: programs,
-                changeStatus : changeAggregationStatus
+                changeStatus: changeAggregationStatus
             }
         )
-        if(res.response){
-            await dispatch( inCompleteEvent() )
+        if (res.response) {
+            await dispatch(inCompleteEvent())
         }
         changeAggregationStatus(false);
     }
@@ -178,8 +191,8 @@ export const EventButtons = ({ history, existingEvent }) => {
             duplicate === DUPLICATE_ERROR
                 ? DUPLICATE_ERROR
                 : invalid
-                ? invalid
-                : 'Submit record and add new record for the same person',
+                    ? invalid
+                    : 'Submit record and add new record for the same person',
         loading: buttonLoading === 'submitAdd',
     }
 
@@ -193,8 +206,8 @@ export const EventButtons = ({ history, existingEvent }) => {
             duplicate === DUPLICATE_ERROR
                 ? DUPLICATE_ERROR
                 : invalid
-                ? invalid
-                : 'Submit record and add new record for the same person',
+                    ? invalid
+                    : 'Submit record and add new record for the same person',
         loading: buttonLoading === 'submitAdd',
     }
 
@@ -208,8 +221,8 @@ export const EventButtons = ({ history, existingEvent }) => {
             duplicate === DUPLICATE_ERROR
                 ? DUPLICATE_ERROR
                 : invalid
-                ? invalid
-                : 'Submit record',
+                    ? invalid
+                    : 'Submit record',
         loading: buttonLoading === 'submit',
     }
 
@@ -223,8 +236,8 @@ export const EventButtons = ({ history, existingEvent }) => {
             duplicate === DUPLICATE_ERROR
                 ? DUPLICATE_ERROR
                 : invalid
-                ? invalid
-                : 'Submit record',
+                    ? invalid
+                    : 'Submit record',
         loading: buttonLoading === 'save',
     }
 
@@ -238,8 +251,8 @@ export const EventButtons = ({ history, existingEvent }) => {
             duplicate === DUPLICATE_ERROR
                 ? DUPLICATE_ERROR
                 : invalid
-                ? invalid
-                : 'Next record',
+                    ? invalid
+                    : 'Next record',
         loading: buttonLoading === 'next',
     }
 
@@ -253,36 +266,50 @@ export const EventButtons = ({ history, existingEvent }) => {
             duplicate === DUPLICATE_ERROR
                 ? DUPLICATE_ERROR
                 : invalid
-                ? invalid
-                : 'Complete Event',
+                    ? invalid
+                    : 'Complete Event',
         loading: buttonLoading === 'complete',
-    }
+    };
 
     const incompleteButton = {
-        label: 'Mark Incomplete',
+        label: "Mark Incomplete",
         onClick: onInComplete,
-        disabled: buttonsDisabled || !status.editable || btnStatus || aggregationOnProgress,
-        icon: 'edit',
+        // disabled: buttonsDisabled || !status.editable || btnStatus || aggregationOnProgress,
+        // apply isOlderThan15Days for this button 
+        disabled:
+            buttonsDisabled ||
+            btnStatus ||
+            aggregationOnProgress ||
+            isOlderThan15Days,
+        icon: "edit",
         primary: true,
         tooltip:
             buttonsDisabled || !status.editable
-                ? 'Records with this approval status cannot be edited'
-                : 'Edit record',
-        loading: buttonLoading === 'incomplete',
-    }
+                ? "Records with this approval status cannot be edited"
+                : "Edit record",
+        loading: buttonLoading === "incomplete",
+    };
 
     const editButton = {
-        label: 'Edit',
+        label: "Edit",
         onClick: onEdit,
-        disabled: buttonsDisabled || !status.editable || btnStatus || aggregationOnProgress,
-        icon: 'edit',
+        // apply isOlderThan15Days for this button 
+        // disabled: buttonsDisabled || !status.editable || btnStatus || aggregationOnProgress,
+        disabled:
+            buttonsDisabled ||
+            aggregationOnProgress ||
+            btnStatus ||
+            isOlderThan15Days,
+        icon: "edit",
         primary: true,
         tooltip:
             buttonsDisabled || !status.editable
-                ? 'Records with this approval status cannot be edited'
-                : 'Edit record',
-        loading: buttonLoading === 'edit',
-    }
+                ? "Records with this approval status cannot be edited"
+                : isOlderThan15Days
+                    ? "Records older than 15 days cannot be edited"
+                    : "Edit record",
+        loading: buttonLoading === "edit",
+    };
 
     const Go_Back = {
         label: 'Back',
@@ -308,8 +335,8 @@ export const EventButtons = ({ history, existingEvent }) => {
             duplicate === DUPLICATE_ERROR
                 ? DUPLICATE_ERROR
                 : invalid
-                ? invalid
-                : 'Submit record and add new record for the same person',
+                    ? invalid
+                    : 'Submit record and add new record for the same person',
         loading: buttonLoading === 'submitAdd',
     }
 
@@ -322,24 +349,66 @@ export const EventButtons = ({ history, existingEvent }) => {
             duplicate === DUPLICATE_ERROR
                 ? DUPLICATE_ERROR
                 : invalid
-                ? invalid
-                : 'Submit record',
+                    ? invalid
+                    : 'Submit record',
         loading: buttonLoading === 'save',
     }
 
     const buttonsLab = () =>
-        existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back,Clinician] : programCheck ? [completeButton, Save, Go_Back,Clinician] : [Save, Go_Back,Clinician]
-            : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, Go_BackIso,Clinician] : [completeButton, submitAddButtonIso, Go_BackIso,Clinician]:[submitButton,submitAddButton,Go_Back]
+        existingEvent && !pageFirst
+            ? !eventId
+                ? []
+                : status.completed
+                    ? [incompleteButton, editButton, Go_Back, Clinician]
+                    : programCheck
+                        ? [completeButton, Save, Go_Back, Clinician]
+                        : [Save, Go_Back, Clinician]
+            : removeButtton
+                ? [nextButton, Go_Back]
+                : prevValues
+                    ? isCompleteClicked
+                        ? [incompleteButton, submitAddButtonIso, Go_BackIso, Clinician]
+                        : [completeButton, submitAddButtonIso, Go_BackIso, Clinician]
+                    : [submitButton, submitAddButton, Go_Back];
 
     const buttonsWrite = () =>
-        existingEvent && !pageFirst ? !eventId ? [] : status.completed ? [incompleteButton, editButton,Go_Back, Clinician] : programCheck ? [completeButton, Save, Go_Back,Clinician] : [Save, Go_Back,Clinician]
-            : removeButtton ? [nextButton,Go_Back] : prevValues ? isCompleteClicked ? [incompleteButton, submitAddButtonIso, Go_BackIso, Clinician] : [completeButton, submitAddButtonIso, Go_BackIso,Clinician]:isClinicianClicked?[Go_BackIso,Clinician, Save_Notes]:[submitButton,submitAddButton,Go_Back]
+        existingEvent && !pageFirst
+            ? !eventId
+                ? []
+                : status.completed
+                    ? [incompleteButton, editButton, Go_Back, Clinician]
+                    : programCheck
+                        ? [completeButton, Save, Go_Back, Clinician]
+                        : [Save, Go_Back, Clinician]
+            : removeButtton
+                ? [nextButton, Go_Back]
+                : prevValues
+                    ? isCompleteClicked
+                        ? [incompleteButton, submitAddButtonIso, Go_BackIso, Clinician]
+                        : [completeButton, submitAddButtonIso, Go_BackIso, Clinician]
+                    : isClinicianClicked
+                        ? [Go_BackIso, Clinician, Save_Notes]
+                        : [submitButton, submitAddButton, Go_Back];
 
+    const buttonsReadUsers = () => [Clinician, Go_Back];
 
-    const buttonsReadUsers = () =>
-        [Clinician, Go_Back]
+    const clinicinaButtons = () => [Save_Notes, Go_Back];
 
-    const clinicinaButtons = () => [Save_Notes,Go_Back]
-
-    return <StyledButtonRow buttons={userGroup === LABTECH ? isClinicianClicked && !record ? clinicinaButtons() : buttonsLab() : userAccess ? isClinicianClicked ? clinicinaButtons() : buttonsWrite() : isClinicianClicked ? clinicinaButtons() : buttonsReadUsers()} />
-}
+    return (
+        <StyledButtonRow
+            buttons={
+                userGroup === LABTECH
+                    ? isClinicianClicked && !record
+                        ? clinicinaButtons()
+                        : buttonsLab()
+                    : userAccess
+                        ? isClinicianClicked
+                            ? clinicinaButtons()
+                            : buttonsWrite()
+                        : isClinicianClicked
+                            ? clinicinaButtons()
+                            : buttonsReadUsers()
+            }
+        />
+    );
+};

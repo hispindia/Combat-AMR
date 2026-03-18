@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import styled from 'styled-components'
 import { setEntityValue, validateUnique } from '@hisp-amr/app'
 import { TextInput, AgeInput, RadioInputs, SelectInput } from '@hisp-amr/inputs'
-import {TreeViewInput} from './TreeViewInput'
+import { TreeViewInput } from './TreeViewInput'
 
 const Padding = styled.div`
     padding: 16px;
@@ -12,7 +12,7 @@ const Padding = styled.div`
 /**
  * Entity information section.
  */
-export const EntityInput = ({ attribute,userAccess }) => {
+export const EntityInput = ({ attribute, userAccess }) => {
     const dispatch = useDispatch()
     const { optionSets } = useSelector(state => state.metadata)
     const { id: entityId, editing } = useSelector(state => state.data.entity)
@@ -27,35 +27,40 @@ export const EntityInput = ({ attribute,userAccess }) => {
     let { allOrg } = useSelector(state => state.metadata)
     var valueToFind = "";
 
-    function newOrgInsert(testorgs)
-    {
-    var testorgss = testorgs
-    var isParent = false;
-    if(Array.isArray(testorgs)){
-    testorgss = testorgs[0]
-    }
-    else{
-        testorgss = testorgs
-    }
-    if(testorgss && isParent == false){
-        testorgss['label'] = testorgss.displayName;
-        testorgss['value'] = testorgss.id;
-        if (testorgss.id == value) {
-            valueToFind = testorgss.displayName
+    const extraMandatoryIds = ["tjdFAVMJjVp", "ajEVwUD4RQF"]
+
+    const isMandatory =
+    attribute.mandatory ||
+    extraMandatoryIds.includes(attribute.trackedEntityAttribute.id)
+
+    function newOrgInsert(testorgs) {
+        var testorgss = testorgs
+        var isParent = false;
+        if (Array.isArray(testorgs)) {
+            testorgss = testorgs[0]
         }
-    isParent = true;
-    }
-    if(testorgss.children.length!=0){
-        testorgss.children.forEach(function(element){
-            element['label'] = element.displayName
-            element['value'] = element.id
-            if (element.id == value) {
-                valueToFind = element.displayName;
+        else {
+            testorgss = testorgs
+        }
+        if (testorgss && isParent == false) {
+            testorgss['label'] = testorgss.displayName;
+            testorgss['value'] = testorgss.id;
+            if (testorgss.id == value) {
+                valueToFind = testorgss.displayName
             }
-        newOrgInsert(element)
-        })
-    }
-    return testorgss
+            isParent = true;
+        }
+        if (testorgss.children.length != 0) {
+            testorgss.children.forEach(function (element) {
+                element['label'] = element.displayName
+                element['value'] = element.id
+                if (element.id == value) {
+                    valueToFind = element.displayName;
+                }
+                newOrgInsert(element)
+            })
+        }
+        return testorgss
     }
     var orgUnitsLabels = {}
     if (valueType === "ORGANISATION_UNIT") {
@@ -80,12 +85,12 @@ export const EntityInput = ({ attribute,userAccess }) => {
     if (attribute.hide) return null
 
 
-console.log("arrrrrrrrrrrrrrrrrrrrr",attribute)
+    console.log("arrrrrrrrrrrrrrrrrrrrr", attribute)
     return (
         <Padding>
             {attribute.trackedEntityAttribute.valueType === 'AGE' ? (
                 <AgeInput
-                    required={attribute.mandatory}
+                    required={isMandatory}
                     unique={attribute.trackedEntityAttribute.unique}
                     name={attribute.trackedEntityAttribute.id}
                     label={displayLabel}
@@ -97,10 +102,10 @@ console.log("arrrrrrrrrrrrrrrrrrrrr",attribute)
                 optionSets[attribute.trackedEntityAttribute.optionSet.id]
                     .length < 4 ? (
                     <RadioInputs
-                        required={attribute.mandatory}
+                        required={isMandatory}
                         objects={
                             optionSets[
-                                attribute.trackedEntityAttribute.optionSet.id
+                            attribute.trackedEntityAttribute.optionSet.id
                             ]
                         }
                         name={attribute.trackedEntityAttribute.id}
@@ -111,10 +116,10 @@ console.log("arrrrrrrrrrrrrrrrrrrrr",attribute)
                     />
                 ) : (
                     <SelectInput
-                        required={attribute.mandatory}
+                        required={isMandatory}
                         objects={
                             optionSets[
-                                attribute.trackedEntityAttribute.optionSet.id
+                            attribute.trackedEntityAttribute.optionSet.id
                             ]
                         }
                         name={attribute.trackedEntityAttribute.id}
@@ -124,37 +129,38 @@ console.log("arrrrrrrrrrrrrrrrrrrrr",attribute)
                         disabled={disabled}
                     />
                 )
-                ) : valueType === "ORGANISATION_UNIT" ?
-                        <TreeViewInput data={orgUnitsLabels}
-                        placeholder={displayLabel}
-                        onChange={onChange}
-                        name={attribute.trackedEntityAttribute.id}
-                        value={valueToFind}
-                        disabled={disabled}
-                        />
-                : (
-                <TextInput
-                    required={attribute.mandatory}
-                    unique={attribute.trackedEntityAttribute.unique}
-                    uniqueInvalid={unique === false}
-                    validateUnique
-                    onValidation={onValidation}
-                    name={attribute.trackedEntityAttribute.id}
-                    label={displayLabel}
-                    value={value}
+            ) : valueType === "ORGANISATION_UNIT" ?
+                <TreeViewInput data={orgUnitsLabels}
+                    placeholder={displayLabel}
                     onChange={onChange}
-                    disabled={
-                        disabled ||
-                        (attribute.trackedEntityAttribute.unique &&
-                            (entityId || !!modal))
-                    }
-                    type={
-                        attribute.trackedEntityAttribute.valueType === 'NUMBER'
-                            ? 'number'
-                            : 'text'
-                    }
+                    name={attribute.trackedEntityAttribute.id}
+                    value={valueToFind}
+                    disabled={disabled}
                 />
-            )}
+                : (
+                    <TextInput
+                        required={isMandatory}
+                        unique={attribute.trackedEntityAttribute.unique}
+                        uniqueInvalid={unique === false}
+                        validateUnique
+                        onValidation={onValidation}
+                        name={attribute.trackedEntityAttribute.id}
+                        label={displayLabel}
+                        value={value}
+                        onChange={onChange}
+                        disabled={
+                            disabled ||
+                            (attribute.trackedEntityAttribute.unique &&
+                                (entityId || !!modal))
+                        }
+                        type={
+                            attribute.trackedEntityAttribute.valueType === 'NUMBER'
+                                ? 'number'
+                                : 'text'
+                        }
+                    />
+        
+                )}
         </Padding>
     )
 }

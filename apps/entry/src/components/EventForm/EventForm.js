@@ -292,14 +292,14 @@ export const EventForm = ({ history, match }) => {
                     Report
                   </Button>
                   &emsp;&emsp;
-                  <div id="btn">
+                  {/* <div id="btn">
                     {userAccess && (
                       <Button destructive={true} onClick={(e) => onDelete(e)}>
                         Delete
                       </Button>
                     )}
                     &emsp;&emsp;&emsp;&emsp;&emsp;
-                  </div>
+                  </div> */}
                   {/* {!prevValues &&
                             <Button onClick={(e) => onCancel(e)}>Cancel</Button>
                         } */}

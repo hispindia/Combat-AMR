@@ -413,14 +413,14 @@ const Events = ({ match, history }) => {
           Report
         </Button>
         &nbsp;&nbsp;&nbsp;
-        <Button
+        {/* <Button
           destructive={true}
           onClick={() => OnDelete()}
           disabled={!userAccess}
         >
           Delete Record
         </Button>
-        &nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp; */}
         <Button primary={true} onClick={() => onYes()}>
           Back
         </Button>
